@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">OTC后台管理 登录</h3>
+        <h3 class="title">OTC后台管理 注册</h3>
       </div>
 
       <el-form-item prop="username">
@@ -13,7 +13,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="请输入用户名"
           name="username"
           type="text"
           tabindex="1"
@@ -30,8 +30,27 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="请输入密码"
           name="password"
+          tabindex="2"
+          auto-complete="on"
+        />
+        <span class="show-pwd" @click="showPwd">
+          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+        </span>
+      </el-form-item>
+
+    <el-form-item prop="repatePassword">
+        <span class="svg-container">
+          <svg-icon icon-class="password" />
+        </span>
+        <el-input
+          :key="passwordType"
+          ref="password"
+          v-model="loginForm.repatePassword"
+          :type="passwordType"
+          placeholder="请重复密码"
+          name="repatePassword"
           tabindex="2"
           auto-complete="on"
           @keyup.enter.native="handleLogin"
@@ -41,13 +60,13 @@
         </span>
       </el-form-item>
 
-            <el-form-item prop="captcha">
+    <el-form-item prop="captcha">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
         <el-input
           ref="captcha"
-          v-model="loginForm.captcha"
+          v-model="loginForm.password"
           type="text"
           placeholder=" 请输入验证码"
           name="captcha"
@@ -61,10 +80,10 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">注册</el-button>
 
       <div class="tips">
-        <a class="reg" style="margin-right:20px;">注册</a>
+        <a class="reg" style="margin-right:20px;">返回登录</a>
         <!-- <span> password: any</span> -->
       </div>
 
@@ -92,15 +111,24 @@ export default {
         callback()
       }
     }
+    const validateRepatePassword=(rule, value, callback)=>{
+        if (value.length < 6) {
+					callback(new Error('密码必须大于6位数'))
+        }
+       else if(this.loginForm.password!==value){
+				callback(new Error('密码不一致'))
+        }
+    }
     return {
       loginForm: {
-        username: '18329025381@163.com',
-        password: 'yyf361142',
-        captcha:'213'
+        username: '',
+        password: '',
+        repatePassword:''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        repatePassword: [{ required: true, trigger: 'blur', validator: validateRepatePassword }]
       },
       loading: false,
       passwordType: 'password',

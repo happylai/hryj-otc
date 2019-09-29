@@ -23,12 +23,13 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { username, password,captcha } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+      login({ username: username.trim(), password: password,captcha:captcha }).then(response => {
+        console.log("user login",response.headers['x-auth-token'])
+        const { data,headers } = response
+        commit('SET_TOKEN', headers['x-auth-token'])
+        setToken(headers['x-auth-token'])
         resolve()
       }).catch(error => {
         reject(error)
@@ -60,14 +61,18 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        commit('SET_TOKEN', '')
-        removeToken()
-        resetRouter()
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      commit('SET_TOKEN', '')
+      removeToken()
+      resetRouter()
+      resolve()
+      // logout(state.token).then(() => {
+      //   commit('SET_TOKEN', '')
+      //   removeToken()
+      //   resetRouter()
+      //   resolve()
+      // }).catch(error => {
+      //   reject(error)
+      // })
     })
   },
 

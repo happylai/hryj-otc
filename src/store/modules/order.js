@@ -1,19 +1,18 @@
-import { login, logout, getInfo } from '@/api/user'
+import { getList } from '@/api/order'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { resetRouter,asyncRoutes, constantRoutes } from '@/router'
-import { deepClone } from '@/utils/index.js'
+import { resetRouter } from '@/router'
 
-const routes = deepClone([...constantRoutes, ...asyncRoutes])
 const state = {
   token: getToken(),
   name: '',
   avatar: '',
-  roles: [{
-    key: 'admin',
-    name: 'admin',
-    description: 'Super Administrator. Have access to view all pages.',
-    routes: routes
-  }]
+  allList:undefined,
+  allMeta:{
+      current:1,
+      pages:1,
+      size:10,
+      total:0,
+  }
 }
 
 const mutations = {
@@ -26,8 +25,15 @@ const mutations = {
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   },
-  SET_ROLES: (state, roles) => {
-    state.roles = roles
+  set_ALLLIST:(state,data)=>{
+      let allmeta={
+        current:data.current,
+        pages:data.pages,
+        size:data.size,
+        total:data.total,
+      }
+      state.allList=data.records;
+      state.allMeta=allmeta;
   }
 }
 
@@ -41,35 +47,22 @@ const actions = {
         const { data,headers } = response
         commit('SET_TOKEN', headers['x-auth-token'])
         setToken(headers['x-auth-token'])
-        commit('SET_ROLES', [{
-          key: 'admin',
-          name: 'admin',
-          description: 'Super Administrator. Have access to view all pages.',
-          routes: routes
-        }])
-
         resolve()
       }).catch(error => {
-        reject(error)
+        reject(error) 
       })
     })
   },
 
   // get user info
-  getInfo({ commit, state }) {
+  getAllList({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getList().then(response => {
+          console.log("order res",response)
         const { data } = response
 
-        if (!data) {
-          reject('Verification failed, please Login again.')
-        }
 
-        const { name, avatar } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-
+        commit('set_ALLLIST', data)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -100,31 +93,6 @@ const actions = {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       removeToken()
-      resolve()
-    })
-  },
-
-  // dynamically modify permissions
-  changeRoles({ commit, dispatch }, role) {
-    return new Promise(async resolve => {
-      const token = role + '-token'
-
-      commit('SET_TOKEN', token)
-      setToken(token)
-
-      const { roles } = await dispatch('getInfo')
-
-      resetRouter()
-
-      // generate accessible routes map based on roles
-      const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
-
-      // dynamically add accessible routes
-      router.addRoutes(accessRoutes)
-
-      // reset visited views and cached views
-      dispatch('tagsView/delAllViews', null, { root: true })
-
       resolve()
     })
   }

@@ -59,7 +59,81 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
+  
+  // {
+  //   path: '/example',
+  //   component: Layout,
+  //   redirect: '/example/table',
+  //   name: 'Example',
+  //   meta: { title: 'Example', icon: 'example' },
+  //   children: [
+  //     {
+  //       path: 'table',
+  //       name: 'Table',
+  //       component: () => import('@/views/table/index'),
+  //       meta: { title: 'Table', icon: 'table' }
+  //     },
+  //     {
+  //       path: 'tree',
+  //       name: 'Tree',
+  //       component: () => import('@/views/tree/index'),
+  //       meta: { title: 'Tree', icon: 'tree' }
+  //     }
+  //   ]
+  // },
 
+  // {
+  //   path: '/form',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'Form',
+  //       component: () => import('@/views/form/index'),
+  //       meta: { title: 'Form', icon: 'form' }
+  //     }
+  //   ]
+  // },
+
+ 
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
+]
+
+
+/**
+ * asyncRoutes
+ * the routes that need to be dynamically loaded based on user roles
+ */
+export const asyncRoutes = [
+  {
+    path: '/order',
+    component: Layout,
+    meta: { title: '订单管理', icon: 'example'  },
+    children: [
+      {
+        path: 'index',
+        name: 'user',
+        component: () => import('@/views/order/index'),
+        name: 'order',
+        meta: { title: '订单列表', icon: 'example' },
+      },
+      {
+        path: 'withdraw',
+        name: 'withdraw',
+        component: () => import('@/views/order/withdraw'),
+        name: 'order',
+        meta: { title: '出金审核', icon: 'example' },
+      },
+      {
+        path: 'appeal',
+        name: 'appeal',
+        component: () => import('@/views/order/appeal'),
+        name: 'appeal',
+        meta: { title: '订单申述', icon: 'example' },
+      }
+    ]
+  },
   {
     path: '/user',
     component: Layout,
@@ -89,19 +163,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/order',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'user',
-        component: () => import('@/views/user/index'),
-        name: 'order',
-        meta: { title: '订单管理', icon: 'example' },
-      }
-    ]
-  },
+
 
   {
     path: '/parameter',
@@ -143,44 +205,6 @@ export const constantRoutes = [
       }
     ]
   },
-  // {
-  //   path: '/example',
-  //   component: Layout,
-  //   redirect: '/example/table',
-  //   name: 'Example',
-  //   meta: { title: 'Example', icon: 'example' },
-  //   children: [
-  //     {
-  //       path: 'table',
-  //       name: 'Table',
-  //       component: () => import('@/views/table/index'),
-  //       meta: { title: 'Table', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'tree',
-  //       name: 'Tree',
-  //       component: () => import('@/views/tree/index'),
-  //       meta: { title: 'Tree', icon: 'tree' }
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   path: '/form',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'Form',
-  //       component: () => import('@/views/form/index'),
-  //       meta: { title: 'Form', icon: 'form' }
-  //     }
-  //   ]
-  // },
-
- 
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({

@@ -42,11 +42,12 @@ export const constantRoutes = [
     hidden: true
   },
 
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
+
+  // {
+  //   path: '/404',
+  //   component: () => import('@/views/404'),
+  //   hidden: true
+  // },
 
   {
     path: '/',
@@ -58,6 +59,34 @@ export const constantRoutes = [
       component: () => import('@/views/dashboard/index'),
       meta: { title: '首页', icon: 'dashboard' }
     }]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    meta: { title: '用户管理', icon: 'example'  },
+    children: [
+      {
+        path: 'payment',
+        name: 'user',
+        component: () => import('@/views/user/payment'),
+        name: 'user',
+        meta: { title: '支付方式审核', icon: 'example' },
+      },
+      // {
+      //   path: 'withdraw',
+      //   name: 'withdraw',
+      //   component: () => import('@/views/order/withdraw'),
+      //   name: 'order',
+      //   meta: { title: '出金审核', icon: 'example' },
+      // },
+      // {
+      //   path: 'appeal',
+      //   name: 'appeal',
+      //   component: () => import('@/views/order/appeal'),
+      //   name: 'appeal',
+      //   meta: { title: '订单申述', icon: 'example' },
+      // }
+    ]
   },
   
   // {
@@ -97,7 +126,7 @@ export const constantRoutes = [
 
  
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 
@@ -134,20 +163,20 @@ export const asyncRoutes = [
       }
     ]
   },
-  {
-    path: '/user',
-    component: Layout,
-    redirect: '/user/index',
-    children: [
-      {
-        path: 'index',
-        name: 'user',
-        component: () => import('@/views/user/index'),
-        name: 'user',
-        meta: { title: '用户管理', icon: 'example' },
-      }
-    ]
-  },
+  // {
+  //   path: '/user',
+  //   component: Layout,
+  //   redirect: '/user/index',
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'user',
+  //       component: () => import('@/views/user/index'),
+  //       name: 'user',
+  //       meta: { title: '用户管理', icon: 'example' },
+  //     }
+  //   ]
+  // },
 
   {
     path: '/advertising',
@@ -205,6 +234,8 @@ export const asyncRoutes = [
       }
     ]
   },
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({

@@ -1,6 +1,6 @@
 // import parseTime, formatTime and set to filter
 export { parseTime, formatTime } from '@/utils'
-import {PayType,OrderStatus} from '@/utils/enumeration'
+import {PayType,OrderStatus,PayTypeStatus} from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
  * @param {number} time
@@ -85,5 +85,15 @@ export function paymentStatus(num) {
 export function orderStatus(num) {
   return (
     OrderStatus[num].label
+  )
+}
+
+/**
+ * PayTypeStatus 
+ * @param {number} num
+ */
+export function payTypeStatus(num) {
+  return (
+    PayTypeStatus[num].label
   )
 }

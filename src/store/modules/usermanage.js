@@ -134,7 +134,7 @@ const actions = {
       commit('SET_TOKEN', token)
       setToken(token)
 
-      const { roles } = await dispatch('getInfo')
+      // const { roles } = await dispatch('getInfo')
 
       resetRouter()
 

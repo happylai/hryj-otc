@@ -36,7 +36,7 @@
 
       <el-table-column align="center" label="状态" width="95">
         <template slot-scope="scope">
-          <span>{{ scope.row.status|payTypeStatus }}</span>
+          <el-tag :type="tagType[scope.row.status]">{{ scope.row.status|payTypeStatus }}</el-tag>
         </template>
       </el-table-column>
 
@@ -47,8 +47,8 @@
             size="small"
             @click="showDetail(scope.row.id,scope.row.payType)"
           >详情</el-button>
-          <el-button v-if="scope.row.status==0" type="success" size="small" @click="passBtn(scope.row.id)">审核通过</el-button>
-          <el-button v-if="scope.row.status==0" type="danger" size="small" @click="refuseBtn(scope.row.id)">拒绝</el-button>
+          <el-button v-if="scope.row.status!==0" type="success" size="small" @click="passBtn(scope.row.id)">审核通过</el-button>
+          <el-button v-if="scope.row.status!=0" type="danger" size="small" @click="refuseBtn(scope.row.id)">拒绝</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -202,9 +202,8 @@ export default {
   directives: { waves },
   data() {
     return {
-      tabMapOptions: [
-        { label: "交易所用户订单", key: "all" },
-        { label: "站点用户订单", key: "site" }
+      tagType: [
+        '','success','danger'
       ],
       activeName: "all",
       createdTimes: 0,

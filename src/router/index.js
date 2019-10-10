@@ -8,7 +8,7 @@ import Layout from '@/layout'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
- * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
+ * Detail see: https://panjiachen.github.io/vue-element-ROLE_USER-site/guide/essentials/router-and-nav.html
  *
  * hidden: true                   if set true, item will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu
@@ -17,7 +17,7 @@ import Layout from '@/layout'
  * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
+    roles: ['ROLE_USER','editor']    control the page roles (you can set multiple roles)
     title: 'title'               the name show in sidebar and breadcrumb (recommend set)
     icon: 'svg-name'             the icon show in the sidebar
     breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
@@ -43,11 +43,11 @@ export const constantRoutes = [
   },
 
 
-  // {
-  //   path: '/404',
-  //   component: () => import('@/views/404'),
-  //   hidden: true
-  // },
+  {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  },
 
   {
     path: '/',
@@ -60,73 +60,6 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
-  {
-    path: '/user',
-    component: Layout,
-    meta: { title: '用户管理', icon: 'example'  },
-    children: [
-      {
-        path: 'payment',
-        name: 'user',
-        component: () => import('@/views/user/payment'),
-        name: 'user',
-        meta: { title: '支付方式审核', icon: 'example' },
-      },
-      // {
-      //   path: 'withdraw',
-      //   name: 'withdraw',
-      //   component: () => import('@/views/order/withdraw'),
-      //   name: 'order',
-      //   meta: { title: '出金审核', icon: 'example' },
-      // },
-      // {
-      //   path: 'appeal',
-      //   name: 'appeal',
-      //   component: () => import('@/views/order/appeal'),
-      //   name: 'appeal',
-      //   meta: { title: '订单申述', icon: 'example' },
-      // }
-    ]
-  },
-  
-  // {
-  //   path: '/example',
-  //   component: Layout,
-  //   redirect: '/example/table',
-  //   name: 'Example',
-  //   meta: { title: 'Example', icon: 'example' },
-  //   children: [
-  //     {
-  //       path: 'table',
-  //       name: 'Table',
-  //       component: () => import('@/views/table/index'),
-  //       meta: { title: 'Table', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'tree',
-  //       name: 'Tree',
-  //       component: () => import('@/views/tree/index'),
-  //       meta: { title: 'Tree', icon: 'tree' }
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   path: '/form',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'Form',
-  //       component: () => import('@/views/form/index'),
-  //       meta: { title: 'Form', icon: 'form' }
-  //     }
-  //   ]
-  // },
-
- 
-  // 404 page must be placed at the end !!!
-  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 
@@ -138,7 +71,7 @@ export const asyncRoutes = [
   {
     path: '/order',
     component: Layout,
-    meta: { title: '订单管理', icon: 'example'  },
+    meta: { title: '订单管理', icon: 'example',roles: ['ROLE_USER']  },
     children: [
       {
         path: 'index',
@@ -163,25 +96,39 @@ export const asyncRoutes = [
       }
     ]
   },
-  // {
-  //   path: '/user',
-  //   component: Layout,
-  //   redirect: '/user/index',
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'user',
-  //       component: () => import('@/views/user/index'),
-  //       name: 'user',
-  //       meta: { title: '用户管理', icon: 'example' },
-  //     }
-  //   ]
-  // },
+  {
+    path: '/user',
+    component: Layout,
+    meta: { title: '用户管理', icon: 'example',roles: ['ROLE_USER']  },
+    children: [
+      {
+        path: 'payment',
+        name: 'user',
+        component: () => import('@/views/user/payment'),
+        name: 'user',
+        meta: { title: '支付方式审核', icon: 'example' },
+      },
 
+      {
+        path: 'withdraw',
+        name: 'withdraw',
+        component: () => import('@/views/order/withdraw'),
+        name: 'order',
+        meta: { title: '出金审核', icon: 'example' },
+      },
+      {
+        path: 'appeal',
+        name: 'appeal',
+        component: () => import('@/views/order/appeal'),
+        name: 'appeal',
+        meta: { title: '订单申述', icon: 'example' },
+      }
+    ]
+  },
   {
     path: '/advertising',
     component: Layout,
-
+    meta:{title: '广告', icon: 'example',roles: ['ROLE_USER']},
     children: [
       {
         path: 'index',
@@ -192,7 +139,6 @@ export const asyncRoutes = [
       }
     ]
   },
-
 
   {
     path: '/parameter',

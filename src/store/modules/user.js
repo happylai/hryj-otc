@@ -1,6 +1,7 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter,asyncRoutes, constantRoutes } from '@/router'
+import router from '@/router'
 import { deepClone } from '@/utils/index.js'
 
 const routes = deepClone([...constantRoutes, ...asyncRoutes])
@@ -8,12 +9,8 @@ const state = {
   token: getToken(),
   name: '',
   avatar: '',
-  roles: [{
-    key: 'admin',
-    name: 'admin',
-    description: 'Super Administrator. Have access to view all pages.',
-    routes: routes
-  }]
+  roles: [],
+  userInfo:undefined,
 }
 
 const mutations = {
@@ -26,54 +23,52 @@ const mutations = {
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   },
+  SET_USERINFO:(state,userInfo)=>{
+    state.name = userInfo.name;
+    state.userInfo= userInfo
+
+  },
   SET_ROLES: (state, roles) => {
-    state.roles = roles
+    state.roles = roles;
   }
 }
 
 const actions = {
-  // user login
-  login({ commit }, userInfo) {
-    const { username, password,captcha } = userInfo
-    return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password,captcha:captcha }).then(response => {
-        console.log("user login",response.headers['x-auth-token'])
-        const { data,headers } = response
-        commit('SET_TOKEN', headers['x-auth-token'])
-        setToken(headers['x-auth-token'])
-        commit('SET_ROLES', [{
-          key: 'admin',
-          name: 'admin',
-          description: 'Super Administrator. Have access to view all pages.',
-          routes: routes
-        }])
-
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
+    // user login
+    login({ commit }, userInfo) {
+      const { username, password,captcha } = userInfo
+      return new Promise((resolve, reject) => {
+        login({ username: username.trim(), password: password,captcha:captcha }).then( async response => {
+          console.log("user login",response.headers['x-auth-token'])
+          const { data,headers } = response
+          commit('SET_TOKEN', headers['x-auth-token'])
+          commit('SET_USERINFO',data.data.data)
+          setToken(headers['x-auth-token'])
+  //         const roles=data.data.data.principal.roleList;
+  //         // generate accessible routes map based on rolesroleList
+  //         const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+  
+  //         // dynamically add accessible routes
+  //         router.addRoutes(accessRoutes)
+          console.log("data",data)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
 
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
-
-        if (!data) {
-          reject('Verification failed, please Login again.')
-        }
-
-        const { name, avatar } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
+      console.log("state",state)
+      const role=state.userInfo?state.userInfo.principal.roleList:['ROLE_USER'];
+      let data={
+        roles:role
+      }
+      commit('SET_ROLES', role)
+      console.log("setRoles",role)
+      resolve(data)
     })
   },
 

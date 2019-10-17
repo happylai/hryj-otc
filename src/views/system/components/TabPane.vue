@@ -72,7 +72,9 @@ export default {
     },
     data: {
       type: Array,
-      default: []
+      default: () => {
+        return []
+      }
     },
     loading: {
       type: Boolean,
@@ -87,8 +89,7 @@ export default {
         limit: 5,
         type: this.type,
         sort: '+id'
-      },
-      loading: false
+      }
     }
   },
   created() {

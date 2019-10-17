@@ -32,7 +32,7 @@ export function login(data) {
             type: 'error',
             duration: 5 * 1000
           })
-          reject(error)
+          reject(res)
         }
       })
 

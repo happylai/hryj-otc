@@ -47,7 +47,6 @@ const mutations = {
 }
 
 const actions = {
-  // user login
   login({
     commit
   }, userInfo) {
@@ -70,16 +69,12 @@ const actions = {
         commit('SET_TOKEN', headers['x-auth-token'])
         commit('SET_USERINFO', data.data.data)
         setToken(headers['x-auth-token'])
-        // const roles = data.data.data.principal.roleList
-        // generate accessible routes map based on rolesroleList
-        // const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 
-        // dynamically add accessible routes
-        //         router.addRoutes(accessRoutes)
         console.log('data', data)
         resolve()
-      }).catch(error => {
-        reject(error)
+      }).catch(err => {
+        console.log('err', err)
+        reject(err)
       })
     })
   },

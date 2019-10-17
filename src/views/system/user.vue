@@ -111,6 +111,8 @@ export default {
         callback(new Error('密码必须大于6位数'))
       } else if (this.regForm.password !== value) {
         callback(new Error('密码不一致'))
+      } else {
+        callback()
       }
     }
     return {
@@ -230,6 +232,7 @@ export default {
             message: '保存成功',
             type: 'success'
           })
+          this.getAdmins()
           this.dialogVisible = false
         } else {
           this.$message.error(res.message || '操作失败')
@@ -239,6 +242,7 @@ export default {
       })
     },
     handlAdd() {
+      console.log('click')
       this.$refs.regForm.validate(valid => {
         console.log('valid', valid)
         if (valid) {
@@ -253,6 +257,7 @@ export default {
                 type: 'success'
               })
               this.dialogVisible = false
+              this.getAdmins()
               this.regForm = {
                 username: '',
                 email: '',

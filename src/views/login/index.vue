@@ -114,12 +114,12 @@ export default {
           this.loading = true
           this.$store
             .dispatch('user/login', this.loginForm)
-            .then(() => {
+            .then((res) => {
               console.log('登录成功 跳转')
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
             })
-            .catch(() => {
+            .catch((err) => {
               this.loading = false
             })
         } else {

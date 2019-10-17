@@ -72,8 +72,8 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '订单管理',
-    icon: 'example',
-    roles: ['ROLE_USER']
+    icon: 'example'
+    // roles: ['ROLE_USER']
   },
   children: [{
     path: 'index',
@@ -112,40 +112,55 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '用户管理',
-    icon: 'example',
-    roles: ['ROLE_USER']
+    icon: 'example'
+    // roles: ['ROLE_USER']
   },
-  children: [{
-    path: 'payment',
-    name: 'user',
-    component: () => import('@/views/user/payment'),
-    name: 'user',
-    meta: {
-      title: '支付方式审核',
-      icon: 'example'
+  children: [
+    //   {
+    //   path: 'payment',
+    //   name: 'user',
+    //   component: () => import('@/views/user/payment'),
+    //   meta: {
+    //     title: '支付方式审核',
+    //     icon: 'example'
+    //   }
+    // },
+    {
+      path: 'instation',
+      name: 'instationUser',
+      component: () => import('@/views/user/index'),
+      meta: {
+        title: '站内用户',
+        icon: 'example'
+      }
+    },
+    {
+      path: 'store',
+      name: 'storeUser',
+      component: () => import('@/views/user/store'),
+      meta: {
+        title: 'B端商户',
+        icon: 'example'
+      }
+    },
+    {
+      path: 'agent',
+      name: 'angetUser',
+      component: () => import('@/views/user/agent'),
+      meta: {
+        title: '代理商',
+        icon: 'example'
+      }
+    },
+    {
+      path: 'role',
+      name: 'roleApply',
+      component: () => import('@/views/user/role'),
+      meta: {
+        title: '角色申请',
+        icon: 'example'
+      }
     }
-  },
-
-  {
-    path: 'withdraw',
-    name: 'withdraw',
-    component: () => import('@/views/order/withdraw'),
-    name: 'order',
-    meta: {
-      title: '出金审核',
-      icon: 'example'
-    }
-  },
-  {
-    path: 'appeal',
-    name: 'appeal',
-    component: () => import('@/views/order/appeal'),
-    name: 'appeal',
-    meta: {
-      title: '订单申述',
-      icon: 'example'
-    }
-  }
   ]
 },
 {
@@ -153,8 +168,8 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '广告',
-    icon: 'example',
-    roles: ['ROLE_USER']
+    icon: 'example'
+    // roles: ['ROLE_USER']
   },
   children: [{
     path: '/advertising',
@@ -177,16 +192,105 @@ export const asyncRoutes = [{
   }
   ]
 },
-
+{
+  path: '/finance',
+  component: Layout,
+  meta: {
+    title: '财务管理',
+    icon: 'example'
+  },
+  children: [{
+    path: 'center',
+    name: 'centerFinance',
+    component: () => import('@/views/user/index'),
+    meta: {
+      title: '中央财务',
+      icon: 'example'
+    }
+  },
+  {
+    path: 'user',
+    name: 'userFinance',
+    component: () => import('@/views/user/index'),
+    meta: {
+      title: '用户资产',
+      icon: 'example'
+    }
+  }
+  ]
+},
+{
+  path: '/analysis',
+  component: Layout,
+  meta: {
+    title: '数据中心',
+    icon: 'example'
+  },
+  children: [{
+    path: 'statistics',
+    name: 'dataStatistics',
+    component: () => import('@/views/analysis/index'),
+    meta: {
+      title: '数据统计',
+      icon: 'example'
+    }
+  },
+  {
+    path: 'user',
+    name: 'userFinance',
+    component: () => import('@/views/user/index'),
+    meta: {
+      title: '用户资产',
+      icon: 'example'
+    }
+  }
+  ]
+},
 {
   path: '/parameter',
   component: Layout,
   meta: {
     title: '参数设置',
-    icon: 'example',
-    roles: ['ROLE_USER']
+    icon: 'example'
+    // roles: ['ROLE_USER']
   },
   children: [{
+    path: 'price',
+    name: 'priceParams',
+    component: () => import('@/views/params/time'),
+    meta: {
+      title: '定价规则',
+      icon: 'example'
+    }
+  },
+  {
+    path: 'agent',
+    name: 'agentAward',
+    component: () => import('@/views/params/time'),
+    meta: {
+      title: '代理奖励',
+      icon: 'example'
+    }
+  },
+  {
+    path: 'allowance',
+    name: 'parAllowance',
+    component: () => import('@/views/params/time'),
+    meta: {
+      title: '补贴奖励',
+      icon: 'example'
+    }
+  },
+  {
+    path: 'commission',
+    name: 'commission',
+    component: () => import('@/views/params/time'),
+    meta: {
+      title: '交易提成',
+      icon: 'example'
+    }
+  },
+  {
     path: 'time',
     name: 'parTime',
     component: () => import('@/views/params/time'),
@@ -196,11 +300,11 @@ export const asyncRoutes = [{
     }
   },
   {
-    path: 'allowance',
-    name: 'parAllowance',
+    path: 'other',
+    name: 'otherParams',
     component: () => import('@/views/params/time'),
     meta: {
-      title: '补贴参数',
+      title: '其他参数设置',
       icon: 'example'
     }
   }
@@ -214,49 +318,37 @@ export const asyncRoutes = [{
     title: '系统设置',
     icon: 'example'
   },
-  children: [{
-    path: 'roles',
-    name: 'systemRoles',
-    component: () => import('@/views/system/roles'),
-    meta: {
-      title: '后台角色管理',
-      icon: 'example'
+  children: [
+    //   {
+    //   path: 'roles',
+    //   name: 'systemRoles',
+    //   component: () => import('@/views/system/roles'),
+    //   meta: {
+    //     title: '后台角色管理',
+    //     icon: 'example'
+    //   }
+    // },
+    // {
+    //   path: 'permission',
+    //   name: 'systemPermission',
+    //   component: () => import('@/views/system/permission'),
+    //   meta: {
+    //     title: '权限设置',
+    //     icon: 'example'
+    //   }
+    // },
+    {
+      path: 'user',
+      name: 'systemUser',
+      component: () => import('@/views/system/user'),
+      meta: {
+        title: '后台用户列表',
+        icon: 'example'
+      }
     }
-  },
-  {
-    path: 'permission',
-    name: 'systemPermission',
-    component: () => import('@/views/system/permission'),
-    meta: {
-      title: '权限设置',
-      icon: 'example'
-    }
-  },
-  {
-    path: 'user',
-    name: 'systemUser',
-    component: () => import('@/views/system/user'),
-    meta: {
-      title: '后台用户列表',
-      icon: 'example'
-    }
-  }
   ]
 },
-{
-  path: '/finance',
-  component: Layout,
-  children: [{
-    path: 'index',
-    name: 'user',
-    component: () => import('@/views/user/index'),
-    name: 'finance',
-    meta: {
-      title: '财务管理',
-      icon: 'example'
-    }
-  }]
-},
+
 // 404 page must be placed at the end !!!
 {
   path: '*',

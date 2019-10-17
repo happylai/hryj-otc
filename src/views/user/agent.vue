@@ -41,7 +41,7 @@
 
 <script>
 import tabPane from './components/TabPane'
-import { mapState, mapGetters, mapActions } from 'vuex' //先要引入
+import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import Pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { OrderStatus, PayType } from '@/utils/enumeration'

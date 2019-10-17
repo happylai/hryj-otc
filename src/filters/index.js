@@ -1,6 +1,17 @@
 // import parseTime, formatTime and set to filter
-export { parseTime, formatTime } from '@/utils'
-import {PayType,OrderStatus,PayTypeStatus} from '@/utils/enumeration'
+export {
+  parseTime,
+  formatTime
+}
+  from '@/utils'
+import {
+  PayType,
+  OrderStatus,
+  PayTypeStatus,
+  Auths,
+  Roles,
+  UserType
+} from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
  * @param {number} time
@@ -29,19 +40,54 @@ export function timeAgo(time) {
 }
 
 /**
+ * @param {number} timestamp
+ */
+export function timestampFormat(timestamp) {
+  if (timestamp) {
+    var time = new Date(timestamp)
+    var y = time.getFullYear()
+    var M = time.getMonth() + 1
+    var d = time.getDate()
+    var h = time.getHours()
+    var m = time.getMinutes()
+    var s = time.getSeconds()
+    return y + '-' + M + '-' + d + ' ' + h + ':' + m + ':' + s
+  } else {
+    return ''
+  }
+}
+
+/**
  * Number formatting
  * like 10000 => 10k
  * @param {number} num
  * @param {number} digits
  */
 export function numberFormatter(num, digits) {
-  const si = [
-    { value: 1E18, symbol: 'E' },
-    { value: 1E15, symbol: 'P' },
-    { value: 1E12, symbol: 'T' },
-    { value: 1E9, symbol: 'G' },
-    { value: 1E6, symbol: 'M' },
-    { value: 1E3, symbol: 'k' }
+  const si = [{
+    value: 1E18,
+    symbol: 'E'
+  },
+  {
+    value: 1E15,
+    symbol: 'P'
+  },
+  {
+    value: 1E12,
+    symbol: 'T'
+  },
+  {
+    value: 1E9,
+    symbol: 'G'
+  },
+  {
+    value: 1E6,
+    symbol: 'M'
+  },
+  {
+    value: 1E3,
+    symbol: 'k'
+  }
   ]
   for (let i = 0; i < si.length; i++) {
     if (num >= si[i].value) {
@@ -67,9 +113,8 @@ export function uppercaseFirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
-
 /**
- * PaymentStatus 
+ * PaymentStatus
  * @param {number} num
  */
 export function paymentStatus(num) {
@@ -79,7 +124,7 @@ export function paymentStatus(num) {
 }
 
 /**
- * OrderStatus 
+ * OrderStatus
  * @param {number} num
  */
 export function orderStatus(num) {
@@ -89,11 +134,41 @@ export function orderStatus(num) {
 }
 
 /**
- * PayTypeStatus 
+ * PayTypeStatus
  * @param {number} num
  */
 export function payTypeStatus(num) {
   return (
     PayTypeStatus[num].label
+  )
+}
+
+/**
+ * AuthsName
+ * @param {number} num
+ */
+export function authName(num) {
+  return (
+    num === null ? '-' : Auths[num].label
+  )
+}
+
+/**
+ * RolesName
+ * @param {number} num
+ */
+export function roleName(num) {
+  return (
+    num === null ? '-' : Roles[num].label
+  )
+}
+
+/**
+ * userTypeName
+ * @param {number} num
+ */
+export function userTypeName(num) {
+  return (
+    num === null ? '-' : UserType[num - 1].label
   )
 }

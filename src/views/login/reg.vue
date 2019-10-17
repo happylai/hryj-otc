@@ -111,14 +111,14 @@ export default {
         callback()
       }
     }
-    const validateRepatePassword=(rule, value, callback)=>{
+    const validateRepatePassword = (rule, value, callback)=>{
         if (value.length < 6) {
 					callback(new Error('密码必须大于6位数'))
         }
        else if(this.loginForm.password!==value){
 				callback(new Error('密码不一致'))
         }
-    }
+      }
     return {
       loginForm: {
         username: '',

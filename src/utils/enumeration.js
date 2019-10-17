@@ -1,21 +1,169 @@
-export const PayType=[	
-    {name:'ALI_PAY',id:0, label:"支付宝"},
-    {name:'WEI_XIN',id:1,label:"微信支付"},
-    {nama:'BANK',id:2, label:"银行卡"},
-    {name:'CLOUD_PAY',id:3, label:"云闪付"}
+export const PayType = [{
+  name: 'ALI_PAY',
+  id: 0,
+  label: '支付宝'
+},
+{
+  name: 'WEI_XIN',
+  id: 1,
+  label: '微信支付'
+},
+{
+  nama: 'BANK',
+  id: 2,
+  label: '银行卡'
+},
+{
+  name: 'CLOUD_PAY',
+  id: 3,
+  label: '云闪付'
+}
 ]
 
-export const OrderStatus=[	
-    {name:'UN_PAYED',id:0, label:"未支付"},
-    {name:'CANCELED',id:1,label:"取消"},
-    {nama:'TIMEOUT',id:2, label:"超时"},
-    {name:'PAYED_CONFIRMED',id:3, label:"确认已付款"},
-    {name:'COMPLETED',id:3, label:"完成"},
-    {name:'APPEAL',id:3, label:"申诉"}
+export const OrderStatus = [{
+  name: 'UN_PAYED',
+  id: 0,
+  label: '未支付'
+},
+{
+  name: 'CANCELED',
+  id: 1,
+  label: '取消'
+},
+{
+  nama: 'TIMEOUT',
+  id: 2,
+  label: '超时'
+},
+{
+  name: 'PAYED_CONFIRMED',
+  id: 3,
+  label: '确认已付款'
+},
+{
+  name: 'COMPLETED',
+  id: 3,
+  label: '完成'
+},
+{
+  name: 'APPEAL',
+  id: 3,
+  label: '申诉'
+}
 ]
 
-export const PayTypeStatus=[	
-    {id:0, label:"等待审核"},
-    {id:1,label:"审核成功"},
-    {id:2, label:"审核失败"},
+export const PayTypeStatus = [{
+  id: 0,
+  label: '等待审核'
+},
+{
+  id: 1,
+  label: '审核成功'
+},
+{
+  id: 2,
+  label: '审核失败'
+}
+]
+
+export const Auths = [{
+  id: 0,
+  label: '权限0'
+},
+{
+  id: 1,
+  label: '权限1'
+},
+{
+  id: 2,
+  label: '权限2'
+}
+]
+
+export const Roles = [{
+  id: 0,
+  label: '角色0'
+},
+{
+  id: 1,
+  label: '角色1'
+},
+{
+  id: 2,
+  label: '角色2'
+}
+]
+
+export const UserType = [
+  //   {
+  //   id: 0,
+  //   name: 'visitor',
+  //   label: '游客'
+  // },
+  {
+    id: 1,
+    name: 'general',
+    label: '普通'
+  },
+  {
+    id: 2,
+    name: 'super',
+    label: '超级'
+  },
+  {
+    id: 3,
+    name: 'huge',
+    label: '大宗'
+  },
+  {
+    id: 4,
+    name: 'extreme',
+    label: '至尊'
+  }
+]
+
+export const TimeParamsType = [{
+  id: 0,
+  label: ''
+},
+{
+  id: 1,
+  mame: 'DEPOSIT',
+  label: '取消'
+},
+{
+  id: 2,
+  name: 'ACTIVE_GOLD',
+  label: '活跃黄金'
+},
+{
+  id: 3,
+  name: 'CANCEL_ORDER_NUM',
+  label: '取消订单数量'
+},
+{
+  id: 4,
+  mame: 'BUYER_PAY_TIMEOUT',
+  label: '买家付款超时'
+},
+{
+  id: 5,
+  name: 'SELLER_CONFIRM_TIMEOUT',
+  label: '卖家确认超时'
+},
+{
+  id: 6,
+  name: 'AUTO_APPEAL_TIME',
+  label: '自动申诉时间'
+},
+{
+  id: 7,
+  name: 'AUTO_UNFREEZE_TIME',
+  label: '自动解冻时间'
+},
+{
+  id: 8,
+  name: ' AUTO_ORDER_TIME',
+  label: '自动接单时间'
+}
 ]

@@ -13,7 +13,7 @@
       </el-button>
     </div>
     <tab-pane :data="list" @freeze="handleFreeze" @edit="handleEdit" />
-    <pagination :total="meta.total" :page.sync="meta.pages" :limit.sync="meta.size" @pagination="getAdmins" />
+    <pagination :total="meta.total" :page.sync="meta.pages" :limit.sync="meta.size" @pagination="paginationChange" />
     <el-dialog :visible.sync="dialogVisible" title="后台用户编辑">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户名：</el-col>
@@ -196,13 +196,22 @@ export default {
         this.$message.error(err)
       })
     },
+    paginationChange(e) {
+      console.log('paginationChange', e)
+      const data = {
+        size: e.limit,
+        current: e.page
+      }
+      this.handleFilter(data)
+    },
     getAdmins() {
       this.listLoading = true
       this.$store.dispatch('admin/getAdmins')
     },
-    handleFilter() {
+    handleFilter(data) {
       const newMeta = {
         ...this.querymeta,
+        ...data,
         current: 1
       }
       // console.log('searchMeat', this.querymeta)

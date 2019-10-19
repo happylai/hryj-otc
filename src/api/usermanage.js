@@ -21,3 +21,42 @@ export function payTypeAudit(data) {
     data: data
   })
 }
+
+// 用户详情
+export function role_detail(id) {
+  return request({
+    url: `/admin/user/role_apply/${id}`,
+    method: 'get'
+  })
+}
+
+// 用户角色申请列表
+export function role_apply_list(meta, data) {
+  return request({
+    url: '/admin/user/role_apply/applis',
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta
+    }
+  })
+}
+
+// 用户角色申请审核
+export function role_apply_audit(data) {
+  return request({
+    url: `/admin/user/role_apply/audit`,
+    method: 'post',
+    data
+  })
+}
+
+// 角色申请用户详情
+export function role_apply_detail(data) {
+  return request({
+    url: `/admin/user/role_apply/detail`,
+    method: 'get',
+    params: data
+
+  })
+}

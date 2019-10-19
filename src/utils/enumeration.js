@@ -167,3 +167,71 @@ export const TimeParamsType = [{
   label: '自动接单时间'
 }
 ]
+
+export const Authents = [{
+  id: 0,
+  mame: 'AUTHING',
+  label: 'KYC认证'
+},
+{
+  id: 1,
+  name: 'ID_CARD',
+  label: '支付认证'
+}
+]
+
+export const Groups = [{
+  id: 0,
+  mame: 'AUTHING',
+  label: '分组0'
+},
+{
+  id: 1,
+  name: 'ID_CARD',
+  label: '分组1'
+},
+{
+  id: 2,
+  name: 'ID_CARD',
+  label: '分组2'
+}
+]
+
+export const TokenType = [{
+  id: 0,
+  mame: 'PQC',
+  label: 'PQC'
+},
+{
+  id: 1,
+  name: 'PGQ',
+  label: 'PGQ'
+},
+{
+  id: 2,
+  name: 'BTC',
+  label: 'BTC'
+},
+{
+  id: 3,
+  name: 'ETH',
+  label: 'ETH'
+},
+{
+  id: 4,
+  name: 'EOS',
+  label: 'EOS'
+},
+{
+  id: 5,
+  name: 'LTC',
+  label: 'LTC'
+}
+]
+
+export const emptySelect = {
+  id: '',
+  mame: undefined,
+  label: '请选择'
+}
+

@@ -10,7 +10,9 @@ import {
   PayTypeStatus,
   Auths,
   Roles,
-  UserType
+  UserType,
+  Groups,
+  Authents
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -169,6 +171,26 @@ export function roleName(num) {
  */
 export function userTypeName(num) {
   return (
-    num === null ? '-' : UserType[num - 1].label
+    num === null ? '-' : num > 0 ? UserType[num - 1].label : '-'
+  )
+}
+
+/**
+ * GroupName
+ * @param {number} num
+ */
+export function groupName(num) {
+  return (
+    num === null ? '-' : Groups[num].label
+  )
+}
+
+/**
+ * Authents
+ * @param {number} num
+ */
+export function authentName(num) {
+  return (
+    num === null ? '-' : Authents[num].label
   )
 }

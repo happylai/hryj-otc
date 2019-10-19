@@ -155,13 +155,37 @@ export const asyncRoutes = [{
     {
       path: 'role',
       name: 'roleApply',
-      component: () => import('@/views/user/role'),
+      component: () => import('@/views/user/role/main'),
       meta: {
         title: '角色申请',
         icon: 'example'
-      }
+      },
+      children: [
+        {
+          path: '/role',
+          name: 'roleApply',
+          component: () => import('@/views/user/role/index'),
+          meta: {
+            title: '角色申请',
+            icon: 'example'
+          }
+        },
+        {
+          path: '/role/:id',
+          hidden: true,
+          name: 'roleApplyDetail',
+          component: () => import('@/views/user/role/roleDetail'),
+          meta: {
+            title: '详情',
+            icon: 'example',
+            activeMenu: '/role'
+          }
+        }
+      ]
     }
+
   ]
+
 },
 {
   path: '/advertising',
@@ -257,7 +281,7 @@ export const asyncRoutes = [{
   children: [{
     path: 'price',
     name: 'priceParams',
-    component: () => import('@/views/params/time'),
+    component: () => import('@/views/params/priceRules'),
     meta: {
       title: '定价规则',
       icon: 'example'
@@ -302,7 +326,7 @@ export const asyncRoutes = [{
   {
     path: 'other',
     name: 'otherParams',
-    component: () => import('@/views/params/time'),
+    component: () => import('@/views/params/other'),
     meta: {
       title: '其他参数设置',
       icon: 'example'

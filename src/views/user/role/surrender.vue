@@ -1,7 +1,7 @@
 <template>
   <div class="">
+    <tip />
     <div class="filter-container" style="margin-bottom: 10px;">
-
       <el-input v-model="fliterQuery.query" placeholder="用户名ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="fliterQuery.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
@@ -25,7 +25,7 @@
         v-loading="loading"
         align="center"
         label="用户ID"
-        width="160"
+        width="220"
         element-loading-text="请给我点时间！"
       >
         <template slot-scope="scope">
@@ -33,7 +33,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="用户名">
+      <el-table-column width="120px" align="center" label="用户名">
         <template slot-scope="scope">
           <span>{{ scope.row.realName }}</span>
         </template>
@@ -71,7 +71,7 @@
 
       <el-table-column class-name="status-col" align="center" label="操作" width="110">
         <template slot-scope="scope">
-          <el-button type="primary" size="small">查看</el-button>
+          <el-button type="primary" size="small" @click="toDetail(scope.row)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -79,25 +79,21 @@
 
   </div>
 </template>
-
 <script>
 // import tabPane from './components/TabPane'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
+import tip from '@/components/Tip'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect } from '@/utils/enumeration'
 import { role_apply_list, role_apply_detail, role_apply_audit } from '@/api/usermanage'
 
 export default {
   name: 'Tab',
-  components: { pagination },
+  components: { pagination, tip },
   directives: { waves },
   data() {
     return {
-      tabMapOptions: [
-        { label: '角色升级', key: '1' },
-        { label: '退保审核', key: '2' }
-      ],
       activeType: '1',
       UserType,
       Authents: [{ id: '',
@@ -149,7 +145,7 @@ export default {
     },
     getList(meta, data) {
       this.listLoading = true
-      role_apply_list(meta || this.meta, data).then(res => {
+      role_apply_list(meta || this.meta, data || { roleStatus: this.activeType }).then(res => {
         console.log('res', res)
         if (res.code === 0) {
           this.list = res.data.records
@@ -166,7 +162,9 @@ export default {
         authent: fliterQuery.authent,
         groupId: fliterQuery.groupId,
         query: fliterQuery.query,
-        roleId: fliterQuery.roleId
+        roleId: fliterQuery.roleId,
+        roleStatus: this.activeType
+
       }
       if (fliterQuery.date) {
         data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
@@ -176,11 +174,14 @@ export default {
       const meta = this.meta
       meta.current = 1
       this.getList(meta, data)
+    },
+    toDetail(data) {
+      console.log('to detail')
+      this.$router.push({ path: `/role/${data.id}`, query: { userId: data.userId, type: 2 }})
     }
   }
 }
 </script>
-
 <style scoped>
 .tab-container {
   margin: 30px;

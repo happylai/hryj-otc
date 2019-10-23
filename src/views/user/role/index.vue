@@ -15,21 +15,20 @@
 import update from './update'
 import surrender from './surrender'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
-import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { OrderStatus, PayType, UserType } from '@/utils/enumeration'
 
 export default {
   name: 'Tab',
-  components: { update, surrender, pagination },
+  components: { update, surrender },
   directives: { waves },
   data() {
     return {
       tabMapOptions: [
-        { label: '角色升级', key: '1' },
-        { label: '退保审核', key: '2' }
+        { label: '角色升级', key: '0' },
+        { label: '退保审核', key: '1' }
       ],
-      activeType: '1',
+      activeType: '0',
       UserType,
       fliterQuery: {
         page: 1,

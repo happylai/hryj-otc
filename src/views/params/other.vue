@@ -20,8 +20,8 @@
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
     </el-tabs>
     <!-- <tab-pane :loading="loading" :data="list" @edit="handlEdit" /> -->
-    <el-table :data="list" border fit highlight-current-row style="width: 800px">
-      <el-table-column v-loading="loading" align="center" label="角色" width="100" element-loading-text="请给我点时间！">
+    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 800px">
+      <el-table-column align="center" label="角色" width="100" element-loading-text="请给我点时间！">
         <template slot-scope="scope">
           <span>{{ scope.row.roleId|userTypeName }}</span>
         </template>
@@ -29,9 +29,9 @@
 
       <el-table-column min-width="180px" align="center" :label="ParamsTypePlaceHolder[ParamsType]">
         <template slot-scope="scope">
-          <span v-if="ParamsType===1">{{ scope.row.deposit }}</span>
-          <span v-else-if="ParamsType===2">{{ scope.row.activeGold }}</span>
-          <span v-else-if="ParamsType===3">{{ scope.row.num }}</span>
+          <span>{{ scope.row.money }}</span>
+          <!-- <span v-else-if="ParamsType===2">{{ scope.row.activeGold }}</span>
+          <span v-else-if="ParamsType===3">{{ scope.row.num }}</span> -->
 
         </template>
       </el-table-column>
@@ -64,7 +64,7 @@
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="save">保存</el-button>
+        <el-button v-loading="loading" type="primary" @click="save">保存</el-button>
         <el-button @click="dialogVisible = false">取消</el-button>
       </span>
     </el-dialog>
@@ -86,15 +86,16 @@ export default {
     return {
       UserType,
       tabMapOptions: [
-        { label: '保证金', key: '1' },
-        { label: '激活金', key: '2' },
-        { label: '每日可取消单数', key: '3' }
+        { label: '保证金', key: '1', name: 'deposit' },
+        { label: '激活金', key: '2', mame: 'activeGold' },
+        { label: '每日可取消单数', key: '3', name: 'num' }
       ],
       ParamsTypePlaceHolder: {
         1: '保证金',
         2: '激活金',
         3: '每日可取消单数'
       },
+      tabValueName: ['', 'deposit', 'activeGold', '', 'num'],
       ParamsType: '1',
       loading: false,
       dialogVisible: false,

@@ -23,6 +23,7 @@ const state = {
   token: getToken(),
   name: '',
   avatar: '',
+  principal: {},
   roles: [],
   userInfo: undefined
 }
@@ -39,6 +40,7 @@ const mutations = {
   },
   SET_USERINFO: (state, userInfo) => {
     state.name = userInfo.name
+    state.principal = userInfo.principal
     state.userInfo = userInfo
   },
   SET_ROLES: (state, roles) => {

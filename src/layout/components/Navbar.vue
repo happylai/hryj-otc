@@ -15,7 +15,7 @@
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/" />
           <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">Log Out</span>
+            <span style="display:block;" @click="logout">注销</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -108,6 +108,9 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
+        &:hover{
+          cursor:pointer
+        }
         position: relative;
         display: flex;
         align-items: center;

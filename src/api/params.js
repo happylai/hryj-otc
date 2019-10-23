@@ -63,10 +63,67 @@ export function cancel_nums(data, meta) {
   })
 }
 
-export function cancel_num_save(data) {
+export function pricing(data) {
   return request({
-    url: `/admin/dictionary/cancel_num_save`,
+    url: `/admin/dictionary/pricing`,
+    method: 'get',
+    params: data
+  })
+}
+
+export function pricings(data) {
+  return request({
+    url: `/admin/dictionary/pricings`,
+    method: 'get',
+    params: data
+  })
+}
+
+// 保存定价
+export function pricing_save(data) {
+  return request({
+    url: `/admin/dictionary/pricing_save`,
     method: 'post',
     data: data
+  })
+}
+
+// 查询系统接单范围
+export function groups(data) {
+  return request({
+    url: `/admin/dictionary/groups`,
+    method: 'get',
+    params: data
+  })
+}
+
+// 保存接单范围分组参数
+export function group_save(data) {
+  return request({
+    url: `/admin/dictionary/group_save`,
+    method: 'post',
+    data: data
+  })
+}
+
+// 查询补贴类参数列
+export function subsidies(data, meta) {
+  return request({
+    url: `/admin/dictionary/subsidies`,
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta
+    }
+  })
+}
+
+// 保存补贴类参数设置
+export function subsidy_save(data) {
+  return request({
+    url: `/admin/dictionary/subsidy_save`,
+    method: 'post',
+    data: data
+
   })
 }

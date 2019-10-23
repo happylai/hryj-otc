@@ -128,7 +128,7 @@ export const asyncRoutes = [{
     {
       path: 'instation',
       name: 'instationUser',
-      component: () => import('@/views/user/index'),
+      component: () => import('@/views/user/instation'),
       meta: {
         title: '站内用户',
         icon: 'example'
@@ -198,7 +198,7 @@ export const asyncRoutes = [{
   children: [{
     path: '/advertising',
     name: 'user',
-    component: () => import('@/views/user/index'),
+    component: () => import('@/views/advertisement/index'),
     meta: {
       title: '广告管理',
       icon: 'example'
@@ -208,7 +208,7 @@ export const asyncRoutes = [{
     path: ':id',
     hidden: true,
     name: 'advertingDetail',
-    component: () => import('@/views/user/index'),
+    component: () => import('@/views/order/index'),
     meta: {
       title: '详情',
       icon: 'example'
@@ -226,7 +226,7 @@ export const asyncRoutes = [{
   children: [{
     path: 'center',
     name: 'centerFinance',
-    component: () => import('@/views/user/index'),
+    component: () => import('@/views/finance/center'),
     meta: {
       title: '中央财务',
       icon: 'example'
@@ -235,7 +235,7 @@ export const asyncRoutes = [{
   {
     path: 'user',
     name: 'userFinance',
-    component: () => import('@/views/user/index'),
+    component: () => import('@/views/finance/user'),
     meta: {
       title: '用户资产',
       icon: 'example'
@@ -258,16 +258,16 @@ export const asyncRoutes = [{
       title: '数据统计',
       icon: 'example'
     }
-  },
-  {
-    path: 'user',
-    name: 'userFinance',
-    component: () => import('@/views/user/index'),
-    meta: {
-      title: '用户资产',
-      icon: 'example'
-    }
   }
+  // {
+  //   path: 'user',
+  //   name: 'userFinance',
+  //   component: () => import('@/views/order/index'),
+  //   meta: {
+  //     title: '用户资产',
+  //     icon: 'example'
+  //   }
+  // }
   ]
 },
 {
@@ -288,9 +288,9 @@ export const asyncRoutes = [{
     }
   },
   {
-    path: 'agent',
+    path: 'agentAward',
     name: 'agentAward',
-    component: () => import('@/views/params/time'),
+    component: () => import('@/views/params/agent'),
     meta: {
       title: '代理奖励',
       icon: 'example'
@@ -299,7 +299,7 @@ export const asyncRoutes = [{
   {
     path: 'allowance',
     name: 'parAllowance',
-    component: () => import('@/views/params/time'),
+    component: () => import('@/views/params/allowance'),
     meta: {
       title: '补贴奖励',
       icon: 'example'
@@ -308,7 +308,7 @@ export const asyncRoutes = [{
   {
     path: 'commission',
     name: 'commission',
-    component: () => import('@/views/params/time'),
+    component: () => import('@/views/params/allowance'),
     meta: {
       title: '交易提成',
       icon: 'example'

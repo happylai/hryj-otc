@@ -12,7 +12,9 @@ import {
   Roles,
   UserType,
   Groups,
-  Authents
+  Authents,
+  CounterParty,
+  KycLevel
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -119,9 +121,9 @@ export function uppercaseFirst(string) {
  * PaymentStatus
  * @param {number} num
  */
-export function paymentStatus(num) {
+export function paymentStatus(num = 0) {
   return (
-    PayType[num].label
+    num === null ? '-' : PayType[num].label
   )
 }
 
@@ -141,8 +143,28 @@ export function orderStatus(num) {
  */
 export function payTypeStatus(num) {
   return (
-    PayTypeStatus[num].label
+    payTypeStatus === null ? '-' : PayTypeStatus[num].label
   )
+}
+
+/**
+ * PayTypeStatus
+ * @param {number} num
+ */
+export function payTypeNums(num) {
+  if (num) {
+    const data = num.split(',')
+    let typeName = ''
+    for (var i = 0; i < data.length; i++) {
+      typeName = typeName + ' ' + PayType[data[i]].label
+      console.log('typeName', typeName, i)
+      if (i === (data.length - 1)) {
+        return typeName
+      }
+    }
+  } else {
+    return '-'
+  }
 }
 
 /**
@@ -194,3 +216,24 @@ export function authentName(num) {
     num === null ? '-' : Authents[num].label
   )
 }
+
+/**
+ * CounterParty
+ * @param {number} num
+ */
+export function counterParty(num = null) {
+  return (
+    num === null ? '-' : CounterParty[num].label
+  )
+}
+
+/**
+ * CounterParty
+ * @param {number} num
+ */
+export function kycLevel(num = null) {
+  return (
+    num === null ? '-' : KycLevel[num].label
+  )
+}
+

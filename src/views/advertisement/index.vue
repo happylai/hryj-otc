@@ -2,26 +2,39 @@
   <div class="tab-container">
     <tip />
 
-    <div class="filter-container" style="margin-bottom: 10px;">
-      <el-input v-model="listQuery.keywords" placeholder="订单ID/广告ID/买家/卖家/备注" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.importance" placeholder="订单类型" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
+    <div
+      class="filter-container"
+      style="margin-bottom: 10px;"
+    >
+
+      <el-input v-model="fliterQuery.query" placeholder="用户名ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="fliterQuery.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-model="listQuery.type" placeholder="支付方式" clearable class="filter-item" style="width: 140px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
+      <el-select v-model="fliterQuery.groupId" placeholder="所在分组" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in Groups" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-model="listQuery.sort" placeholder="订单状态" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.id" />
+      <el-select v-model="fliterQuery.authent" placeholder="认证方式" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in Authents" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
+      <el-date-picker
+        v-model="fliterQuery.date"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+      />
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-    </div>
-    <el-table :data="data" border fit highlight-current-row style="width: 100%">
+
+      </tip.></div>
+
+    <el-table v-loading="loading" :data="data" border fit highlight-current-row style="width: 100%">
       <el-table-column
-        v-loading="loading"
+
         align="center"
-        label="订单ID"
+        label="用户ID"
         width="65"
         element-loading-text="请给我点时间！"
       >
@@ -106,11 +119,10 @@
 
 <script>
 import tip from '@/components/Tip'
-
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import Pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
-import { OrderStatus, PayType } from '@/utils/enumeration'
+import { Groups, UserType, Authents, emptySelect } from '@/utils/enumeration'
 
 export default {
   name: 'Tab',
@@ -118,13 +130,16 @@ export default {
   directives: { waves },
   data() {
     return {
-      tabMapOptions: [
-        { label: '交易所用户订单', key: 'all' },
-        { label: '站点用户订单', key: 'site' }
-      ],
+
+      UserType,
+      Groups: [emptySelect, ...Groups],
+      Authents: [{ id: '',
+        mame: '',
+        label: '请选择'
+      }, ...Authents],
       activeName: 'all',
       createdTimes: 0,
-      listQuery: {
+      fliterQuery: {
         page: 1,
         limit: 20,
         importance: undefined,

@@ -62,8 +62,8 @@ export default {
     }
     return {
       loginForm: {
-        username: '806598246@qq.com',
-        password: '147852',
+        username: 'lai@qq.com',
+        password: '123456',
         captcha: '213'
       },
       loginRules: {

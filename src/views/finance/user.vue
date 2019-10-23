@@ -3,17 +3,15 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span class="card-title">基础信息</span>
-        <el-button style="float: right; " type="primary" size="small" @click="clickAduit">审核</el-button>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="clickAduit">审核</el-button>
       </div>
       <div class="text item">
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">用户ID：{{ modals.uuid }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">用户名：{{ modals.nickName }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div class="">当前角色：{{ modals.currentRoleId|userTypeName }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">
-            当前状态：<el-link v-if="modals.active" type="success" :underline="false">正常/激活</el-link>
-            <el-link v-if="!modals.active" type="danger" :underline="false">冻结</el-link></div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">认证方式：{{ modals.kycLevel|kycLevel }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">当前状态：{{ modals.active?'正常/激活':'冻结/未激活' }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">认证方式：{{ modals.kycLevel }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">真实姓名：{{ modals.realName }}</div></el-col>
@@ -25,8 +23,8 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">返佣比：{{ modals.rebate }}%</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">申诉数：{{ modals.appealNum }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div class="">被申诉数：{{ modals.appealedNum }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">收付款方式：{{ modals.payTypes|payTypeNums }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">所在分组：{{ modals.pricingGroupId|groupName }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">收付款方式：{{ modals.payTypes }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">所在分组：系统分组</div></el-col>
         </el-row>
       </div>
     </el-card>
@@ -71,17 +69,16 @@
       <el-button v-if="false" v-waves class="filter-item" type="primary" icon="el-icon-add" @click="handleFilter">
         新增
       </el-button>
-      <el-input v-model="fliterQuery.query" placeholder="订单ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="fliterQuery.payType" placeholder="支付方式" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
+      <el-input v-model="fliterQuery.query" placeholder="用户名ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="fliterQuery.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-model="fliterQuery.groupId" placeholder="交易类型" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in CounterParty" :key="item.id" :label="item.label" :value="item.id" />
+      <el-select v-model="fliterQuery.groupId" placeholder="所在分组" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in Groups" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-model="fliterQuery.status" placeholder="订单状态" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in TreadOrderStatus" :key="item.id" :label="item.label" :value="item.name" />
+      <el-select v-model="fliterQuery.authent" placeholder="认证方式" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in Authents" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
-
       <el-date-picker
         v-model="fliterQuery.date"
         type="daterange"
@@ -98,67 +95,78 @@
       <el-table-column
         v-loading="loading"
         align="center"
-        label="订单ID"
+        label="用户"
         width="65"
         element-loading-text="请给我点时间！"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.orderId }}</span>
+          <span>{{ scope.row.uuid }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="交易人">
+      <el-table-column width="180px" align="center" label="用户名">
         <template slot-scope="scope">
-          <span>{{ scope.row.dealer }}</span>
+          <span>{{ scope.row.realName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="80px" align="center" label="成交额">
+      <el-table-column width="80px" align="center" label="保证金">
         <template slot-scope="scope">
-          <span>{{ scope.row.amount }}</span>
+          <span>{{ scope.row.deposit }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="170px" align="center" label="支付类型">
+      <el-table-column width="70px" align="center" label="返佣比%">
         <template slot-scope="scope">
-          <span>{{ scope.row.payType }}</span>
+          <span>{{ scope.row.rebate }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" label="奖励">
+      <el-table-column width="120px" label="当前角色">
         <template slot-scope="scope">
-          <span>{{ scope.row.award }}</span>
+          <span>{{ scope.row.price }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="手续费" width="80">
+      <el-table-column align="center" label="认证方式" width="55">
         <template slot-scope="scope">
           <span>{{ scope.row.authent }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="交易时间" minwidth="300">
+      <el-table-column align="center" label="分组" width="90">
+        <template slot-scope="scope">
+          <span>{{ scope.row.group }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="收款方式" width="95">
+        <template slot-scope="scope">
+          <span>{{ scope.row.fee }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="申请时间" minwidth="300">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="订单状态" minwidth="300">
-        <template slot-scope="scope">
-          <span>{{ scope.row.status }}</span>
+      <el-table-column class-name="status-col" label="操作" width="110">
+        <template slot-scope="{row}">
+          <el-button type="primary" size="small">查看</el-button>
         </template>
       </el-table-column>
-
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="paginationMeta.pages" :limit.sync="meta.size" @pagination="paginationChange" />
     <el-dialog :visible.sync="dialogVisible" title="基础信息审核">
       <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">用户ID：</el-col>
-        <el-col :span="16">{{ editData.id }}</el-col>
+        <el-col :span="8" class="textAlingR">用户名ID：</el-col>
+        <el-col :span="16">{{ editData.username }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户名：</el-col>
-        <el-col :span="16">{{ editData.nickName }}</el-col>
+        <el-col :span="16">{{ editData.email }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">真实姓名：</el-col>
@@ -166,21 +174,26 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">认证状态：：</el-col>
-        <el-col :span="16">{{ editData.kycLevel|kycLevel }}</el-col>
+        <el-col :span="16">{{ editData.email }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">手机号：</el-col>
         <el-col :span="16" class="">
-          {{ editData.mobileContact }}
+          {{ editData.ip }}
+          <el-checkbox v-model="ipOnly">
+            <el-link type="danger" :underline="false">认证状态</el-link>
+          </el-checkbox>
+          <el-link type="primary">详情</el-link>
         </el-col>
+        <el-col :span="16" />
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">身份证号：</el-col>
-        <el-col :span="16">{{ editData.idNumber }}</el-col>
+        <el-col :span="16">{{ editData.email }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">登陆邮箱：</el-col>
-        <el-col :span="16">{{ editData.emailContact }}</el-col>
+        <el-col :span="16">{{ editData.email }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">登陆密码：</el-col>
@@ -188,70 +201,63 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">返佣比:</el-col>
-        <el-col :span="16">{{ editData.rebate }}</el-col>
+        <el-col :span="16">{{ editData.email }}</el-col>
       </el-row>
-      <el-row v-if="type===1" :gutter="20" class="userRow">
+      <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">角色升级：</el-col>
         <el-col :span="16">
-          <el-link type="success" :underline="false">超级</el-link>
-
-          <el-link type="danger" :underline="false">当前登录角色：{{ editData.currentRoleId|userTypeName }}</el-link>
-        </el-col>
-      </el-row>
-      <el-row v-else-if="type===2" :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">用户角色：</el-col>
-        <el-col :span="16">
-          <el-link type="success" :underline="false">超级</el-link>
-
-          <el-link type="danger" :underline="false">当前登录角色：{{ editData.currentRoleId|userTypeName }}</el-link>
+          <el-select v-model="newRole" placeholder="更换角色">
+            <el-option v-for="(item,index) in Roles" :key="index" :label="item.label" :value="item.id" />
+          </el-select>
+          <el-link type="danger" :underline="false">当前登录角色：{{ editData.role }}</el-link>
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">所在分组：</el-col>
         <el-col :span="16">
-          <el-select v-model="editData.newPricingGroupId" placeholder="选择分组">
-            <el-option v-for="(item,inedex) in Groups" :key="inedex+'auth'" :label="item.label" :value="item.id" />
+          <el-select v-model="newAuth" placeholder="更换权限">
+            <el-option v-for="(item,inedex) in Auths" :key="inedex+'auth'" :label="item.label" :value="item.id" />
           </el-select>
-          <el-link type="danger" :underline="false">当前分组：{{ editData.pricingGroupId }}</el-link>
+          <el-link type="danger" :underline="false">当前登录权限：{{ editData.auth }}</el-link>
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">账号状态：</el-col>
-        <el-col :span="16">{{ editData.active?'正常/激活':'冻结/未激活' }}</el-col>
+        <el-col :span="16">{{ editData.createTime }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">收付款方式：</el-col>
-        <el-col :span="16">{{ editData.payTypes|payTypeNums }}</el-col>
+        <el-col :span="8" class="textAlingR">首付款方式：</el-col>
+        <el-col :span="16">{{ editData.createTime }}</el-col>
       </el-row>
-
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="16" :offset="8">
+          <el-checkbox v-model="isfreeze">
+            <el-link type="danger" :underline="false">冻结该账号</el-link>
+          </el-checkbox>
+        </el-col>
+      </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click=" handleAudit(1) ">通过</el-button>
-        <el-button @click="handleAudit(2)">不通过</el-button>
+        <el-button type="primary" @click=" saveEdit() ">通过</el-button>
+        <el-button @click="dialogVisible = false">不通过</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import update from './update'
-import surrender from './surrender'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
-import { Groups, UserType, Authents, emptySelect, OrderStatus, CounterParty, PayType } from '@/utils/enumeration'
-import { role_apply_list, role_apply_detail, role_apply_audit, TreadOrderStatus } from '@/api/usermanage'
-import { order_details } from '@/api/order'
+import { Groups, UserType, Authents, emptySelect } from '@/utils/enumeration'
+import { role_apply_list, role_apply_detail, role_apply_audit } from '@/api/usermanage'
 
 export default {
   name: 'Tab',
-  components: { update, surrender, pagination },
+  components: {  pagination },
   directives: { waves },
   data() {
     return {
       UserType,
-      PayType,
-      TreadOrderStatus,
-      CounterParty,
       Authents: [{ id: '',
         mame: '',
         label: '请选择'
@@ -263,8 +269,7 @@ export default {
         date: null,
         query: undefined,
         authent: undefined,
-        groupId: undefined,
-        status: undefined
+        groupId: undefined
       },
       meta: {
         current: 1,
@@ -280,25 +285,23 @@ export default {
       id: undefined,
       dialogVisible: false,
       modals: {},
-      editData: {},
-      newData: {}
+      editData: {}
 
     }
   },
+
   computed: {
-    ...mapState({
-      adminId: state => state.user.principal.adminId
-    })
+
   },
+
   mounted() {
     this.id = this.$route.params.id
-    const userId = this.$route.query.userId
-    this.userId = userId
-    this.type = this.$route.query.type
     this.detail(this.id)
-    this.getList(null, { userId: userId })
   },
   methods: {
+    showCreatedTimes() {
+      this.createdTimes = this.createdTimes + 1
+    },
 
     detail(id) {
       this.listLoading = true
@@ -320,10 +323,10 @@ export default {
       const fliterQuery = this.fliterQuery
       console.log('fliterQuery', this.fliterQuery)
       const data = {
-        payType: fliterQuery.payType,
+        authent: fliterQuery.authent,
+        groupId: fliterQuery.groupId,
         query: fliterQuery.query,
-        status: fliterQuery.status,
-        userId: this.userId
+        roleId: fliterQuery.roleId
       }
       if (fliterQuery.date) {
         data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
@@ -334,55 +337,10 @@ export default {
       meta.current = 1
       this.getList(meta, data)
     },
-    getList(meta, data) {
-      order_details(meta || this.meta, data || { userId: this.userId }).then(res => {
-        if (res.code === 0) {
-          this.list = res.data.records
-          this.meta.current = res.data.current
-          this.paginationMeta.total = res.data.total
-          this.paginationMeta.pages = res.data.pages
-        }
-      })
-    },
+    getList() {},
     clickAduit() {
       this.dialogVisible = true
       this.editData = this.modals
-    },
-    handleAudit(status) {
-      const data = {
-        adminId: this.adminId,
-        applyId: this.id,
-        groupId: this.newPricingGroupId ? this.editData.newPricingGroupId : this.editData.pricingGroupId,
-        reason: undefined,
-        status: status,
-        userId: this.userId
-      }
-      if (status === 2) {
-        this.$prompt('请输入拒绝理由', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
-        }).then(({ value }) => {
-          data.reason = value
-          this.audit(data)
-        }).catch(() => {
-
-        })
-      } else {
-        this.audit(data)
-      }
-    },
-    audit(data) {
-      role_apply_audit(data).then(res => {
-        if (res.code === 0) {
-          this.dialogVisible = false
-          this.$message({
-            message: '操作成功',
-            type: 'success'
-          })
-        } else {
-          this.$message.error('操作失败')
-        }
-      })
     }
 
   }

@@ -1,20 +1,30 @@
 <template>
-  <div class="">
+  <div class="tab-container">
     <tip />
-    <div class="filter-container" style="margin-bottom: 10px;">
-      <el-button v-if="false" v-waves class="filter-item" type="primary" icon="el-icon-add" @click="handleFilter">
-        新增
-      </el-button>
+
+    <div
+      class="filter-container"
+      style="margin-bottom: 10px;"
+    >
+
       <el-input v-model="fliterQuery.query" placeholder="用户名ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="fliterQuery.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
+      <el-select v-model="fliterQuery.kycLevel" placeholder="认证状态" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in KycLevel" :key="item.id" :label="item.label" :value="item.id" />
+      </el-select>
+
+      <el-select v-model="fliterQuery.payType" placeholder="收付款方式" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
+      </el-select>
       <el-select v-model="fliterQuery.groupId" placeholder="所在分组" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in Groups" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-model="fliterQuery.kycLevel" placeholder="认证方式" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in KycLevel" :key="item.id" :label="item.label" :value="item.name" />
+      <el-select v-model="fliterQuery.active" placeholder="账号状态" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in AccountStatus" :key="item.id" :label="item.label" :value="item.name" />
       </el-select>
+
       <el-date-picker
         v-model="fliterQuery.date"
         type="daterange"
@@ -28,12 +38,12 @@
 
     </div>
 
-    <el-table :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
         v-loading="loading"
         align="center"
         label="用户ID"
-        width="220"
+        width="180"
         element-loading-text="请给我点时间！"
       >
         <template slot-scope="scope">
@@ -41,71 +51,85 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="用户名">
+      <el-table-column width="180px" align="center" label="用户名">
         <template slot-scope="scope">
-          <span>{{ scope.row.realName }}</span>
+          <span>{{ scope.row.advertiseId }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="80px" align="center" label="保证金">
+      <el-table-column width="80px" align="center" label="可用余额">
         <template slot-scope="scope">
-          <span>{{ scope.row.deposit }}</span>
+          <span>{{ scope.row.balance }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="返佣比%">
+      <el-table-column width="90px" align="center" label="成交数量">
         <template slot-scope="scope">
-          <span>{{ scope.row.rebate||'-' }}</span>
+          <span>{{ scope.row.balance }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="当前角色">
+      <el-table-column width="120px" align="center" label="胜诉比">
         <template slot-scope="scope">
-          <span>{{ scope.row.currentRoleId|userTypeName }}</span>
+          <span>{{ scope.row.appeal_win }}/{{ scope.row.appeal_total }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="认证方式" width="80">
+      <el-table-column align="center" label="完成订单数" width="95">
         <template slot-scope="scope">
-          <span>{{ scope.row.kycLevel }}</span>
+          <span>{{ scope.row.orders }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="分组" width="90">
+      <el-table-column align="center" label="当前角色" width="90">
         <template slot-scope="scope">
-          <span>{{ scope.row.pricingGroupId }}</span>
+          <span>{{ scope.row.roleId|userTypeName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="收款方式" width="95">
+      <el-table-column align="center" label="认证状态" width="95">
         <template slot-scope="scope">
-          <span>{{ scope.row.payTypes }}</span>
+          <span>{{ scope.row.kycLevel|kycLevel }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="申请时间" minwidth="300">
+      <el-table-column align="center" label="收付款方式" width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.payTypes|payTypeNums }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="返佣比%" width="95">
+        <template slot-scope="scope">
+          <span>{{ scope.row.rebate }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="所在分组" width="95">
+        <template slot-scope="scope">
+          <span>{{ scope.row.pricingGroupId|groupName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="注册时间">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" align="center" label="操作" width="110">
+      <el-table-column align="center" label="账号状态" width="95">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" @click="toDetail(scope.row)">查看</el-button>
+          <span>{{ scope.row.active?'激活':'冻结' }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" class-name="status-col" label="操作" width="110">
+        <template slot-scope="{row}">
+          <el-button type="primary" size="small">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="paginationMeta.current" :limit.sync="meta.size" @pagination="paginationChange" />
-
-    <!-- <el-dialog :visible.sync="dialogPvVisible" title="订单详情">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="Channel" />
-        <el-table-column prop="pv" label="Pv" />
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
-      </span>
-    </el-dialog> -->
+    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
   </div>
 </template>
 
@@ -116,8 +140,8 @@ import pagination from '@/components/Pagination'
 import tip from '@/components/Tip'
 
 import waves from '@/directive/waves' // waves directive
-import { Groups, UserType, Authents, emptySelect, KycLevel } from '@/utils/enumeration'
-import { role_apply_list, role_apply_detail, role_apply_audit } from '@/api/usermanage'
+import { Groups, UserType, KycLevel, emptySelect, PayType, AccountStatus } from '@/utils/enumeration'
+import { users_web } from '@/api/usermanage'
 
 export default {
   name: 'Tab',
@@ -125,21 +149,18 @@ export default {
   directives: { waves },
   data() {
     return {
-
+      AccountStatus,
+      PayType,
       activeType: '0',
       UserType,
       KycLevel,
-      Authents: [{ id: '',
-        mame: '',
-        label: '请选择'
-      }, ...Authents],
       Groups: [emptySelect, ...Groups],
       fliterQuery: {
         page: 1,
         size: 20,
         date: null,
         query: undefined,
-        authent: undefined,
+        payType: undefined,
         groupId: undefined,
         kycLevel: undefined
       },
@@ -147,7 +168,7 @@ export default {
         current: 1,
         size: 10
       },
-
+      dialogVisible: false,
       loading: false,
       list: [],
       paginationMeta: {
@@ -179,7 +200,7 @@ export default {
     },
     getList(meta, data) {
       this.listLoading = true
-      role_apply_list(meta || this.meta, data || { roleStatus: this.activeType }).then(res => {
+      users_web(meta || this.meta, data).then(res => {
         console.log('res', res)
         if (res.code === 0) {
           this.list = res.data.records
@@ -193,11 +214,12 @@ export default {
       const fliterQuery = this.fliterQuery
       console.log('fliterQuery', this.fliterQuery)
       const data = {
+        active: fliterQuery.active,
         kycLevel: fliterQuery.kycLevel,
         groupId: fliterQuery.groupId,
+        payType: fliterQuery.payType,
         query: fliterQuery.query,
-        roleId: fliterQuery.roleId,
-        roleStatus: this.activeType
+        roleId: fliterQuery.roleId
       }
       if (fliterQuery.date) {
         data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
@@ -219,8 +241,5 @@ export default {
 <style scoped>
 .tab-container {
   margin: 30px;
-}
-.filter-item{
-  margin-top:5px
 }
 </style>

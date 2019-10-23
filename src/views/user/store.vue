@@ -1,72 +1,200 @@
 <template>
-  <div class="app-container">
-    <el-table v-loading="listLoading" :data="list" element-loading-text="Loading" border fit highlight-current-row>
-      <el-table-column align="center" label="ID" width="95">
+  <div class="tab-container">
+    <div class="container-tip"><i class="el-icon-warning color-primary" s /> 处理异常订单正确姿势：1.查看订单详情；2.核实收付款是否完成；3.核查交易提成是否收取；4.核查系统补贴、返利是否发放。
+      <div>
+        <el-link type="info" :underline="false">温馨提示：若遇其他非上述情况请及时联系管理员：</el-link>
+        <el-link type="primary">Towards <i class="el-icon-chat-dot-round" /></el-link>
+      </div>
+    </div>
+
+    <div class="filter-container" style="margin-bottom: 10px;">
+
+      <el-input v-model="fliterQuery.query" placeholder="用户名ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="fliterQuery.active" placeholder="账号状态" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in AccountStatus" :key="item.id" :label="item.label" :value="item.name" />
+      </el-select>
+      <el-date-picker
+        v-model="fliterQuery.date"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+      />
+      <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
+        搜索
+      </el-button>
+
+    </div>
+
+    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+      <el-table-column
+
+        align="center"
+        label="用户ID"
+        width="65"
+        element-loading-text="请给我点时间！"
+      >
         <template slot-scope="scope">
-          {{ scope.$index }}
+          <span>{{ scope.row.uuid }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+
+      <el-table-column width="180px" align="center" label="用户名">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          <span>{{ scope.row.emailContact }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+
+      <el-table-column width="80px" align="center" label="手机号">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span>{{ scope.row.mobileContact }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
+
+      <el-table-column width="70px" align="center" label="邮箱">
         <template slot-scope="scope">
-          {{ scope.row.pageviews }}
+          <span>{{ scope.row.emailContact }}</span>
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
+
+      <el-table-column width="120px" label="交易额">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
+          <span>{{ scope.row.amount }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
+
+      <el-table-column align="center" label="账号状态" width="55">
         <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
+          <span>{{ scope.row.seller }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="注册时间" minwidth="300">
+        <template slot-scope="scope">
+          <span>{{ scope.row.createTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="状态" width="95">
+        <template slot-scope="scope">
+          <span>{{ scope.row.active?"正常":"冻结" }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" class-name="status-col" label="操作" width="110">
+        <template slot-scope="{row}">
+          <el-button type="primary" size="small">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
+
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
+// import tabPane from './components/TabPane'
+import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
+import pagination from '@/components/Pagination'
+import tip from '@/components/Tip'
+
+import waves from '@/directive/waves' // waves directive
+import { Groups, UserType, KycLevel, emptySelect, PayType, AccountStatus } from '@/utils/enumeration'
+import { users_b } from '@/api/usermanage'
 
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
+  name: 'Tab',
+  components: { pagination, tip },
+  directives: { waves },
   data() {
     return {
-      list: null,
-      listLoading: true
+      AccountStatus,
+      PayType,
+      activeType: '0',
+      UserType,
+      KycLevel,
+      Groups: [emptySelect, ...Groups],
+      fliterQuery: {
+        page: 1,
+        size: 20,
+        date: null,
+        query: undefined,
+        payType: undefined,
+        groupId: undefined,
+        kycLevel: undefined
+      },
+      meta: {
+        current: 1,
+        size: 10
+      },
+      dialogVisible: false,
+      loading: false,
+      list: [],
+      paginationMeta: {
+        total: 10,
+        pages: 1
+      }
     }
   },
-  created() {
-    this.fetchData()
+
+  computed: {
+    ...mapState({
+      allList: state => state.order.allList,
+      allListMeta: state => state.order.allMeta
+    })
+  },
+
+  mounted() {
+    this.getList()
   },
   methods: {
-    fetchData() {
+    showCreatedTimes() {
+      this.createdTimes = this.createdTimes + 1
+    },
+    paginationChange(e) {
+      console.log('paginationChange', e)
+      this.meta.size = e.limit
+      this.meta.current = e.page
+      this.getList()
+    },
+    getList(meta, data) {
       this.listLoading = true
-      getList().then(response => {
-        this.list = response.data.items
-        this.listLoading = false
+      users_b(meta || this.meta, data).then(res => {
+        console.log('res', res)
+        if (res.code === 0) {
+          this.list = res.data.records
+          this.meta.current = res.data.current
+          this.paginationMeta.total = res.data.total
+          this.paginationMeta.pages = res.data.pages
+        }
       })
+    },
+    handleFilter() {
+      const fliterQuery = this.fliterQuery
+      console.log('fliterQuery', this.fliterQuery)
+      const data = {
+        active: fliterQuery.active,
+        query: fliterQuery.query
+      }
+      if (fliterQuery.date) {
+        data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
+        // data.start = '2019-10-16 12:11:11'
+        data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
+      }
+      const meta = this.meta
+      meta.current = 1
+      this.getList(meta, data)
+    },
+    toDetail(data) {
+      console.log('to detail')
+      this.$router.push({ path: `/role/${data.id}`, query: { userId: data.userId, type: 1 }})
     }
   }
 }
 </script>
+
+<style scoped>
+.tab-container {
+  margin: 30px;
+}
+</style>

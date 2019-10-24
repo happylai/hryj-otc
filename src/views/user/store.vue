@@ -1,40 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <div class="app-container">
-    <el-table v-loading="listLoading" :data="list" element-loading-text="Loading" border fit highlight-current-row>
-      <el-table-column align="center" label="ID" width="95">
-        <template slot-scope="scope">
-          {{ scope.$index }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Title">
-        <template slot-scope="scope">
-          {{ scope.row.title }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
-        </template>
-      </el-table-column>
-    </el-table>
-=======
   <div class="tab-container">
     <div class="container-tip"><i class="el-icon-warning color-primary" s /> 处理异常订单正确姿势：1.查看订单详情；2.核实收付款是否完成；3.核查交易提成是否收取；4.核查系统补贴、返利是否发放。
       <div>
@@ -125,42 +89,10 @@
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
 
->>>>>>> dev
   </div>
 </template>
 
 <script>
-<<<<<<< HEAD
-import { getList } from '@/api/table'
-
-export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
-  data() {
-    return {
-      list: null,
-      listLoading: true
-    }
-  },
-  created() {
-    this.fetchData()
-  },
-  methods: {
-    fetchData() {
-      this.listLoading = true
-      getList().then(response => {
-        this.list = response.data.items
-        this.listLoading = false
-      })
-=======
 // import tabPane from './components/TabPane'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
@@ -256,17 +188,13 @@ export default {
     toDetail(data) {
       console.log('to detail')
       this.$router.push({ path: `/role/${data.id}`, query: { userId: data.userId, type: 1 }})
->>>>>>> dev
     }
   }
 }
 </script>
-<<<<<<< HEAD
-=======
 
 <style scoped>
 .tab-container {
   margin: 30px;
 }
 </style>
->>>>>>> dev

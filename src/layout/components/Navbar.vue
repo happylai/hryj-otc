@@ -108,12 +108,9 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
-<<<<<<< HEAD
-=======
         &:hover{
           cursor:pointer
         }
->>>>>>> dev
         position: relative;
         display: flex;
         align-items: center;

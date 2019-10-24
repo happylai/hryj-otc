@@ -1,33 +1,5 @@
 <template>
   <div class="tab-container">
-<<<<<<< HEAD
-    <!-- <el-tag>mounted times ：{{ createdTimes }}</el-tag>
-    <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;" title="Tab with keep-alive" type="success" /> -->
-    <el-tabs v-model="activeName" style="margin-top:15px;">
-      <div class="filter-container" style="margin-bottom: 10px;">
-        <el-input v-model="listQuery.keywords" placeholder="订单ID/广告ID/买家/卖家/备注" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        <el-select v-model="listQuery.importance" placeholder="订单类型" clearable style="width: 140px" class="filter-item">
-          <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
-        </el-select>
-        <el-select v-model="listQuery.type" placeholder="支付方式" clearable class="filter-item" style="width: 140px">
-          <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
-        </el-select>
-        <el-select v-model="listQuery.sort" placeholder="订单状态" style="width: 140px" class="filter-item" @change="handleFilter">
-          <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.id" />
-        </el-select>
-        <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
-          搜索
-        </el-button>
-
-      </div>
-      <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key">
-        <keep-alive>
-          <tab-pane v-if="activeName==item.key" :data="allList" :type="item.key" @create="showCreatedTimes" />
-        </keep-alive>
-      </el-tab-pane>
-      <pagination v-show="allListMeta.total>0" :total="allListMeta.total" :page.sync="allListMeta.pages" :limit.sync="allListMeta.size" @pagination="getList" />
-    </el-tabs>
-=======
     <tip />
 
     <div class="filter-container" style="margin-bottom: 10px;">
@@ -119,7 +91,6 @@
       </el-table-column>
     </el-table>
     <pagination v-show="allListMeta.total>0" :total="allListMeta.total" :page.sync="allListMeta.pages" :limit.sync="allListMeta.size" @pagination="getList" />
->>>>>>> dev
 
     <el-dialog :visible.sync="dialogPvVisible" title="订单详情">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
@@ -134,12 +105,8 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import tabPane from './components/TabPane'
-=======
 import tip from '@/components/Tip'
 
->>>>>>> dev
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import Pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
@@ -147,11 +114,7 @@ import { OrderStatus, PayType } from '@/utils/enumeration'
 
 export default {
   name: 'Tab',
-<<<<<<< HEAD
-  components: { tabPane },
-=======
   components: { tip },
->>>>>>> dev
   directives: { waves },
   data() {
     return {

@@ -3,72 +3,21 @@
     <el-table-column
       v-loading="loading"
       align="center"
-<<<<<<< HEAD
-      label="订单ID"
-=======
       label="用户ID"
->>>>>>> dev
       width="65"
       element-loading-text="请给我点时间！"
     >
       <template slot-scope="scope">
-<<<<<<< HEAD
-        <span>{{ scope.row.id }}</span>
-      </template>
-    </el-table-column>
-
-   <el-table-column width="180px" align="center" label="所属广告">
-=======
         <span>{{ scope.row.uuid }}</span>
       </template>
     </el-table-column>
 
     <el-table-column width="180px" align="center" label="用户名">
->>>>>>> dev
       <template slot-scope="scope">
         <span>{{ scope.row.advertiseId }}</span>
       </template>
     </el-table-column>
 
-<<<<<<< HEAD
-   <el-table-column width="80px" align="center" label="类型">
-      <template slot-scope="scope">
-        <span>{{ scope.row.token }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column width="70px" align="center" label="币种">
-      <template slot-scope="scope">
-        <span>{{ scope.row.token }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column width="120px" label="交易额">
-      <template slot-scope="scope">
-        <span>{{ scope.row.price }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column align="center" label="卖家" width="55">
-      <template slot-scope="scope">
-        <span>{{ scope.row.seller }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column align="center" label="支付方式" width="90">
-      <template slot-scope="scope">
-        <span>{{ scope.row.payType|paymentStatus }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column align="center" label="手续费" width="95">
-      <template slot-scope="scope">
-        <span>{{ scope.row.fee }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column align="center" label="交易时间" minwidth="300">
-=======
     <el-table-column width="80px" align="center" label="可用余额">
       <template slot-scope="scope">
         <span>{{ scope.row.balance }}</span>
@@ -124,34 +73,22 @@
     </el-table-column>
 
     <el-table-column align="center" label="注册时间" width="95">
->>>>>>> dev
       <template slot-scope="scope">
         <span>{{ scope.row.createTime }}</span>
       </template>
     </el-table-column>
 
-<<<<<<< HEAD
-    <el-table-column align="center" label="状态" width="95">
-      <template slot-scope="scope">
-        <span>{{ scope.row.orderStatus|orderStatus }}</span>
-=======
     <el-table-column align="center" label="账号状态" width="95">
       <template slot-scope="scope">
         <span>{{ scope.row.active }}</span>
->>>>>>> dev
       </template>
     </el-table-column>
 
     <el-table-column class-name="status-col" label="操作" width="110">
       <template slot-scope="{row}">
         <el-button type="primary" size="small">详情</el-button>
-<<<<<<< HEAD
-              </template>
-            </el-table-column> 
-=======
       </template>
     </el-table-column>
->>>>>>> dev
   </el-table>
 </template>
 
@@ -174,15 +111,9 @@ export default {
       type: String,
       default: 'CN'
     },
-<<<<<<< HEAD
-    data:{
-      type:Array,
-      default:[]
-=======
     data: {
       type: Array,
       default: []
->>>>>>> dev
     }
   },
   data() {

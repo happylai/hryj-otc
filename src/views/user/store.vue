@@ -31,7 +31,7 @@
 
         align="center"
         label="用户ID"
-        width="65"
+        width="180px"
         element-loading-text="请给我点时间！"
       >
         <template slot-scope="scope">
@@ -45,39 +45,33 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="80px" align="center" label="手机号">
+      <el-table-column width="180px" align="center" label="手机号">
         <template slot-scope="scope">
           <span>{{ scope.row.mobileContact }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="70px" align="center" label="邮箱">
+      <el-table-column width="180px" align="center" label="邮箱">
         <template slot-scope="scope">
           <span>{{ scope.row.emailContact }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" label="交易额">
+      <el-table-column width="120px" align="center" label="交易额">
         <template slot-scope="scope">
-          <span>{{ scope.row.amount }}</span>
+          <span>{{ scope.row.amount||'-' }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="账号状态" width="55">
+      <el-table-column align="center" label="账号状态" width="80px">
         <template slot-scope="scope">
-          <span>{{ scope.row.seller }}</span>
+          <span>{{ scope.row.active?'正常':'冻结' }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="注册时间" minwidth="300">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="状态" width="95">
-        <template slot-scope="scope">
-          <span>{{ scope.row.active?"正常":"冻结" }}</span>
         </template>
       </el-table-column>
 

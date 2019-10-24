@@ -95,7 +95,8 @@
 
       <el-table-column align="center" label="收付款方式" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.payTypes|payTypeNums }}</span>
+          <el-link v-if="scope.row.needAudit" type="danger" @click="clickGoAudit(scope.row.id)">去审核>>></el-link>
+          <span v-else>{{ scope.row.payTypes|payTypeNums }}</span>
         </template>
       </el-table-column>
 
@@ -130,6 +131,40 @@
       </el-table-column>
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
+    <el-dialog :visible.sync="dialogVisible" title="支付方式审核">
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">支付方式：</el-col>
+        <el-col :span="16">{{ auditData.payType|paymentStatus }}</el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">账号：</el-col>
+        <el-col :span="16">
+          {{ auditData.uuid }}
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">昵称：</el-col>
+        <el-col :span="16">
+          {{ auditData.nickName||'-' }}
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">姓名：</el-col>
+        <el-col :span="16">
+          {{ auditData.realName||'-' }}
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR" />
+        <el-col :span="16">
+          <img src="" class="payTypeImage">
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleAudit(true)">通过</el-button>
+        <el-button type="info" @click="handleAudit(false)">不通过</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -141,7 +176,7 @@ import tip from '@/components/Tip'
 
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, KycLevel, emptySelect, PayType, AccountStatus } from '@/utils/enumeration'
-import { users_web } from '@/api/usermanage'
+import { users_web, pay_type_audit, pay_type_info } from '@/api/usermanage'
 
 export default {
   name: 'Tab',
@@ -174,14 +209,14 @@ export default {
       paginationMeta: {
         total: 10,
         pages: 1
-      }
+      },
+      auditData: {}
     }
   },
 
   computed: {
     ...mapState({
-      allList: state => state.order.allList,
-      allListMeta: state => state.order.allMeta
+      adminId: state => state.user.principal.adminId
     })
   },
 
@@ -233,7 +268,58 @@ export default {
     toDetail(data) {
       console.log('to detail')
       this.$router.push({ path: `/role/${data.id}`, query: { userId: data.userId, type: 1 }})
+    },
+    clickGoAudit(id) {
+      this.dialogVisible = true
+      this.getPay_type_info(id)
+    },
+    getPay_type_info(id) {
+      pay_type_info({ userId: id }).then(res => {
+        if (res.code === 0) {
+          this.auditData = res.data
+        }
+      })
+    },
+    auditPayType(data) {
+      pay_type_audit(data).then(res => {
+        this.loading = false
+        this.dialogVisible = false
+        if (res.code === 0) {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.getList()
+        } else {
+          this.$message.error(res.message || '操作失败')
+        }
+      }).catch(err => {
+        console.log('err', err)
+        this.$message.error(err || '操作失败')
+        this.loading = false
+      })
+    },
+    handleAudit(isPass) {
+      const data = {
+        adminId: this.adminId,
+        audit: isPass,
+        reason: undefined,
+        id: this.auditData.id,
+        userId: this.auditData.userId
+      }
+      if (isPass) {
+        this.auditPayType(data)
+      } else {
+        this.$prompt('请输入拒绝理由', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(({ value }) => {
+          data.reason = value
+          this.auditPayType(data)
+        })
+      }
     }
+
   }
 }
 </script>
@@ -241,5 +327,10 @@ export default {
 <style scoped>
 .tab-container {
   margin: 30px;
+}
+.payTypeImage{
+  width: 100px;
+  height: 100px;
+  background-color: #dedede
 }
 </style>

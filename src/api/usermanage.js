@@ -123,3 +123,22 @@ export function user_b(data) {
 
   })
 }
+
+// 获取用户支付方式审核
+export function pay_type_info(data) {
+  return request({
+    url: `/admin/user/pay_type_info`,
+    method: 'get',
+    params: data
+
+  })
+}
+
+// 用户支付方式审核
+export function pay_type_audit(data) {
+  return request({
+    url: `/admin/user/pay_type/audit`,
+    method: 'post',
+    data
+  })
+}

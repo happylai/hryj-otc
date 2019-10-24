@@ -51,7 +51,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="用户名">
+      <el-table-column width="120px" align="center" label="用户名">
         <template slot-scope="scope">
           <span>{{ scope.row.advertiseId }}</span>
         </template>
@@ -124,9 +124,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" class-name="status-col" label="操作" width="110">
-        <template slot-scope="{row}">
-          <el-button type="primary" size="small">详情</el-button>
+      <el-table-column align="center" class-name="status-col" label="操作" width="180">
+        <template slot-scope="scope">
+          <el-button type="danger" size="small" @click="handleFreeze(scope.row.id)">交易冻结</el-button>
+          <el-button type="primary" size="small" @click="goDetail(scope.row.id)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -176,7 +177,7 @@ import tip from '@/components/Tip'
 
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, KycLevel, emptySelect, PayType, AccountStatus } from '@/utils/enumeration'
-import { users_web, pay_type_audit, pay_type_info } from '@/api/usermanage'
+import { users_web, pay_type_audit, pay_type_info, freeze_deal } from '@/api/usermanage'
 
 export default {
   name: 'Tab',
@@ -286,7 +287,7 @@ export default {
         this.dialogVisible = false
         if (res.code === 0) {
           this.$message({
-            message: '保存成功',
+            message: '操作成功',
             type: 'success'
           })
           this.getList()
@@ -318,6 +319,28 @@ export default {
           this.auditPayType(data)
         })
       }
+    },
+    goDetail(id) {
+      this.$router.push({ path: `/user/instation/${id}` })
+    },
+    handleFreeze(id) {
+      this.$confirm('是否冻结用户交易?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        freeze_deal({ userId: id }).then(res => {
+          if (res.code === 0) {
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+            this.getList()
+          } else {
+            this.$message.error(res.message || '操作失败')
+          }
+        })
+      })
     }
 
   }

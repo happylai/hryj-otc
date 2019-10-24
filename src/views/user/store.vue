@@ -76,8 +76,8 @@
       </el-table-column>
 
       <el-table-column align="center" class-name="status-col" label="操作" width="110">
-        <template slot-scope="{row}">
-          <el-button type="primary" size="small">详情</el-button>
+        <template slot-scope="scope">
+          <el-button type="primary" size="small" @click="goDetail(scope.row.id)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -179,9 +179,8 @@ export default {
       meta.current = 1
       this.getList(meta, data)
     },
-    toDetail(data) {
-      console.log('to detail')
-      this.$router.push({ path: `/role/${data.id}`, query: { userId: data.userId, type: 1 }})
+    goDetail(id) {
+      this.$router.push({ path: `/user/store/${id}` })
     }
   }
 }

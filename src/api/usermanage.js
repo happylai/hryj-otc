@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import qs from 'qs'
 
 export function payType() {
   return request({
@@ -98,8 +99,8 @@ export function user_b_save(data) {
 export function user_web_save(data) {
   return request({
     url: `/admin/user/user_web_save`,
-    method: 'get',
-    params: data
+    method: 'post',
+    data
 
   })
 }
@@ -142,3 +143,26 @@ export function pay_type_audit(data) {
     data
   })
 }
+
+// 用户支付方式列表查询
+export function pay_types(data) {
+  return request({
+    url: `/admin/user/pay_types`,
+    method: 'get',
+    params: data
+
+  })
+}
+
+// 用户交易冻结
+export function freeze_deal(data) {
+  return request({
+    url: `/admin/user/freeze_deal`,
+    method: 'post',
+    data: qs.stringify(data),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+

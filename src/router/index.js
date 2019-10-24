@@ -143,6 +143,7 @@ export const asyncRoutes = [{
         icon: 'example'
       }
     },
+
     {
       path: 'agent',
       name: 'angetUser',
@@ -182,6 +183,28 @@ export const asyncRoutes = [{
           }
         }
       ]
+    },
+    {
+      path: 'instation/:id',
+      hidden: true,
+      name: 'userDetail',
+      component: () => import('@/views/user/userDetail'),
+      meta: {
+        title: '详情',
+        icon: 'example',
+        type: 1
+      }
+    },
+    {
+      path: 'store/:id',
+      hidden: true,
+      name: 'userDetail',
+      component: () => import('@/views/user/userbDetail'),
+      meta: {
+        title: '详情',
+        icon: 'example',
+        type: 2
+      }
     }
 
   ]

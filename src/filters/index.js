@@ -128,6 +128,16 @@ export function paymentStatus(num = 0) {
 }
 
 /**
+ * PaymentStatus
+ * @param {number} num
+ */
+export function payTypeName(num = 0) {
+  return (
+    num === null ? '-' : PayType[num].label
+  )
+}
+
+/**
  * OrderStatus
  * @param {number} num
  */

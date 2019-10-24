@@ -114,6 +114,7 @@ export const asyncRoutes = [{
     title: '用户管理',
     icon: 'example'
     // roles: ['ROLE_USER']
+<<<<<<< HEAD
   },
   children: [
     //   {
@@ -217,12 +218,86 @@ export const asyncRoutes = [{
       icon: 'example'
     }
   }
+=======
+  },
+  children: [
+    //   {
+    //   path: 'payment',
+    //   name: 'user',
+    //   component: () => import('@/views/user/payment'),
+    //   meta: {
+    //     title: '支付方式审核',
+    //     icon: 'example'
+    //   }
+    // },
+    {
+      path: 'instation',
+      name: 'instationUser',
+      component: () => import('@/views/user/instation'),
+      meta: {
+        title: '站内用户',
+        icon: 'example'
+      }
+    },
+    {
+      path: 'store',
+      name: 'storeUser',
+      component: () => import('@/views/user/store'),
+      meta: {
+        title: 'B端商户',
+        icon: 'example'
+      }
+    },
+    {
+      path: 'agent',
+      name: 'angetUser',
+      component: () => import('@/views/user/agent'),
+      meta: {
+        title: '代理商',
+        icon: 'example'
+      }
+    },
+    {
+      path: 'role',
+      name: 'roleApply',
+      component: () => import('@/views/user/role/main'),
+      meta: {
+        title: '角色申请',
+        icon: 'example'
+      },
+      children: [
+        {
+          path: '/role',
+          name: 'roleApply',
+          component: () => import('@/views/user/role/index'),
+          meta: {
+            title: '角色申请',
+            icon: 'example'
+          }
+        },
+        {
+          path: '/role/:id',
+          hidden: true,
+          name: 'roleApplyDetail',
+          component: () => import('@/views/user/role/roleDetail'),
+          meta: {
+            title: '详情',
+            icon: 'example',
+            activeMenu: '/role'
+          }
+        }
+      ]
+    }
+
+>>>>>>> dev
   ]
+
 },
 {
   path: '/analysis',
   component: Layout,
   meta: {
+<<<<<<< HEAD
     title: '数据中心',
     icon: 'example'
   },
@@ -230,15 +305,32 @@ export const asyncRoutes = [{
     path: 'statistics',
     name: 'dataStatistics',
     component: () => import('@/views/analysis/index'),
+=======
+    title: '广告',
+    icon: 'example'
+    // roles: ['ROLE_USER']
+  },
+  children: [{
+    path: '/advertising',
+    name: 'user',
+    component: () => import('@/views/advertisement/index'),
+>>>>>>> dev
     meta: {
       title: '数据统计',
       icon: 'example'
     }
   },
   {
+<<<<<<< HEAD
     path: 'user',
     name: 'userFinance',
     component: () => import('@/views/user/index'),
+=======
+    path: ':id',
+    hidden: true,
+    name: 'advertingDetail',
+    component: () => import('@/views/order/index'),
+>>>>>>> dev
     meta: {
       title: '用户资产',
       icon: 'example'
@@ -247,9 +339,10 @@ export const asyncRoutes = [{
   ]
 },
 {
-  path: '/parameter',
+  path: '/finance',
   component: Layout,
   meta: {
+<<<<<<< HEAD
     title: '参数设置',
     icon: 'example'
     // roles: ['ROLE_USER']
@@ -269,14 +362,26 @@ export const asyncRoutes = [{
     component: () => import('@/views/params/time'),
     meta: {
       title: '代理奖励',
+=======
+    title: '财务管理',
+    icon: 'example'
+  },
+  children: [{
+    path: 'center',
+    name: 'centerFinance',
+    component: () => import('@/views/finance/center'),
+    meta: {
+      title: '中央财务',
+>>>>>>> dev
       icon: 'example'
     }
   },
   {
-    path: 'allowance',
-    name: 'parAllowance',
-    component: () => import('@/views/params/time'),
+    path: 'user',
+    name: 'userFinance',
+    component: () => import('@/views/finance/user'),
     meta: {
+<<<<<<< HEAD
       title: '补贴奖励',
       icon: 'example'
     }
@@ -285,6 +390,95 @@ export const asyncRoutes = [{
     path: 'commission',
     name: 'commission',
     component: () => import('@/views/params/time'),
+    meta: {
+      title: '交易提成',
+=======
+      title: '用户资产',
+      icon: 'example'
+    }
+  }
+  ]
+},
+{
+  path: '/analysis',
+  component: Layout,
+  meta: {
+    title: '数据中心',
+    icon: 'example'
+  },
+  children: [{
+    path: 'statistics',
+    name: 'dataStatistics',
+    component: () => import('@/views/analysis/index'),
+    meta: {
+      title: '数据统计',
+      icon: 'example'
+    }
+  }
+  // {
+  //   path: 'user',
+  //   name: 'userFinance',
+  //   component: () => import('@/views/order/index'),
+  //   meta: {
+  //     title: '用户资产',
+  //     icon: 'example'
+  //   }
+  // }
+  ]
+},
+{
+  path: '/parameter',
+  component: Layout,
+  meta: {
+    title: '参数设置',
+    icon: 'example'
+    // roles: ['ROLE_USER']
+  },
+  children: [{
+    path: 'price',
+    name: 'priceParams',
+    component: () => import('@/views/params/priceRules'),
+    meta: {
+      title: '定价规则',
+>>>>>>> dev
+      icon: 'example'
+    }
+  },
+  {
+<<<<<<< HEAD
+    path: 'time',
+    name: 'parTime',
+    component: () => import('@/views/params/time'),
+    meta: {
+      title: '时间设置',
+=======
+    path: 'agentAward',
+    name: 'agentAward',
+    component: () => import('@/views/params/agent'),
+    meta: {
+      title: '代理奖励',
+>>>>>>> dev
+      icon: 'example'
+    }
+  },
+  {
+<<<<<<< HEAD
+    path: 'other',
+    name: 'otherParams',
+    component: () => import('@/views/params/time'),
+=======
+    path: 'allowance',
+    name: 'parAllowance',
+    component: () => import('@/views/params/allowance'),
+    meta: {
+      title: '补贴奖励',
+      icon: 'example'
+    }
+  },
+  {
+    path: 'commission',
+    name: 'commission',
+    component: () => import('@/views/params/allowance'),
     meta: {
       title: '交易提成',
       icon: 'example'
@@ -302,7 +496,8 @@ export const asyncRoutes = [{
   {
     path: 'other',
     name: 'otherParams',
-    component: () => import('@/views/params/time'),
+    component: () => import('@/views/params/other'),
+>>>>>>> dev
     meta: {
       title: '其他参数设置',
       icon: 'example'

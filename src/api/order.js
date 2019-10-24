@@ -8,3 +8,15 @@ export function getList(params) {
     // params
   })
 }
+
+// 交易明细列表
+export function order_details(meta, data) {
+  return request({
+    url: `/admin/order/order_details`,
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta
+    }
+  })
+}

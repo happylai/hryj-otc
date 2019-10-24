@@ -10,7 +10,11 @@ import {
   PayTypeStatus,
   Auths,
   Roles,
-  UserType
+  UserType,
+  Groups,
+  Authents,
+  CounterParty,
+  KycLevel
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -117,9 +121,9 @@ export function uppercaseFirst(string) {
  * PaymentStatus
  * @param {number} num
  */
-export function paymentStatus(num) {
+export function paymentStatus(num = 0) {
   return (
-    PayType[num].label
+    num === null ? '-' : PayType[num].label
   )
 }
 
@@ -139,8 +143,28 @@ export function orderStatus(num) {
  */
 export function payTypeStatus(num) {
   return (
-    PayTypeStatus[num].label
+    payTypeStatus === null ? '-' : PayTypeStatus[num].label
   )
+}
+
+/**
+ * PayTypeStatus
+ * @param {number} num
+ */
+export function payTypeNums(num) {
+  if (num) {
+    const data = num.split(',')
+    let typeName = ''
+    for (var i = 0; i < data.length; i++) {
+      typeName = typeName + ' ' + PayType[data[i]].label
+      console.log('typeName', typeName, i)
+      if (i === (data.length - 1)) {
+        return typeName
+      }
+    }
+  } else {
+    return '-'
+  }
 }
 
 /**
@@ -169,6 +193,47 @@ export function roleName(num) {
  */
 export function userTypeName(num) {
   return (
-    num === null ? '-' : UserType[num - 1].label
+    num === null ? '-' : num > 0 ? UserType[num - 1].label : '-'
   )
 }
+
+/**
+ * GroupName
+ * @param {number} num
+ */
+export function groupName(num) {
+  return (
+    num === null ? '-' : Groups[num].label
+  )
+}
+
+/**
+ * Authents
+ * @param {number} num
+ */
+export function authentName(num) {
+  return (
+    num === null ? '-' : Authents[num].label
+  )
+}
+
+/**
+ * CounterParty
+ * @param {number} num
+ */
+export function counterParty(num = null) {
+  return (
+    num === null ? '-' : CounterParty[num].label
+  )
+}
+
+/**
+ * CounterParty
+ * @param {number} num
+ */
+export function kycLevel(num = null) {
+  return (
+    num === null ? '-' : KycLevel[num].label
+  )
+}
+

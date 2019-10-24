@@ -15,6 +15,8 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import moment from 'moment'
+
 import * as filters from './filters' // global filters
 
 /**
@@ -31,6 +33,9 @@ import {
 if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
+
+// use moment
+Vue.prototype.$moment = moment
 
 // use ElementUI
 Vue.use(ElementUI)

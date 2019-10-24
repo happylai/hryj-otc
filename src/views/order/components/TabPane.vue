@@ -1,7 +1,7 @@
 <template>
-  <el-table :data="data" border fit highlight-current-row style="width: 100%">
+  <el-table v-loading="loading" :data="data" border fit highlight-current-row style="width: 100%">
     <el-table-column
-      v-loading="loading"
+
       align="center"
       label="订单ID"
       width="65"
@@ -12,13 +12,13 @@
       </template>
     </el-table-column>
 
-   <el-table-column width="180px" align="center" label="所属广告">
+    <el-table-column width="180px" align="center" label="所属广告">
       <template slot-scope="scope">
         <span>{{ scope.row.advertiseId }}</span>
       </template>
     </el-table-column>
 
-   <el-table-column width="80px" align="center" label="类型">
+    <el-table-column width="80px" align="center" label="类型">
       <template slot-scope="scope">
         <span>{{ scope.row.token }}</span>
       </template>
@@ -69,8 +69,8 @@
     <el-table-column class-name="status-col" label="操作" width="110">
       <template slot-scope="{row}">
         <el-button type="primary" size="small">详情</el-button>
-              </template>
-            </el-table-column> 
+      </template>
+    </el-table-column>
   </el-table>
 </template>
 
@@ -93,9 +93,9 @@ export default {
       type: String,
       default: 'CN'
     },
-    data:{
-      type:Array,
-      default:[]
+    data: {
+      type: Array,
+      default: []
     }
   },
   data() {

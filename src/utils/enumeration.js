@@ -128,7 +128,7 @@ export const TimeParamsType = [{
 },
 {
   id: 1,
-  mame: 'DEPOSIT',
+  name: 'DEPOSIT',
   label: '取消'
 },
 {
@@ -143,7 +143,7 @@ export const TimeParamsType = [{
 },
 {
   id: 4,
-  mame: 'BUYER_PAY_TIMEOUT',
+  name: 'BUYER_PAY_TIMEOUT',
   label: '买家付款超时'
 },
 {
@@ -166,4 +166,153 @@ export const TimeParamsType = [{
   name: ' AUTO_ORDER_TIME',
   label: '自动接单时间'
 }
+]
+
+export const Authents = [{
+  id: 0,
+  name: 'AUTHING',
+  label: 'KYC认证'
+},
+{
+  id: 1,
+  name: 'ID_CARD',
+  label: '支付认证'
+}
+]
+
+export const Groups = [{
+  id: 0,
+  name: 'AUTHING',
+  label: '分组0'
+},
+{
+  id: 1,
+  name: 'ID_CARD',
+  label: '分组1'
+},
+{
+  id: 2,
+  name: 'ID_CARD',
+  label: '分组2'
+}
+]
+
+export const TokenType = [{
+  id: 0,
+  name: 'PQC',
+  label: 'PQC'
+},
+{
+  id: 1,
+  name: 'PGQ',
+  label: 'PGQ'
+},
+{
+  id: 2,
+  name: 'BTC',
+  label: 'BTC'
+},
+{
+  id: 3,
+  name: 'ETH',
+  label: 'ETH'
+},
+{
+  id: 4,
+  name: 'EOS',
+  label: 'EOS'
+},
+{
+  id: 5,
+  name: 'LTC',
+  label: 'LTC'
+}
+]
+
+export const emptySelect = {
+  id: '',
+  name: undefined,
+  label: '请选择'
+}
+
+export const CounterParty = [{
+  id: 0,
+  name: 'AUTHING',
+  label: '买家'
+},
+{
+  id: 1,
+  name: 'ID_CARD',
+  label: '卖家'
+}
+
+]
+
+export const KycLevel = [{
+  id: 0,
+  name: 'UN_CERTIFIED',
+  label: '认证中'
+},
+{
+  id: 1,
+  name: 'Image_CERTIFIED',
+  label: 'KYC照片认证'
+},
+{
+  id: 2,
+  name: 'VIDEO_CERTIFIED',
+  label: 'KYC视频认证'
+}
+
+]
+
+export const TreadOrderStatus = [{
+  id: 0,
+  name: 'UN_PAYED',
+  label: '未支付'
+},
+{
+  id: 1,
+  name: 'PAY_CONFIRMED',
+  label: '确认支付'
+},
+{
+  id: 2,
+  name: 'CANCELED',
+  label: '取消'
+},
+{
+  id: 3,
+  name: 'PAY_RECEIVED',
+  label: '已收到支付'
+},
+{
+  id: 4,
+  name: 'COMPLETED',
+  label: '支付完成'
+},
+{
+  id: 5,
+  name: 'APPEALING',
+  label: '申诉中'
+},
+{
+  id: 6,
+  name: 'PAY_TIMEOUT',
+  label: '支付超时'
+}
+
+]
+
+export const AccountStatus = [{
+  id: 0,
+  name: 'true',
+  label: '正常'
+},
+{
+  id: 1,
+  name: 'false',
+  label: '冻结'
+}
+
 ]

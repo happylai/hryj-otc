@@ -314,5 +314,33 @@ export const AccountStatus = [{
   name: 'false',
   label: '冻结'
 }
+]
 
+export const AdvStatus = [{
+  id: 0,
+  name: 'true',
+  label: '下架'
+},
+{
+  id: 1,
+  name: 'false',
+  label: '上架'
+},
+{
+  id: 2,
+  name: 'false',
+  label: '关闭'
+}
+]
+
+export const AdvType = [{
+  id: 0,
+  name: 'true',
+  label: '买入'
+},
+{
+  id: 1,
+  name: 'false',
+  label: '卖出'
+}
 ]

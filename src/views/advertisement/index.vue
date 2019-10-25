@@ -1,21 +1,21 @@
 <template>
   <div class="tab-container">
-    <tip />
+    <tip :miain-tip="miainTip" :second-tip="secondTip" :show-contact="false" />
 
     <div
       class="filter-container"
       style="margin-bottom: 10px;"
     >
 
-      <el-input v-model="fliterQuery.query" placeholder="用户名ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="fliterQuery.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
+      <el-input v-model="fliterQuery.query" placeholder="广告ID / 创建人" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="fliterQuery.type" placeholder="广告类型" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in AdvType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-model="fliterQuery.groupId" placeholder="所在分组" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in Groups" :key="item.id" :label="item.label" :value="item.id" />
+      <el-select v-model="fliterQuery.payType" placeholder="收付款方式" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-model="fliterQuery.authent" placeholder="认证方式" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in Authents" :key="item.id" :label="item.label" :value="item.id" />
+      <el-select v-model="fliterQuery.status" placeholder="状态" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in AdvStatus" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
       <el-date-picker
         v-model="fliterQuery.date"
@@ -28,64 +28,70 @@
         搜索
       </el-button>
 
-      </tip.></div>
+    </div>
 
-    <el-table v-loading="loading" :data="data" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
 
         align="center"
-        label="用户ID"
-        width="65"
+        label="广告ID"
+        min-width="120px"
         element-loading-text="请给我点时间！"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.uuid }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="所属广告">
+      <el-table-column width="180px" align="center" label="创建人">
         <template slot-scope="scope">
-          <span>{{ scope.row.advertiseId }}</span>
+          <span>{{ scope.row.userUuid }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="80px" align="center" label="类型">
-        <template slot-scope="scope">
-          <span>{{ scope.row.token }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="70px" align="center" label="币种">
+      <el-table-column width="80px" align="center" label="币种">
         <template slot-scope="scope">
           <span>{{ scope.row.token }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" label="交易额">
+      <el-table-column width="70px" align="center" label="金额">
         <template slot-scope="scope">
-          <span>{{ scope.row.price }}</span>
+          <span>{{ scope.row.amount }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="卖家" width="55">
+      <el-table-column width="120px" align="center" label="最小成交额">
         <template slot-scope="scope">
-          <span>{{ scope.row.seller }}</span>
+          <span>{{ scope.row.minLimit }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="支付方式" width="90">
+      <el-table-column align="center" label="最大成交额" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.payType|paymentStatus }}</span>
+          <span>{{ scope.row.maxLimit }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="手续费" width="95">
+      <el-table-column align="center" label="类型" width="90">
         <template slot-scope="scope">
-          <span>{{ scope.row.fee }}</span>
+          <span>{{ scope.row.type|advType }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="交易时间" minwidth="300">
+      <el-table-column align="center" label="访问量" width="95">
+        <template slot-scope="scope">
+          <span />
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="支付方式" min-width="180px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.payType|payTypeNames }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" min-width="180px" label="创建时间">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
@@ -93,17 +99,18 @@
 
       <el-table-column align="center" label="状态" width="95">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderStatus|orderStatus }}</span>
+          <span>{{ scope.row.status|advStatus }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="操作" width="110">
-        <template slot-scope="{row}">
-          <el-button type="primary" size="small">详情</el-button>
+      <el-table-column class-name="status-col" align="center" label="操作" min-width="180px">
+        <template slot-scope="scope">
+          <el-button type="primary" :disabled="scope.row.status===0" size="small" @click="handleRemove(scope.row.id)">下架</el-button>
+          <el-button type="primary" size="small" @click="goDetail(scope.row.id)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="allListMeta.total>0" :total="allListMeta.total" :page.sync="allListMeta.pages" :limit.sync="allListMeta.size" @pagination="getList" />
+    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
 
     <el-dialog :visible.sync="dialogPvVisible" title="订单详情">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
@@ -118,83 +125,118 @@
 </template>
 
 <script>
-import tip from '@/components/Tip'
+// import tabPane from './components/TabPane'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
-import Pagination from '@/components/Pagination'
+import pagination from '@/components/Pagination'
+import tip from '@/components/Tip'
+
 import waves from '@/directive/waves' // waves directive
-import { Groups, UserType, Authents, emptySelect } from '@/utils/enumeration'
+import { PayType, AdvStatus, AdvType } from '@/utils/enumeration'
+import { advertises, down_advertise } from '@/api/advertisement'
 
 export default {
-  name: 'Tab',
-  components: { tip },
+  name: 'Advertisement',
+  components: { pagination, tip },
   directives: { waves },
   data() {
     return {
-
-      UserType,
-      Groups: [emptySelect, ...Groups],
-      Authents: [{ id: '',
-        mame: '',
-        label: '请选择'
-      }, ...Authents],
-      activeName: 'all',
-      createdTimes: 0,
+      AdvStatus,
+      AdvType,
+      PayType,
+      miainTip: '广告下架：1.查看广告详情；2.核查是否有未完成交易。',
+      secondTip: '温馨提示：若遇其他非上述情况请及时联系管理员。',
       fliterQuery: {
         page: 1,
-        limit: 20,
-        importance: undefined,
-        keywords: undefined,
-        orderType: undefined,
-        paymentType: undefined,
-        orderStatus: undefined,
-        dialogPvVisible: true
-        // orderStatus:OrderStatus,
-        // payType:PayType
-      }
+        size: 20,
+        date: null,
+        query: undefined,
+        payType: undefined
+      },
+      meta: {
+        current: 1,
+        size: 10
+      },
+      dialogVisible: false,
+      loading: false,
+      list: [],
+      paginationMeta: {
+        total: 10,
+        pages: 1
+      },
+      auditData: {}
     }
   },
-  watch: {
-    activeName(val) {
-      this.$router.push(`${this.$route.path}?tab=${val}`)
-    }
-  },
+
   computed: {
     ...mapState({
-      allList: state => state.order.allList,
-      allListMeta: state => state.order.allMeta
+      adminId: state => state.user.principal.adminId
     })
   },
-  created() {
-    // init the default selected tab
-    const tab = this.$route.query.tab
-    if (tab) {
-      this.activeName = tab
-    }
-  },
+
   mounted() {
     this.getList()
   },
   methods: {
-    showCreatedTimes() {
-      this.createdTimes = this.createdTimes + 1
-    },
-    getList() {
-      this.listLoading = true
-      this.$store.dispatch('order/getAllList')
-      // 	fetchList(this.listQuery).then(response => {
-      // 		this.list = response.data.items
-      // 		this.total = response.data.total
 
-      // 		// Just to simulate the time of the request
-      // 		setTimeout(() => {
-      // 			this.listLoading = false
-      // 		}, 1.5 * 1000)
-      // })
+    paginationChange(e) {
+      console.log('paginationChange', e)
+      this.meta.size = e.limit
+      this.meta.current = e.page
+      this.getList()
+    },
+    getList(meta, data) {
+      this.listLoading = true
+      advertises(meta || this.meta, data).then(res => {
+        console.log('res', res)
+        if (res.code === 0) {
+          this.list = res.data.records
+          this.meta.current = res.data.current
+          this.paginationMeta.total = res.data.total
+          this.paginationMeta.pages = res.data.pages
+        }
+      })
     },
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      const fliterQuery = this.fliterQuery
+      console.log('fliterQuery', this.fliterQuery)
+      const data = {
+        type: fliterQuery.type,
+        payType: fliterQuery.payType,
+        query: fliterQuery.query,
+        status: fliterQuery.status
+      }
+      if (fliterQuery.date) {
+        data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
+        data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
+      }
+      const meta = this.meta
+      meta.current = 1
+      this.getList(meta, data)
+    },
+
+    goDetail(id) {
+      this.$router.push({ path: `/advertising/${id}` })
+    },
+    handleRemove(id) {
+      this.$confirm('是否下架该广告?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        down_advertise({ id: id }).then(res => {
+          if (res.code === 0) {
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+            this.getList()
+          } else {
+            this.$message.error(res.message || '操作失败')
+          }
+        })
+      })
     }
+
   }
 }
 </script>

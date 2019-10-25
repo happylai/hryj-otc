@@ -211,7 +211,7 @@ export const asyncRoutes = [{
 
 },
 {
-  path: '/analysis',
+  path: '/advertising',
   component: Layout,
   meta: {
     title: '广告',
@@ -223,7 +223,7 @@ export const asyncRoutes = [{
     name: 'user',
     component: () => import('@/views/advertisement/index'),
     meta: {
-      title: '数据统计',
+      title: '广告管理',
       icon: 'example'
     }
   },
@@ -231,9 +231,9 @@ export const asyncRoutes = [{
     path: ':id',
     hidden: true,
     name: 'advertingDetail',
-    component: () => import('@/views/order/index'),
+    component: () => import('@/views/advertisement/detail'),
     meta: {
-      title: '用户资产',
+      title: '详情',
       icon: 'example'
     }
   }

@@ -14,7 +14,9 @@ import {
   Groups,
   Authents,
   CounterParty,
-  KycLevel
+  KycLevel,
+  AdvStatus,
+  AdvType
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -161,7 +163,7 @@ export function payTypeStatus(num) {
  * PayTypeStatus
  * @param {number} num
  */
-export function payTypeNums(num) {
+export function payTypeNames(num) {
   if (num) {
     const data = num.split(',')
     let typeName = ''
@@ -244,6 +246,26 @@ export function counterParty(num = null) {
 export function kycLevel(num = null) {
   return (
     num === null ? '-' : KycLevel[num].label
+  )
+}
+
+/**
+ * AdvType
+ * @param {number} num
+ */
+export function advType(num = null) {
+  return (
+    num === null ? '-' : AdvType[num].label
+  )
+}
+
+/**
+ * AdvStatus
+ * @param {number} num
+ */
+export function advStatus(num = null) {
+  return (
+    num === null ? '-' : AdvStatus[num].label
   )
 }
 

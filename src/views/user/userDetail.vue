@@ -25,7 +25,7 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">返佣比：{{ modals.rebate }}%</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">申诉数：{{ modals.appealNum }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div class="">被申诉数：{{ modals.appealedNum }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">收付款方式：{{ modals.payTypes|payTypeNums }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">收付款方式：{{ modals.payTypes|payTypeNames }}</div></el-col>
           <!-- <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">所在分组：{{ modals.pricingGroupId|groupName }}</div></el-col> -->
         </el-row>
       </div>
@@ -293,7 +293,7 @@
           <el-checkbox-group v-model="newData.payTypes">
             <el-checkbox v-for="(item,index) in peyTypeList" :key="index+'payType'" :label="item.payType.toString()">{{ item.payType|payTypeName }}</el-checkbox>
           </el-checkbox-group>
-          <el-link type="danger" :underline="false">当前收付款方式：{{ editData.payTypes|payTypeNums }}</el-link>
+          <el-link type="danger" :underline="false">当前收付款方式：{{ editData.payTypes|payTypeNames }}</el-link>
         </el-col>
       </el-row>
 

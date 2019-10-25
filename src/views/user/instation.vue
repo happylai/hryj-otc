@@ -96,7 +96,7 @@
       <el-table-column align="center" label="收付款方式" width="120">
         <template slot-scope="scope">
           <el-link v-if="scope.row.needAudit" type="danger" @click="clickGoAudit(scope.row.id)">去审核>>></el-link>
-          <span v-else>{{ scope.row.payTypes|payTypeNums }}</span>
+          <span v-else>{{ scope.row.payTypes|payTypeNames }}</span>
         </template>
       </el-table-column>
 
@@ -180,7 +180,7 @@ import { Groups, UserType, KycLevel, emptySelect, PayType, AccountStatus } from 
 import { users_web, pay_type_audit, pay_type_info, freeze_deal } from '@/api/usermanage'
 
 export default {
-  name: 'Tab',
+  name: 'UserInstation',
   components: { pagination, tip },
   directives: { waves },
   data() {
@@ -225,9 +225,7 @@ export default {
     this.getList()
   },
   methods: {
-    showCreatedTimes() {
-      this.createdTimes = this.createdTimes + 1
-    },
+
     paginationChange(e) {
       console.log('paginationChange', e)
       this.meta.size = e.limit

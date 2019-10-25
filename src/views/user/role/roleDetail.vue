@@ -25,7 +25,7 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">返佣比：{{ modals.rebate }}%</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">申诉数：{{ modals.appealNum }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div class="">被申诉数：{{ modals.appealedNum }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">收付款方式：{{ modals.payTypes|payTypeNums }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">收付款方式：{{ modals.payTypes|payTypeNames }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">所在分组：{{ modals.pricingGroupId|groupName }}</div></el-col>
         </el-row>
       </div>
@@ -221,7 +221,7 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">收付款方式：</el-col>
-        <el-col :span="16">{{ editData.payTypes|payTypeNums }}</el-col>
+        <el-col :span="16">{{ editData.payTypes|payTypeNames }}</el-col>
       </el-row>
 
       <span slot="footer" class="dialog-footer">

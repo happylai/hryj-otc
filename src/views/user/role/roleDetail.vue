@@ -58,7 +58,7 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6">
             <div class="card-item ">
               <div class="cart-i-t">激活金 <el-link :underline="false" type="success">(已退还)</el-link> </div>
-              <div class="cart-i-v">{{ modals.activeGold }}</div>
+              <div class="cart-i-v">{{ modals.activeBalance }}</div>
             </div>
           </el-col>
         </el-row>

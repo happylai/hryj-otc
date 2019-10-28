@@ -86,7 +86,7 @@
             </div>
           </el-col>
           <el-col span="12">
-            <div class="card-item borderR">
+            <div class="card-item ">
               <div class="cart-i-t">冻结资产(不可用) </div>
               <div class="cart-i-v">{{ modals.frozenBalance }}</div>
             </div></el-col>
@@ -217,10 +217,10 @@
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">修改密码：</el-col>
         <el-col :span="16">
-          <el-input style="width: 240px" ref="password" v-model="editData.password" show-password :type="passwordType" placeholder="请输入密码" name="password" tabindex="2" auto-complete="off" />
+          <el-input ref="password" v-model="editData.password" style="width: 240px" show-password :type="passwordType" placeholder="请输入密码" name="password" tabindex="2" auto-complete="off" />
         </el-col>
       </el-row>
-      
+
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">账号状态：</el-col>
         <el-col :span="16">
@@ -372,7 +372,7 @@ export default {
       const data = {
         active: this.newData.active,
         id: this.id,
-        password:this.newData.password
+        password: this.newData.password
       }
 
       this.user_save(data)

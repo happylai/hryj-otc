@@ -1,4 +1,6 @@
 // import parseTime, formatTime and set to filter
+import has from 'has-value'
+
 export {
   parseTime,
   formatTime
@@ -164,7 +166,8 @@ export function payTypeStatus(num) {
  * @param {number} num
  */
 export function payTypeNames(num) {
-  if (num) {
+  if (has({ foo: num }, 'foo') && num !== null) {
+    console.log('hasvalue')
     const data = num.split(',')
     let typeName = ''
     for (var i = 0; i < data.length; i++) {
@@ -175,6 +178,7 @@ export function payTypeNames(num) {
       }
     }
   } else {
+    console.log('dont has value', num)
     return '-'
   }
 }

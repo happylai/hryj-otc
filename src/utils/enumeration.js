@@ -194,6 +194,14 @@ export const Groups = [{
   id: 2,
   name: 'ID_CARD',
   label: '分组2'
+}, {
+  id: 3,
+  name: 'ID_CARD',
+  label: '分组3'
+}, {
+  id: 4,
+  name: 'ID_CARD',
+  label: '分组4'
 }
 ]
 

@@ -4672,6 +4672,13 @@ get-value@^2.0.3, get-value@^2.0.6:
   resolved "https://registry.yarnpkg.com/get-value/-/get-value-2.0.6.tgz#dc15ca1c672387ca76bd37ac0a395ba2042a2c28"
   integrity sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=
 
+get-value@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.npm.taobao.org/get-value/download/get-value-3.0.1.tgz#5efd2a157f1d6a516d7524e124ac52d0a39ef5a8"
+  integrity sha1-Xv0qFX8dalFtdSThJKxS0KOe9ag=
+  dependencies:
+    isobject "^3.0.1"
+
 getpass@^0.1.1:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/getpass/-/getpass-0.1.7.tgz#5eff8e3e684d569ae4cb2b1282604e8ba62149fa"
@@ -4872,6 +4879,14 @@ has-value@^1.0.0:
     has-values "^1.0.0"
     isobject "^3.0.0"
 
+has-value@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.npm.taobao.org/has-value/download/has-value-2.0.2.tgz#d0f12e8780ba8e90e66ad1a21c707fdb67c25658"
+  integrity sha1-0PEuh4C6jpDmatGiHHB/22fCVlg=
+  dependencies:
+    get-value "^3.0.0"
+    has-values "^2.0.1"
+
 has-values@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/has-values/-/has-values-0.1.4.tgz#6d61de95d91dfca9b9a02089ad384bff8f62b771"
@@ -4884,6 +4899,13 @@ has-values@^1.0.0:
   dependencies:
     is-number "^3.0.0"
     kind-of "^4.0.0"
+
+has-values@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npm.taobao.org/has-values/download/has-values-2.0.1.tgz#3876200ff86d8a8546a9264a952c17d5fc17579d"
+  integrity sha1-OHYgD/htioVGqSZKlSwX1fwXV50=
+  dependencies:
+    kind-of "^6.0.2"
 
 has@^1.0.0, has@^1.0.1, has@^1.0.3:
   version "1.0.3"

@@ -81,7 +81,7 @@
 
       <el-table-column align="center" label="访问量" width="95">
         <template slot-scope="scope">
-          <span />
+          <span>字段缺失</span>
         </template>
       </el-table-column>
 

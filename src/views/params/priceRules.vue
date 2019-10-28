@@ -2,7 +2,58 @@
   <div class="tab-container">
     <el-tabs v-model="activeType" style="margin-top:15px;">
       <el-tab-pane :key="tabMapOptions[0].key" :label="tabMapOptions[0].label" :name="tabMapOptions[0].key">
-        <el-row :gutter="20">
+        <div>
+          <el-select v-model="price.token" placeholder="请选择币种" clearable style="width: 140px" class="filter-item">
+            <el-option v-for="item in TokenType" :key="item.label+'tokenType'" :label="item.label" :value="item.label" />
+          </el-select>
+          <el-input v-model="price.exchangeRate" clearable placeholder="设置汇率" style="width: 300px;" class="filter-item" />
+          <el-button v-waves :loading="loading" class="filter-item" style="width: 100px;" type="primary" @click="handleSave">
+            保存
+          </el-button>
+          <el-switch
+            v-model="price.active"
+            inactive-color="#dcdfe6"
+            active-text="激活该配置"
+          />
+        </div>
+        <el-row :gutter="20" class="userRow">
+          <el-col :span="24" class="">
+          <span class="price_title">接单范围</span>
+          <el-link type="primary">去添加></el-link>
+          </el-col>
+        </el-row>
+
+        <el-table class="marginT20" :data="list" border fit highlight-current-row>
+          <el-table-column v-loading="loading" align="center" label="币种名称" width="180" element-loading-text="请给我点时间！">
+            <template slot-scope="scope">
+              <span>{{ scope.row.token }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column min-width="180px" align="center" label="汇率">
+            <template slot-scope="scope">
+              <span>{{ scope.row.exchangeRate }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column min-width="180px" align="center" label="接单范围">
+            <template slot-scope="scope">
+              <span>{{ scope.row.createTime }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column min-width="180px" align="center" label="创建时间">
+            <template slot-scope="scope">
+              <span>{{ scope.row.createTime }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column class-name="status-col" align="center" label="操作" width="180">
+            <template slot-scope="scope">
+              <el-button type="primary" size="small" @click="edit(scope.row)">编辑</el-button>
+              <el-button type="info" size="small" @click="edit(scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- <el-row :gutter="20">
           <el-col :span="16">
             <div class="">
               <el-row :gutter="20" class="userRow">
@@ -39,10 +90,10 @@
               </el-row>
             </div>
           </el-col>
-        </el-row>
+        </el-row> -->
       </el-tab-pane>
 
-      <el-tab-pane :key="tabMapOptions[1].key" :label="tabMapOptions[1].label" :name="tabMapOptions[1].key">
+      <!-- <el-tab-pane :key="tabMapOptions[1].key" :label="tabMapOptions[1].label" :name="tabMapOptions[1].key">
         <div class="filter-container" style="margin-bottom: 10px;">
           <el-input v-model="price.minVolume" placeholder="最低接单价" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
           <el-input v-model="price.maxVolume" placeholder="最高接单价" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -98,9 +149,26 @@
             </div>
           </el-col>
         </el-row>
-      </el-tab-pane>
+      </el-tab-pane> -->
 
     </el-tabs>
+      <!-- <el-dialog :visible.sync="dialogVisible" title="支付方式审核">
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">支付方式：</el-col>
+        <el-col :span="16">{{ auditData.payType }}</el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">账号：</el-col>
+        <el-col :span="16">
+          {{ auditData.uuid }}
+        </el-col>
+      </el-row>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleAudit(true)">通过</el-button>
+        <el-button type="info" @click="handleAudit(false)">不通过</el-button>
+      </span>
+    </el-dialog> -->
   </div>
 
 </template>
@@ -111,7 +179,7 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect, TokenType } from '@/utils/enumeration'
-import { pricings, pricing_save, pricing, groups, group_save } from '@/api/params'
+import { pricings, pricing_save, pricing, groups, group_save, pricing_scopes } from '@/api/params'
 
 export default {
   name: 'Tab',
@@ -121,11 +189,11 @@ export default {
     return {
       tabMapOptions: [
         { label: '固定价格', key: '1' },
-        { label: '价格范围', key: '2' },
-        { label: '灵活价格', key: '3' }
+        { label: '灵活价格', key: '2' }
       ],
       activeType: '1',
       UserType,
+      dialogVisible:false,
       TokenType,
       Authents: [{ id: '',
         mame: '',
@@ -153,24 +221,32 @@ export default {
 
   mounted() {
     this.getPriceDetail()
-    this.getList()
+    this.getPriceGroups()
   },
   methods: {
 
     getPriceDetail() {
-      pricing().then(res => {
+      pricing({ type: this.activeType }).then(res => {
         if (res.code === 0) {
           console.log('res', res)
           if (res.code === 0) {
+            this.modals =
+            this.getList()
           }
         }
       })
     },
     getList(meta, data) {
       this.listLoading = true
-      groups({ type: this.activeType }).then(res => {
+      pricing_scopes({ type: this.activeType }).then(res => {
         this.list = res.data.records
 
+        console.log('res', res)
+      })
+    },
+
+    getPriceGroups() {
+      groups({ type: this.activeType }).then(res => {
         console.log('res', res)
       })
     },
@@ -179,13 +255,12 @@ export default {
       const price = this.price
       if (!price.exchangeRate) {
         this.$message.error('请填写汇率')
-      } else if (price.active === undefined) {
-        this.$message.error('请选择是否激活')
       } else {
         const data = {
           ...price,
           type: this.activeType
         }
+        this.save(data)
       }
     },
     handleSaveAar() {
@@ -243,5 +318,8 @@ export default {
 }
 .filter-item{
   margin-top:5px
+}
+.price_title{
+  font-size:18px
 }
 </style>

@@ -63,6 +63,15 @@ export function cancel_nums(data, meta) {
   })
 }
 
+// 保存/添加每日可取消单数参数配置
+export function cancel_num_save(data) {
+  return request({
+    url: `/admin/dictionary/cancel_num_save`,
+    method: 'post',
+    data: data
+  })
+}
+
 export function pricing(data) {
   return request({
     url: `/admin/dictionary/pricing`,
@@ -106,6 +115,24 @@ export function group_save(data) {
   })
 }
 
+// 查询分组下的接单范围
+export function groups_scopes(data) {
+  return request({
+    url: `/admin/dictionary/group/scopes`,
+    method: 'get',
+    params: data
+  })
+}
+
+// 解散分组，系统分组不能解散
+export function group_del(data) {
+  return request({
+    url: `/admin/dictionary/group_save`,
+    method: 'post',
+    data: data
+  })
+}
+
 // 查询补贴类参数列
 export function subsidies(data, meta) {
   return request({
@@ -125,5 +152,17 @@ export function subsidy_save(data) {
     method: 'post',
     data: data
 
+  })
+}
+
+// 根据固定定价id查询对应的接单范围
+export function pricing_scopes(data, meta) {
+  return request({
+    url: `/admin/dictionary/pricing/scopes`,
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta
+    }
   })
 }

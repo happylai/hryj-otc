@@ -93,7 +93,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="收付款方式" width="120">
+      <el-table-column align="center" label="收付款方式" width="130">
         <template slot-scope="scope">
           <el-link v-if="scope.row.needAudit" type="danger" @click="clickGoAudit(scope.row.id)">去审核>>></el-link>
           <span v-else>{{ scope.row.payTypes|payTypeNames }}</span>

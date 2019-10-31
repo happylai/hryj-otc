@@ -352,3 +352,26 @@ export const AdvType = [{
   label: '卖出'
 }
 ]
+
+export const DealType = [{
+  id: 0,
+  name: 'BUY',
+  label: '买家'
+},
+{
+  id: 1,
+  name: 'SELL ',
+  label: '卖家'
+}
+]
+
+export const FiatType = [{
+  id: 0,
+  label: 'CNY'
+},
+{
+  id: 1,
+  label: 'USDT'
+}
+]
+

@@ -166,3 +166,49 @@ export function pricing_scopes(data, meta) {
     }
   })
 }
+
+// 保存/新增接单范围
+export function scope_save(data) {
+  return request({
+    url: `/admin/dictionary/pricing/scope_save`,
+    method: 'post',
+    data: data
+
+  })
+}
+
+// 查询可添加到当前分组的接单范围
+export function get_group_scopes_add(data, meta) {
+  return request({
+    url: `/admin/dictionary/group/scopes/add`,
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta
+    }
+  })
+}
+
+// 添加接单范围到分组中
+export function scopes_add(data) {
+  return request({
+    url: `/admin/dictionary/group/scopes_add`,
+    method: 'post',
+    data: qs.stringify(data),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
+// 删除接单范围
+export function scope_del(data) {
+  return request({
+    url: `/admin/dictionary/pricing/scope_del`,
+    method: 'post',
+    data: qs.stringify(data),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}

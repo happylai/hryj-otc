@@ -20,7 +20,58 @@
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
     </el-tabs>
     <!-- <tab-pane :loading="loading" :data="list" @edit="handlEdit" /> -->
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 800px">
+    <el-row v-if="ParamsType==='4'" :gutter="20" class="tableRow">
+      <el-col :span="8" class="textAlingR">
+        <el-table ref="groupsTable" v-loading="loading" :data="list" border fit highlight-current-row style="width: 800px" @current-change="handleCurrentChange">
+          <el-table-column align="center" label="分组名称" width="100" element-loading-text="请给我点时间！">
+            <template slot-scope="scope">
+              <span>{{ scope.row.groupName }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column min-width="180px" align="center" label="分组人数">
+            <template slot-scope="scope">
+              <span>{{ scope.row.userNum }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+      <el-col :span="1">
+        <span>>></span>
+      </el-col>
+      <el-col :span="17">
+        <el-table v-loading="loading" :data="groupDetail" border fit highlight-current-row>
+          <el-table-column align="center" label="币种名称" width="100" element-loading-text="请给我点时间！">
+            <template slot-scope="scope">
+              <span>{{ scope.row.token }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column min-width="180px" align="center" label="接单范围">
+            <template slot-scope="scope">
+              <span>{{ scope.row.minPrice }}~{{ scope.row.maxPrice }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column min-width="180px" align="center" label="法定货币">
+            <template slot-scope="scope">
+              <span>{{ scope.row.fiat }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column min-width="180px" align="center" label="交易角色">
+            <template slot-scope="scope">
+              <span>{{ scope.row.dealType }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div style="margin-top: 20px">
+          <el-button @click="groupDialogVisible=true">编辑</el-button>
+        </div>
+      </el-col>
+    </el-row>
+
+    <el-table v-else v-loading="loading" :data="list" border fit highlight-current-row style="width: 800px">
       <el-table-column v-if="ParamsType!=='4'" align="center" label="角色" width="100" element-loading-text="请给我点时间！">
         <template slot-scope="scope">
           <span>{{ scope.row.roleId|userTypeName }}</span>
@@ -61,59 +112,61 @@
         </template>
       </el-table-column>
     </el-table>
+
     <!-- <pagination v-show="meta.total>0" :total="meta.total" :page.sync="meta.pages" :limit.sync="meta.size" @pagination="getList" /> -->
 
-    <el-dialog :visible.sync="groupDialogVisible" >
+    <el-dialog :visible.sync="groupDialogVisible">
 
       <div class="dialog-content">
         <div slot="header" class="dialog-header">
-          <span class="dialog_title">分组1设置 </span> <span class="dialog_title_tip">该分组当前总人数 33567</span>
+          <span class="dialog_title">{{ currentGroup.groupName }}设置 </span> <span class="dialog_title_tip">该分组当前总人数 {{ currentGroup.userNum }}</span>
         </div>
         <div>
-          <el-row :gutter="20" class="dialog_content_top">
-            <el-col :span="24" class="">
-              <el-select  v-model="addData.roleId" placeholder="选择币种" clearable style="width: 140px" class="filter-item">
-                  <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
-                </el-select>
-                <el-select  v-model="addData.roleId" placeholder="接单范围" clearable style="width: 140px" class="filter-item">
-                  <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
-                </el-select>
-                <el-button type="primary" size="small" style="margin-left: 40px" @click="handlEdit(scope.row)">确认添加</el-button>
-            </el-col>
-          </el-row>
 
-          <el-table v-loading="loading" :data="list" border fit highlight-current-row >
-            <el-table-column  align="center" label="币种选择" width="100" element-loading-text="请给我点时间！">
+          <el-col :span="24" class="marginT20">
+            <el-select v-model="currentGroupQuery.token" placeholder="请选择币种" clearable style="width: 140px" class="filter-item" @change="filterChange">
+              <el-option v-for="item in TokenType" :key="item.label+'tokenType'" :label="item.label" :value="item.label" />
+            </el-select>
+            <el-select v-model="currentGroupQuery.fiat" placeholder="请选择法币" clearable style="width: 140px" class="filter-item" @change="filterChange">
+              <el-option v-for="item in FiatType" :key="item.label+'tokenType'" :label="item.label" :value="item.label" />
+            </el-select>
+            <el-select v-model="currentGroupQuery.dealType" placeholder="请选择交易角色" clearable style="width: 140px" class="filter-item" @change="filterChange">
+              <el-option v-for="item in DealType" :key="item.label+'tokenType'" :label="item.label" :value="item.id" />
+            </el-select>
+            <el-button type="primary" size="small" style="margin-left: 40px" @click="handlEdit(scope.row)">搜索</el-button>
+          </el-col>
+
+          <el-table v-loading="loading" class="marginT20" :data="current_group_scopes_add" border fit highlight-current-row @selection-change="handleCurrent_group_scopes_add">
+
+            <el-table-column
+              type="selection"
+              width="55"
+            />
+            <el-table-column align="center" label="币种选择" width="100" element-loading-text="请给我点时间！">
               <template slot-scope="scope">
-                <span>{{ scope.row.roleId|userTypeName }}</span>
+                <span>{{ scope.row.token }}</span>
               </template>
             </el-table-column>
 
             <el-table-column v-if="ParamsType==='4'" min-width="180px" align="center" label="接单范围">
               <template slot-scope="scope">
-                <span>{{ scope.row.createTime }}</span>
+                <span>{{ scope.row.minPrice }}~{{ scope.row.maxPrice }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column v-if="ParamsType==='4'" min-width="180px" align="center" label="分组人数">
+            <el-table-column v-if="ParamsType==='4'" min-width="180px" align="center" label="法币">
               <template slot-scope="scope">
-                <span>{{ scope.row.createTime }}</span>
+                <span>{{ scope.row.fiat }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column v-if="ParamsType==='4'" min-width="180px" align="center" label="创建时间">
+            <el-table-column v-if="ParamsType==='4'" min-width="180px" align="center" label="交易角色">
               <template slot-scope="scope">
-                <span>{{ scope.row.createTime }}</span>
-              </template>
-            </el-table-column>
-
-
-            <el-table-column class-name="status-col" align="center" label="操作" width="110">
-              <template slot-scope="scope">
-                <el-button type="primary" size="small" @click="handlEdit(scope.row)">解散</el-button>
+                <span>{{ scope.row.dealType }}</span>
               </template>
             </el-table-column>
           </el-table>
+          <el-button type="primary" size="small" class="marginT20" @click="handleAddGroupScopes()">一键添加</el-button>
         </div>
       </div>
     </el-dialog>
@@ -144,8 +197,8 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
-import { UserType, TimeParamsType } from '@/utils/enumeration'
-import { deposits, deposit_save, active_golds, active_gold_save, cancel_nums, cancel_num_save, groups, group_save } from '@/api/params'
+import { UserType, TokenType, FiatType, DealType } from '@/utils/enumeration'
+import { deposits, deposit_save, active_golds, active_gold_save, cancel_nums, cancel_num_save, groups, group_save, groups_scopes, get_group_scopes_add, scopes_add } from '@/api/params'
 
 export default {
   name: 'Tab',
@@ -154,6 +207,9 @@ export default {
   data() {
     return {
       UserType,
+      TokenType,
+      FiatType,
+      DealType,
       tabMapOptions: [
         { label: '保证金', key: '1', name: 'deposit' },
         { label: '激活金', key: '2', mame: 'activeGold' },
@@ -168,11 +224,12 @@ export default {
         4: '分组名称'
 
       },
+      currentGroup: { groupName: undefined },
       tabValueName: ['', 'deposit', 'activeGold', '', 'num'],
       ParamsType: '4',
       loading: false,
       dialogVisible: false,
-      groupDialogVisible:true,
+      groupDialogVisible: false,
       meta: {
         current: 1,
         size: 10,
@@ -186,9 +243,20 @@ export default {
       list: [{
 
       }],
+      groupDetail: [],
       editData: {
         roleId: 1
-      }
+      },
+      editDataQuery: {
+
+      },
+      currentGroupQuery: {
+        token: 'BTC',
+        dealType: 0,
+        fiat: 'CNY'
+      },
+      current_group_scopes_add: [],
+      current_group_scopes_add_Selection: []
     }
   },
   computed: {
@@ -213,6 +281,20 @@ export default {
     this.getList()
   },
   methods: {
+    setCurrent(row) {
+      console.log('setRow', row)
+      this.currentGroup = row
+      this.$refs.groupsTable.setCurrentRow(row)
+    },
+    handleCurrentChange(data) {
+      console.log('val', data)
+      this.currentGroup = data
+      this.getGroupDetail(data.id)
+    },
+    handleCurrent_group_scopes_add(val) {
+      console.log('handleCurrent_group_scopes_add', val)
+      this.current_group_scopes_add_Selection = val
+    },
     handleTabClick(tab, event) {
       this.ParamsType = tab.name
       this.addData = {
@@ -230,6 +312,10 @@ export default {
         this.loading = false
         if (res.code === 0) {
           this.list = res.data.records
+          if (this.ParamsType === '4') {
+            this.getGroupDetail(this.list[0].id)
+            this.setCurrent(this.list[0])
+          }
         }
       }).catch(err => {
         console.log('err', err)
@@ -241,16 +327,29 @@ export default {
       this.getList()
     },
     handlEdit(data) {
-      if(this.ParamsType!=='4'){
-      this.editData = data
-      this.dialogVisible = true
-      }else{
+      if (this.ParamsType !== '4') {
+        this.editData = data
+        this.dialogVisible = true
+      } else {
         this.editData = data
         this.groupDialogVisible = true
       }
     },
-    getGroupDetail(id){
-
+    getGroupDetail(id) {
+      groups_scopes({ groupId: id }).then(res => {
+        this.groupDetail = res.data.records
+      })
+    },
+    getgroup_scopes_add() {
+      const data = {
+        ...this.currentGroupQuery,
+        groupId: this.currentGroup.id
+      }
+      get_group_scopes_add(data).then(res => {
+        if (res.code === 0) {
+          this.current_group_scopes_add = res.data.records
+        }
+      })
     },
     handleSave() {
       const data = this.editData
@@ -307,6 +406,35 @@ export default {
         this.$message.error(err || '操作失败')
         this.loading = false
       })
+    },
+    filterChange() {
+      this.getgroup_scopes_add(this.currentGroupQuery)
+    },
+    handleAddGroupScopes() {
+      const data = this.current_group_scopes_add_Selection
+      var result = data.map(a => a.id).join(',')
+      const postData = {
+        groupId: this.currentGroup.id,
+        scopeIds: result
+      }
+      if (result) {
+        scopes_add(postData).then(res => {
+          if (res.code === 0) {
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+            this.getList()
+          } else {
+            this.$message.error(res.message || '操作失败')
+          }
+        }).catch(err => {
+          console.log('err', err)
+          this.$message.error(err || '操作失败')
+          this.loading = false
+        })
+      }
+      console.log('result', result)
     }
   }
 }
@@ -316,9 +444,10 @@ export default {
 .tab-container {
   margin: 20px;
 }
-.userRow {
+.tableRow {
   min-height: 20px;
   margin: 10px 0;
+  display: flex
 }
 .dialog-header{
   margin-top:-50px;

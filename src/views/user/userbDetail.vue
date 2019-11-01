@@ -11,16 +11,14 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">用户名：{{ modals.nickName }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div class="">真实姓名：{{ modals.realName }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">
-            当前状态：<el-link v-if="modals.active" type="success" :underline="false">正常/激活</el-link>
+            当前状态：<el-link v-if="modals.active" type="success" :underline="false">正常</el-link>
             <el-link v-if="!modals.active" type="danger" :underline="false">冻结</el-link></div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">认证方式：{{ modals.kycLevel|kycLevel }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">手机号：{{ modals.mobileContact }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">邮箱：{{ modals.emailContact }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">申诉数：{{ modals.appealNum }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div class="">被申诉数：{{ modals.appealedNum }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div class="">手续费：{{ modals.appealedNum }}</div></el-col>
         </el-row>
       </div>
     </el-card>
@@ -60,13 +58,19 @@
 
       <el-table-column label="收款码" align="center">
         <template slot-scope="scope">
-          <img class="paymentImage" :src="scope.row.qrCode||''" alt="收款吗">
+          <img class="paymentImage" :src="scope.row.qrCode||''" alt="收款码">
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="交易提成" width="80">
+      <el-table-column align="center" label="提现手续费" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.royalty }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" class-name="status-col" label="操作" width="110">
+        <template slot-scope="scope">
+          <el-button type="primary" size="small" @click="clickEditPayment(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
 
@@ -117,6 +121,7 @@
       <el-date-picker
         v-model="fliterQuery.date"
         type="daterange"
+        auto-complete="off"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
@@ -126,7 +131,7 @@
       </el-button>
 
     </div>
-    <el-table :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table stripe :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
         v-loading="loading"
         align="center"
@@ -183,7 +188,7 @@
 
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="paginationMeta.pages" :limit.sync="meta.size" @pagination="paginationChange" />
-    <el-dialog :visible.sync="dialogVisible" title="基础信息修改">
+    <el-dialog :visible.sync="editDialogVisible" title="基础信息修改">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户ID：</el-col>
         <el-col :span="16">{{ editData.uuid }}</el-col>
@@ -217,7 +222,7 @@
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">修改密码：</el-col>
         <el-col :span="16">
-          <el-input ref="password" v-model="editData.password" style="width: 240px" show-password :type="passwordType" placeholder="请输入密码" name="password" tabindex="2" auto-complete="off" />
+          <el-input  v-model="editData.password" style="width: 240px" show-password type="text" placeholder="请输入密码" name="password" tabindex="2" />
         </el-col>
       </el-row>
 
@@ -234,7 +239,50 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click=" handleAudit() ">保存</el-button>
-        <el-button @click="dialogVisible=false">取消</el-button>
+        <el-button @click="editDialogVisible=false">取消</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog :visible.sync="paymentDialogVisible" title="编辑手续费" width="40%">
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">支付方式：</el-col>
+        <el-col :span="16">{{ editPayment.payType|paymentStatus }}</el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">账号：</el-col>
+        <el-col :span="16">
+          {{ editPayment.uuid }}
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">昵称：</el-col>
+        <el-col :span="16">
+          {{ editPayment.nickName||'-' }}
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">姓名：</el-col>
+        <el-col :span="16">
+          {{ editPayment.realName||'-' }}
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">体现手续费：</el-col>
+        <el-col :span="16">
+          <el-input v-model="editPayment.royalty" style="width: 240px"  type="text" placeholder="请输入手续费比例(%)" suffix="%"  tabindex="2" auto-complete="off" >
+          <template slot="append">%</template>
+          </el-input>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR" />
+        <el-col :span="16" v-if="editPayment.qrCode">
+          <img :src="editPayment.qrCode" alt="收款码" class="payTypeImage">
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleAudit(true)">确认</el-button>
+        <el-button type="info" @click="handleAudit(false)">取消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -286,15 +334,19 @@ export default {
         pages: 1
       },
       id: undefined,
-      dialogVisible: false,
+      editDialogVisible: false,
+      paymentDialogVisible:false,
       modals: {},
-      editData: {},
+      editData: {
+        password:'',
+      },
       newData: {
         active: false,
         payTypes: [],
         rebate: undefined,
         groupId: undefined
-      }
+      },
+      editPayment:{}
 
     }
   },
@@ -341,7 +393,7 @@ export default {
         payType: fliterQuery.payType,
         query: fliterQuery.query,
         status: fliterQuery.status,
-        userId: this.userId
+        userId: this.id
       }
       if (fliterQuery.date) {
         data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
@@ -363,7 +415,7 @@ export default {
       })
     },
     clickAduit() {
-      this.dialogVisible = true
+      this.editDialogVisible = true
       this.editData = this.modals
       this.newData.active = this.editData.active
       this.editData.password = undefined
@@ -381,7 +433,7 @@ export default {
       const requestType = ['', user_web_save, user_b_save]
       requestType[this.type](data).then(res => {
         if (res.code === 0) {
-          this.dialogVisible = false
+          this.editDialogVisible = false
           this.$message({
             message: '操作成功',
             type: 'success'
@@ -393,6 +445,10 @@ export default {
       }).catch(err => {
         this.$message.error(err || '操作失败')
       })
+    },
+    clickEditPayment(data){
+      this.editPayment=data;
+      this.paymentDialogVisible=true
     }
 
   }

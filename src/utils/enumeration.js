@@ -26,30 +26,40 @@ export const OrderStatus = [{
   label: '未支付'
 },
 {
-  name: 'CANCELED',
+  name: 'PAY_CONFIRMED',
   id: 1,
+  label: '支付确认中'
+},
+{
+  name: 'CANCELED',
+  id: 2,
   label: '取消'
 },
 {
-  nama: 'TIMEOUT',
-  id: 2,
-  label: '超时'
-},
-{
-  name: 'PAYED_CONFIRMED',
+  name: 'PAY_RECEIVED',
   id: 3,
-  label: '确认已付款'
+  label: '收到支付'
 },
 {
   name: 'COMPLETED',
-  id: 3,
+  id: 4,
   label: '完成'
 },
 {
-  name: 'APPEAL',
-  id: 3,
+  name: 'APPEALING',
+  id: 5,
   label: '申诉'
-}
+},
+{
+  nama: 'PAY_TIMEOUT',
+  id: 6,
+  label: '支付超时'
+},
+{
+  nama: 'RECEIVED_TIMEOUT',
+  id: 7,
+  label: '收款超时'
+},
 ]
 
 export const PayTypeStatus = [{

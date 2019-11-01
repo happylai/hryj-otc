@@ -11,20 +11,19 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">广告ID：{{ modals.uuid }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">交易类型：{{ modals.type|advType }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">交易币种：{{ modals.token }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">货币类型：{{ modals.fiat }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">法币币种：{{ modals.fiat }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">金额：{{ modals.amount }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">成交量：{{ modals.successAmount }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">区域：字段缺少</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">支付方式：{{ modals.payTypes|payTypeNames }}</div></el-col>
 
         </el-row>
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">最小成交额：{{ modals.minLimit }}%</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">最大成交额：{{ modals.maxLimit }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">定价方式：{{ modals.priceType===1?'灵活价格':'固定价格' }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">一口价：{{ modals.price }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">定价方式：{{ modals.priceType===1&&modals.origin===0?'灵活价格':'固定价格' }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6" v-if="modals.origin===1"><div class="">一口价：{{ modals.price }}</div></el-col>
         </el-row>
       </div>
     </el-card>

@@ -22,7 +22,7 @@ const store = new Vuex.Store({
   modules,
   getters,
   plugins: [createPersistedState({
-    paths: ['user.token', 'user.name', 'user.principal']
+    paths: ['user.token', 'user.name', 'user.principal','user.userInfo']
   })]
 })
 

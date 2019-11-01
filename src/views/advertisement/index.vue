@@ -79,12 +79,6 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="访问量" width="95">
-        <template slot-scope="scope">
-          <span>字段缺失</span>
-        </template>
-      </el-table-column>
-
       <el-table-column align="center" label="支付方式" min-width="180px">
         <template slot-scope="scope">
           <span>{{ scope.row.payType|payTypeNames }}</span>

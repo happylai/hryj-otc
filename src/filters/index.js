@@ -135,7 +135,7 @@ export function paymentStatus(num = 0) {
  * PaymentStatus
  * @param {number} num
  */
-export function payTypeName(num = 0) {
+export function payTypeName(num ) {
   return (
     num === null ? '-' : PayType[num].label
   )
@@ -147,7 +147,7 @@ export function payTypeName(num = 0) {
  */
 export function orderStatus(num) {
   return (
-    OrderStatus[num].label
+   num===null?'-': OrderStatus[num].label
   )
 }
 
@@ -157,7 +157,7 @@ export function orderStatus(num) {
  */
 export function payTypeStatus(num) {
   return (
-    payTypeStatus === null ? '-' : PayTypeStatus[num].label
+    num === null ? '-' : PayTypeStatus[num].label
   )
 }
 

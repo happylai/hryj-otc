@@ -4,8 +4,8 @@
     <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;" title="Tab with keep-alive" type="success" /> -->
     <el-tabs v-model="ParamsType" style="margin-top:15px;" @tab-click="handleTabClick">
       <div class="filter-container" style="margin-bottom: 10px;">
-        <el-select v-if="ParamsType!=='4'" v-model="addData.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
-          <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
+        <el-select v-if="ParamsType!=='4'&&ParamsType!=='2'" v-model="addData.roleId" :placeholder="'选择'+roleName[ParamsType]" clearable style="width: 140px" class="filter-item">
+          <el-option v-for="item in UserType" :disabled="ParamsType==1&&(item.id===1||item.id===4)" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
         <el-input v-model="addData.addNewData" :placeholder="ParamsTypePlaceHolder[ParamsType]" style="width: 200px;" class="filter-item" />
 
@@ -72,7 +72,7 @@
     </el-row>
 
     <el-table v-else v-loading="loading" :data="list" border fit highlight-current-row style="width: 800px">
-      <el-table-column v-if="ParamsType!=='4'" align="center" label="角色" width="100" element-loading-text="请给我点时间！">
+      <el-table-column v-if="ParamsType!=='4'" align="center" :label="roleName[ParamsType]" width="100" element-loading-text="请给我点时间！">
         <template slot-scope="scope">
           <span>{{ scope.row.roleId|userTypeName }}</span>
         </template>
@@ -173,7 +173,7 @@
 
     <el-dialog :visible.sync="dialogVisible" :title="ParamsTypePlaceHolder[ParamsType]+'设置'">
       <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">当前角色：</el-col>
+        <el-col :span="8" class="textAlingR">{{ParamsType===1?'升级角色':'当前角色'}}：</el-col>
         <el-col :span="16">{{ editData.roleId|userTypeName }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
@@ -222,11 +222,11 @@ export default {
         2: '激活金',
         3: '每日可取消单数',
         4: '分组名称'
-
       },
+      roleName:['','升级角色','角色','角色','角色'],
       currentGroup: { groupName: undefined },
       tabValueName: ['', 'deposit', 'activeGold', '', 'num'],
-      ParamsType: '4',
+      ParamsType: '1',
       loading: false,
       dialogVisible: false,
       groupDialogVisible: false,
@@ -362,7 +362,11 @@ export default {
       this.save(postData)
     },
     handleAdd() {
-      if (!this.addData.addNewData) {
+      if(!this.addData.roleId&&(this.ParamsType==='1'||this.ParamsType==='3')){
+        this.$message.error(`请选择${this.roleName[this.ParamsType]}`)
+
+      }
+      else if (!this.addData.addNewData) {
         this.$message.error(`请填写${this.ParamsTypePlaceHolder[this.ParamsType]}`)
       } else if (this.ParamsType === '4') {
         const data = {

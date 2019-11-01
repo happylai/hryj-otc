@@ -27,12 +27,12 @@
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">倒计时：</el-col>
         <el-col :span="16">
-          <el-input v-model="editData.time" style="width: 150px;height:30px" placeholder="请输入时间参数(如:15)" />
+          <el-input v-model="editData.newtime" style="width: 150px;height:30px" placeholder="请输入时间参数(如:15)" />
           <el-link type="danger" :underline="false">当前时间参数：{{ editData.time }}</el-link>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="save">保存</el-button>
+        <el-button type="primary" @click="handleSave">保存</el-button>
         <el-button @click="dialogVisible = false">取消</el-button>
       </span>
     </el-dialog>
@@ -55,18 +55,20 @@ export default {
     return {
       UserType,
       tabMapOptions: [
-        { label: '订单超时参数', key: '4' },
-        { label: '触发申述时间', key: '6' },
-        { label: '解冻货币时间', key: '7' },
-        { label: '一键接单时间', key: '8' }
+        { label: '买家付款超时', key: '0' },
+        { label: '卖家确认超时', key: '1' },
+        { label: '触发申述时间', key: '2' },
+        { label: '解冻货币时间', key: '3' },
+        { label: '一键接单时间', key: '4' }
       ],
       TimeParamsTypePlaceHolder: {
-        4: '超时参数',
-        6: '申述激活时间',
-        7: '自动解冻时间',
-        8: '一键接单时间'
+        0: '超时参数',
+        1: '超时参数',
+        2: '申述激活时间',
+        3: '自动解冻时间',
+        4: '一键接单时间'
       },
-      TimeParamsType: '4',
+      TimeParamsType: '0',
       loading: false,
       dialogVisible: false,
       meta: {
@@ -138,7 +140,7 @@ export default {
       const postData = {
         id: data.id,
         roleId: data.roleId,
-        time: data.time * 1,
+        time: data.newtime?data.newtime*1:data.time * 1,
         type: data.type
       }
       this.save(postData)

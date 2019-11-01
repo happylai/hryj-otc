@@ -8,7 +8,7 @@
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="showAddUser=true">
+      <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-plus" @click="showAddUser=true">
         添加用户
       </el-button>
     </div>
@@ -32,7 +32,6 @@
           </el-checkbox>
           <el-link type="primary">详情</el-link>
         </el-col>
-        <el-col :span="16" />
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">角色：</el-col>
@@ -44,17 +43,8 @@
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">权限：</el-col>
-        <el-col :span="16">
-          <el-select v-model="newAuth" placeholder="更换权限">
-            <el-option v-for="(item,inedex) in Auths" :key="inedex+'auth'" :label="item.label" :value="item.id" />
-          </el-select>
-          <el-link type="danger" :underline="false">当前登录权限：{{ editData.auth }}</el-link>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">上次登陆时间：</el-col>
-        <el-col :span="16">{{ editData.createTime }}</el-col>
+        <el-col :span="16">{{ editData.createTime|timestampFormat }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="16" :offset="8">
@@ -71,16 +61,16 @@
     <el-dialog :visible.sync="showAddUser" title="添加用户">
       <el-form ref="regForm" :model="regForm" :rules="loginRules" class="login-form" label-width="80px" auto-complete="on" label-position="right">
         <el-form-item label="用户名" class="addUserItem" prop="username">
-          <el-input ref="username" v-model="regForm.username" placeholder="请输入用户名" name="username" type="text" tabindex="1" auto-complete="on" />
+          <el-input ref="username" v-model="regForm.username" autocomplete="off" placeholder="请输入用户名" name="username" type="text" tabindex="1" auto-complete="on" />
         </el-form-item>
         <el-form-item label="邮箱" class="addUserItem" prop="email">
-          <el-input ref="email" v-model="regForm.email" placeholder="请输入邮箱" name="email" type="text" tabindex="1" auto-complete="on" />
+          <el-input ref="email" v-model="regForm.email" autocomplete="off" placeholder="请输入邮箱" name="email" type="text" tabindex="1" auto-complete="on" />
         </el-form-item>
         <el-form-item label="密码" class="addUserItem" prop="password">
-          <el-input ref="password" v-model="regForm.password" show-password :type="passwordType" placeholder="请输入密码" name="password" tabindex="2" auto-complete="on" />
+          <el-input ref="password" v-model="regForm.password" autocomplete="off" show-password :type="passwordType" placeholder="请输入密码" name="password" tabindex="2" auto-complete="on" />
         </el-form-item>
-        <el-form-item label="重复密码" class="addUserItem" prop="repatePassword">
-          <el-input ref="repatePassword" v-model="regForm.repatePassword" show-password :type="passwordType" placeholder="请重复密码" name="repatePassword" tabindex="2" auto-complete="on" @keyup.enter.native="handlAdd" />
+        <el-form-item label="重复密码" class="addUserItem" prop="confirm">
+          <el-input ref="confirm" v-model="regForm.confirm" autocomplete="off" show-password :type="passwordType" placeholder="请重复密码" name="confirm" tabindex="2" auto-complete="on" @keyup.enter.native="handlAdd" />
         </el-form-item>
         <el-form-item label="" class="addUserItem">
           <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handlAdd">添加</el-button>
@@ -104,7 +94,7 @@ export default {
   components: { tabPane, pagination },
   directives: { waves },
   data() {
-    const validateRepatePassword = (rule, value, callback) => {
+    const validateConfirm = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请重复密码'))
       } else if (value.length < 6) {
@@ -124,7 +114,7 @@ export default {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         email: [{ required: true, trigger: 'blur', validator: validateEamil }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-        repatePassword: [{ required: true, trigger: 'blur', validator: validateRepatePassword }]
+        confirm: [{ required: true, trigger: 'blur', validator: validateConfirm }]
       },
       dialogVisible: false,
       showAddUser: false,
@@ -188,7 +178,6 @@ export default {
             message: '操作成功',
             type: 'success'
           })
-          this.showAddUser = true
         } else {
           this.$message.error('操作失败')
         }
@@ -261,6 +250,7 @@ export default {
             this.loading = false
 
             if (res.code === 0) {
+              this.dialogVisible = false
               this.$message({
                 message: '保存成功',
                 type: 'success'

@@ -100,8 +100,8 @@
       </el-tab-pane>
     </el-tabs>
 
-    <el-dialog :visible.sync="dialogVisible" title="添加价格范围">
-      <el-row :gutter="20" class="userRow">
+    <el-dialog :visible.sync="dialogVisible" :title="(editData.id?'修改':'添加')+'价格范围'">
+      <el-row v-if="!editData.id" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">币种：</el-col>
         <el-col :span="16">
           <el-select v-model="editData.token" placeholder="请选择币种" clearable style="width: 140px" class="filter-item">

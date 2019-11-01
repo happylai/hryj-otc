@@ -12,7 +12,7 @@
         <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
       <el-select v-model="fliterQuery.kycLevel" placeholder="认证状态" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in KycLevel" :key="item.id" :label="item.label" :value="item.id" />
+        <el-option v-for="item in kycLevel" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
 
       <el-select v-model="fliterQuery.payType" placeholder="收付款方式" clearable style="width: 140px" class="filter-item">
@@ -38,7 +38,7 @@
 
     </div>
 
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table stripe v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
         v-loading="loading"
         align="center"
@@ -51,11 +51,6 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="用户名">
-        <template slot-scope="scope">
-          <span>{{ scope.row.advertiseId }}</span>
-        </template>
-      </el-table-column>
 
       <el-table-column width="80px" align="center" label="可用余额">
         <template slot-scope="scope">
@@ -89,7 +84,7 @@
 
       <el-table-column align="center" label="认证状态" width="95">
         <template slot-scope="scope">
-          <span>{{ scope.row.kycLevel|kycLevel }}</span>
+          <el-tag :type="scope.row.kycLevel?'success':'danger'">{{scope.row.kycLevel?'已认证':'未认证'}}</el-tag>
         </template>
       </el-table-column>
 
@@ -120,19 +115,19 @@
 
       <el-table-column align="center" label="账号状态" width="95">
         <template slot-scope="scope">
-          <span>{{ scope.row.active?'激活':'冻结' }}</span>
+          <el-tag :type="scope.row.active?'success':'danger'">{{scope.row.active?'正常':'冻结'}}</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column align="center" class-name="status-col" label="操作" width="180">
         <template slot-scope="scope">
-          <el-button type="danger" size="small" @click="handleFreeze(scope.row.id)">交易冻结</el-button>
+          <el-button type="danger" disabled="scope.row.frozenDeal" size="small" @click="handleFreeze(scope.row.id)">交易冻结</el-button>
           <el-button type="primary" size="small" @click="goDetail(scope.row.id)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
-    <el-dialog :visible.sync="dialogVisible" title="支付方式审核">
+    <el-dialog :visible.sync="dialogVisible" title="支付方式审核" width="40%">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">支付方式：</el-col>
         <el-col :span="16">{{ auditData.payType|paymentStatus }}</el-col>
@@ -176,7 +171,7 @@ import pagination from '@/components/Pagination'
 import tip from '@/components/Tip'
 
 import waves from '@/directive/waves' // waves directive
-import { Groups, UserType, KycLevel, emptySelect, PayType, AccountStatus } from '@/utils/enumeration'
+import { Groups, UserType,  emptySelect, PayType, AccountStatus } from '@/utils/enumeration'
 import { users_web, pay_type_audit, pay_type_info, freeze_deal } from '@/api/usermanage'
 
 export default {
@@ -186,10 +181,9 @@ export default {
   data() {
     return {
       AccountStatus,
-      PayType,
+      PayType:[...PayType,{id:5,label:"待审核"}],
       activeType: '0',
       UserType,
-      KycLevel,
       Groups: [emptySelect, ...Groups],
       fliterQuery: {
         page: 1,
@@ -200,6 +194,13 @@ export default {
         groupId: undefined,
         kycLevel: undefined
       },
+      kycLevel:[{
+        label:"未认证",
+        id:0
+      },{
+        label:"已认证",
+        id:1
+      }],
       meta: {
         current: 1,
         size: 10

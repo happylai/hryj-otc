@@ -24,9 +24,13 @@
         搜索
       </el-button>
 
+      <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-plus" @click="handleFilter">
+        添加
+      </el-button>
+
     </div>
 
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table stripe v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
 
         align="center"
@@ -36,12 +40,6 @@
       >
         <template slot-scope="scope">
           <span>{{ scope.row.uuid }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="180px" align="center" label="用户名">
-        <template slot-scope="scope">
-          <span>{{ scope.row.emailContact }}</span>
         </template>
       </el-table-column>
 

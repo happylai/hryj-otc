@@ -11,8 +11,8 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">用户名：{{ modals.nickName }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div class="">当前角色：{{ modals.currentRoleId|userTypeName }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">
-            当前状态：<el-link v-if="modals.active" type="success" :underline="false">正常/激活</el-link>
-            <el-link v-if="!modals.active" type="danger" :underline="false">冻结</el-link></div></el-col>
+            当前状态： <el-tag :type="modals.active?'success':'danger'">{{modals.active?'正常':'冻结'}}</el-tag>
+            </div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">认证方式：{{ modals.kycLevel|kycLevel }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
@@ -66,7 +66,8 @@
 
       <el-table-column label="收款码" align="center">
         <template slot-scope="scope">
-          <img class="paymentImage" :src="scope.row.qrCode||''" alt="收款吗">
+          <span v-if=" scope.row.payType===2||scope.row.qrCode===null">无</span>
+          <img v-else class="paymentImage" :src="scope.row.qrCode||''" alt="收款码">
         </template>
       </el-table-column>
 
@@ -104,8 +105,8 @@
           </el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6">
             <div class="card-item ">
-              <div class="cart-i-t">激活金 <el-link :underline="false" type="success">(已退还)</el-link> </div>
-              <div class="cart-i-v">{{ modals.activeGold }}</div>
+              <div class="cart-i-t">激活金 <el-link :underline="false" :type="modals.toBOrders>300000?'success':'info'">{{modals.toBOrders>300000?'(已退还)':'(未退还)'}} </el-link> </div>
+              <div class="cart-i-v">{{ modals.activeBalance }}</div>
             </div>
           </el-col>
         </el-row>
@@ -114,7 +115,7 @@
     </el-card>
 
     <div class="section-title-container marginT40">
-      <span class="section-title">交易明细</span><span class="container-tip">  已经完成订单：总数<el-link type="primary">7342 </el-link>  | toB售币订单：<el-link type="primary">3242 </el-link></span>
+      <span class="section-title">交易明细</span><span class="container-tip">  已经完成订单：总数<el-link type="primary">{{modals.totalOrders}} </el-link>  | toB售币订单：<el-link type="primary">{{modals.toBOrders}} </el-link></span>
 
     </div>
     <div class="filter-container" style="margin-bottom: 10px;">
@@ -144,7 +145,7 @@
       </el-button>
 
     </div>
-    <el-table :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table stripe :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
         v-loading="loading"
         align="center"
@@ -169,13 +170,19 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="170px" align="center" label="支付类型">
+      <el-table-column width="80px" align="center" label="类型">
         <template slot-scope="scope">
-          <span>{{ scope.row.payType }}</span>
+          <span>{{ scope.row.dealType|advType }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" label="奖励">
+      <el-table-column width="170px" align="center" label="支付方式">
+        <template slot-scope="scope">
+          <span>{{ scope.row.payType|payTypeName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column width="120px" align="center" label="奖励">
         <template slot-scope="scope">
           <span>{{ scope.row.award }}</span>
         </template>
@@ -183,7 +190,7 @@
 
       <el-table-column align="center" label="手续费" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.authent }}</span>
+          <span>{{ scope.row.fee }}</span>
         </template>
       </el-table-column>
 
@@ -195,7 +202,7 @@
 
       <el-table-column align="center" label="订单状态" minwidth="300">
         <template slot-scope="scope">
-          <span>{{ scope.row.status }}</span>
+          <span>{{ scope.row.status|orderStatus }}</span>
         </template>
       </el-table-column>
 
@@ -212,11 +219,11 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">真实姓名：</el-col>
-        <el-col :span="16">{{ editData.email }}</el-col>
+        <el-col :span="16">{{ editData.realName }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">认证状态：：</el-col>
-        <el-col :span="16">{{ editData.kycLevel|kycLevel }}</el-col>
+        <el-col :span="16"><el-tag :type="editData.kycLevel?'success':'danger'">{{editData.kycLevel?'已认证':'未认证'}}</el-tag></el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">手机号：</el-col>
@@ -226,7 +233,13 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">身份证号：</el-col>
-        <el-col :span="16">{{ editData.idNumber }}</el-col>
+        <el-col :span="8">{{ editData.idNumber }}</el-col>
+        <el-col :span="4">
+          <img v-if="editData.identityImageFront" :src="editData.identityImageFront" alt="身份证正面">
+        </el-col>
+        <el-col :span="4">
+          <img v-if="editData.identityImageBack" :src="editData.identityImageBack" alt="身份证反面">
+        </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">登陆邮箱：</el-col>
@@ -284,8 +297,8 @@
             v-model="newData.active"
             active-color="#13ce66"
             inactive-color="#ff4949"
-          />{{ newData.active?'正常/激活':'冻结/未激活' }}
-          <el-link type="danger" :underline="false">当前状态： {{ editData.active?'正常/激活':'冻结/未激活' }}</el-link></el-col>
+          />{{ newData.active?'正常':'冻结' }}
+          <el-link type="danger" :underline="false">当前状态： {{ editData.active?'正常':'冻结' }}</el-link></el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">收付款方式：</el-col>
@@ -406,7 +419,7 @@ export default {
         payType: fliterQuery.payType,
         query: fliterQuery.query,
         status: fliterQuery.status,
-        userId: this.userId
+        userId: this.id
       }
       if (fliterQuery.date) {
         data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
@@ -437,16 +450,23 @@ export default {
       this.editData.password = undefined
     },
     handleAudit() {
+      const frozenPayTypes=this.getFrozenPayTypes(this.editData.payTypes.split(','),this.newData.payTypes)
       const data = {
         groupId: this.newData.groupId,
         active: this.newData.active,
         id: this.id,
         rebate: this.newData.rebate,
+        frozenPayTypes:frozenPayTypes,
         usedPayTypes: this.newData.payTypes,
         password:this.editData.password
       }
 
       this.user_save(data)
+    },
+    getFrozenPayTypes(oldData,newData){
+      console.log(oldData,newData)
+      let f = oldData.filter(function(v){ return !(newData.indexOf(v) > -1)})
+      return f
     },
     user_save(data) {
       const requestType = ['', user_web_save, user_b_save]

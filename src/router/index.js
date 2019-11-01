@@ -325,7 +325,8 @@ export const asyncRoutes = [{
     component: () => import('@/views/params/allowance'),
     meta: {
       title: '补贴奖励',
-      icon: 'example'
+      icon: 'example',
+      type:1
     }
   },
   {
@@ -334,7 +335,8 @@ export const asyncRoutes = [{
     component: () => import('@/views/params/allowance'),
     meta: {
       title: '交易提成',
-      icon: 'example'
+      icon: 'example',
+      type:2
     }
   },
   {

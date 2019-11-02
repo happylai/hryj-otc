@@ -20,7 +20,7 @@
 
     <el-table-column width="150px" align="center" label="角色">
       <template slot-scope="scope">
-        <span>{{ scope.row.role }}</span>
+        <span>{{ adminRolesConstName(scope.row.role,adminRolesConst) }}</span>
       </template>
     </el-table-column>
 
@@ -53,6 +53,8 @@
 
 <script>
 // import { fetchList } from '@/api/article'
+import { mapGetters } from 'vuex'
+import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 
 export default {
   filters: {
@@ -83,6 +85,9 @@ export default {
   },
   data() {
     return {
+      groupsConstName,
+      userRolesConstName,
+      adminRolesConstName,
       list: null,
       listQuery: {
         page: 1,
@@ -91,6 +96,14 @@ export default {
         sort: '+id'
       }
     }
+  },
+  computed: {
+
+    ...mapGetters([
+      'groupsConst',
+      'userRolesConst',
+      'adminRolesConst'
+    ])
   },
   created() {
     // this.getList()

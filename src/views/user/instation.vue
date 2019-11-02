@@ -8,8 +8,8 @@
     >
 
       <el-input v-model="fliterQuery.query" placeholder="用户名ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="fliterQuery.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
+      <el-select v-model="fliterQuery.roleId" placeholder="选择角色" clearable style="width: 150px" class="filter-item">
+        <el-option v-for="item in userRolesConst" :key="item.id" :label="item.zhName" :value="item.id" />
       </el-select>
       <el-select v-model="fliterQuery.kycLevel" placeholder="认证状态" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in kycLevel" :key="item.id" :label="item.label" :value="item.id" />
@@ -19,7 +19,7 @@
         <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
       <el-select v-model="fliterQuery.groupId" placeholder="所在分组" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in Groups" :key="item.id" :label="item.label" :value="item.id" />
+        <el-option v-for="item in groupsConst" :key="item.id" :label="item.groupName" :value="item.id" />
       </el-select>
       <el-select v-model="fliterQuery.active" placeholder="账号状态" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in AccountStatus" :key="item.id" :label="item.label" :value="item.name" />
@@ -38,7 +38,7 @@
 
     </div>
 
-    <el-table stripe v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="loading" stripe :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
         v-loading="loading"
         align="center"
@@ -50,7 +50,6 @@
           <span>{{ scope.row.uuid }}</span>
         </template>
       </el-table-column>
-
 
       <el-table-column width="80px" align="center" label="可用余额">
         <template slot-scope="scope">
@@ -76,15 +75,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="当前角色" width="90">
+      <el-table-column align="center" label="当前角色" width="140">
         <template slot-scope="scope">
-          <span>{{ scope.row.roleId|userTypeName }}</span>
+          <span>{{ userRolesConstName(scope.row.roleId,userRolesConst) }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="认证状态" width="95">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.kycLevel?'success':'danger'">{{scope.row.kycLevel?'已认证':'未认证'}}</el-tag>
+          <el-tag :type="scope.row.kycLevel?'success':'danger'">{{ scope.row.kycLevel?'已认证':'未认证' }}</el-tag>
         </template>
       </el-table-column>
 
@@ -103,7 +102,7 @@
 
       <el-table-column align="center" label="所在分组" width="95">
         <template slot-scope="scope">
-          <span>{{ scope.row.pricingGroupId|groupName }}</span>
+          <span>{{ groupsConstName(scope.row.pricingGroupId,groupsConst) }}</span>
         </template>
       </el-table-column>
 
@@ -115,7 +114,7 @@
 
       <el-table-column align="center" label="账号状态" width="95">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.active?'success':'danger'">{{scope.row.active?'正常':'冻结'}}</el-tag>
+          <el-tag :type="scope.row.active?'success':'danger'">{{ scope.row.active?'正常':'冻结' }}</el-tag>
         </template>
       </el-table-column>
 
@@ -169,19 +168,23 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import tip from '@/components/Tip'
-
+import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 import waves from '@/directive/waves' // waves directive
-import { Groups, UserType,  emptySelect, PayType, AccountStatus } from '@/utils/enumeration'
+import { Groups, UserType, emptySelect, PayType, AccountStatus } from '@/utils/enumeration'
 import { users_web, pay_type_audit, pay_type_info, freeze_deal } from '@/api/usermanage'
 
 export default {
   name: 'UserInstation',
   components: { pagination, tip },
   directives: { waves },
+
   data() {
     return {
+      groupsConstName,
+      userRolesConstName,
+      adminRolesConstName,
       AccountStatus,
-      PayType:[...PayType,{id:5,label:"待审核"}],
+      PayType: [...PayType, { id: 5, label: '待审核' }],
       activeType: '0',
       UserType,
       Groups: [emptySelect, ...Groups],
@@ -194,12 +197,12 @@ export default {
         groupId: undefined,
         kycLevel: undefined
       },
-      kycLevel:[{
-        label:"未认证",
-        id:0
-      },{
-        label:"已认证",
-        id:1
+      kycLevel: [{
+        label: '未认证',
+        id: 0
+      }, {
+        label: '已认证',
+        id: 1
       }],
       meta: {
         current: 1,
@@ -219,7 +222,12 @@ export default {
   computed: {
     ...mapState({
       adminId: state => state.user.principal.adminId
-    })
+    }),
+    ...mapGetters([
+      'groupsConst',
+      'userRolesConst',
+      'adminRolesConst'
+    ])
   },
 
   mounted() {

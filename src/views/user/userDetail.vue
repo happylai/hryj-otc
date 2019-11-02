@@ -9,10 +9,9 @@
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">用户ID：{{ modals.uuid }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">用户名：{{ modals.nickName }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div class="">当前角色：{{ modals.currentRoleId|userTypeName }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div class="">当前角色：{{ userRolesConstName(modals.currentRoleId,userRolesConst) }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">
-            当前状态： <el-tag :type="modals.active?'success':'danger'">{{modals.active?'正常':'冻结'}}</el-tag>
-            </div></el-col>
+            当前状态： <el-tag :type="modals.active?'success':'danger'">{{ modals.active?'正常':'冻结' }}</el-tag></div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">认证方式：{{ modals.kycLevel|kycLevel }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
@@ -105,7 +104,7 @@
           </el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6">
             <div class="card-item ">
-              <div class="cart-i-t">激活金 <el-link :underline="false" :type="modals.toBOrders>300000?'success':'info'">{{modals.toBOrders>300000?'(已退还)':'(未退还)'}} </el-link> </div>
+              <div class="cart-i-t">激活金 <el-link :underline="false" :type="modals.toBOrders>300000?'success':'info'">{{ modals.toBOrders>300000?'(已退还)':'(未退还)' }} </el-link> </div>
               <div class="cart-i-v">{{ modals.activeBalance }}</div>
             </div>
           </el-col>
@@ -115,7 +114,7 @@
     </el-card>
 
     <div class="section-title-container marginT40">
-      <span class="section-title">交易明细</span><span class="container-tip">  已经完成订单：总数<el-link type="primary">{{modals.totalOrders}} </el-link>  | toB售币订单：<el-link type="primary">{{modals.toBOrders}} </el-link></span>
+      <span class="section-title">交易明细</span><span class="container-tip">  已经完成订单：总数<el-link type="primary">{{ modals.totalOrders }} </el-link>  | toB售币订单：<el-link type="primary">{{ modals.toBOrders }} </el-link></span>
 
     </div>
     <div class="filter-container" style="margin-bottom: 10px;">
@@ -130,12 +129,13 @@
         <el-option v-for="item in CounterParty" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
       <el-select v-model="fliterQuery.status" placeholder="订单状态" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in TreadOrderStatus" :key="item.id" :label="item.label" :value="item.name" />
+        <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.name" />
       </el-select>
 
       <el-date-picker
         v-model="fliterQuery.date"
         type="daterange"
+        name="datepicker"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
@@ -223,7 +223,7 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">认证状态：：</el-col>
-        <el-col :span="16"><el-tag :type="editData.kycLevel?'success':'danger'">{{editData.kycLevel?'已认证':'未认证'}}</el-tag></el-col>
+        <el-col :span="16"><el-tag :type="editData.kycLevel?'success':'danger'">{{ editData.kycLevel?'已认证':'未认证' }}</el-tag></el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">手机号：</el-col>
@@ -235,10 +235,10 @@
         <el-col :span="8" class="textAlingR">身份证号：</el-col>
         <el-col :span="8">{{ editData.idNumber }}</el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageFront" :src="editData.identityImageFront" alt="身份证正面">
+          <img v-if="editData.identityImageFront" class="idImage" :src="editData.identityImageFront" alt="身份证正面">
         </el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageBack" :src="editData.identityImageBack" alt="身份证反面">
+          <img v-if="editData.identityImageBack" class="idImage" :src="editData.identityImageBack" alt="身份证反面">
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
@@ -248,7 +248,7 @@
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">修改密码：</el-col>
         <el-col :span="16">
-          <el-input style="width: 240px" ref="password" v-model="editData.password" show-password :type="passwordType" placeholder="请输入密码" name="password" tabindex="2" auto-complete="off" />
+          <el-input v-model="newPassword" style="width: 240px" name="changepassword" type="text" placeholder="请输入密码" tabindex="2" />
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
@@ -266,19 +266,19 @@
       <el-row v-if="type==='1'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">角色升级：</el-col>
         <el-col :span="16">
-          <el-link type="success" :underline="false">超级</el-link>
+          <el-link type="success" :underline="false">超级 {{ userRolesConstName(editData.currentRoleId,userRolesConst) }}</el-link>
 
-          <el-link type="danger" :underline="false">当前登录角色：{{ editData.currentRoleId|userTypeName }}</el-link>
+          <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.currentRoleId,userRolesConst) }}</el-link>
         </el-col>
       </el-row>
       <el-row v-else-if="type===2" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户角色：</el-col>
         <el-col :span="16">
           <el-select v-model="newData.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
-            <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
+            <el-option v-for="item in userRolesConst" :key="item.id" :label="item.zhName" :value="item.id" />
           </el-select>
 
-          <el-link type="danger" :underline="false">当前登录角色：{{ editData.currentRoleId|userTypeName }}</el-link>
+          <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.currentRoleId,userRolesConst) }}</el-link>
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
@@ -322,9 +322,11 @@
 
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
+import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
+
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect, OrderStatus, CounterParty, PayType } from '@/utils/enumeration'
-import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, TreadOrderStatus } from '@/api/usermanage'
+import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit } from '@/api/usermanage'
 import { order_details } from '@/api/order'
 
 export default {
@@ -333,9 +335,12 @@ export default {
   directives: { waves },
   data() {
     return {
+      groupsConstName,
+      userRolesConstName,
+      adminRolesConstName,
       UserType,
       PayType,
-      TreadOrderStatus,
+      OrderStatus,
       CounterParty,
       Authents: [{ id: '',
         mame: '',
@@ -355,7 +360,7 @@ export default {
         current: 1,
         size: 10
       },
-
+      newPassword: undefined,
       loading: false,
       list: [],
       peyTypeList: [],
@@ -379,7 +384,12 @@ export default {
   computed: {
     ...mapState({
       adminId: state => state.user.principal.adminId
-    })
+    }),
+    ...mapGetters([
+      'groupsConst',
+      'userRolesConst',
+      'adminRolesConst'
+    ])
   },
   mounted() {
     this.id = this.$route.params.id
@@ -450,22 +460,22 @@ export default {
       this.editData.password = undefined
     },
     handleAudit() {
-      const frozenPayTypes=this.getFrozenPayTypes(this.editData.payTypes.split(','),this.newData.payTypes)
+      const frozenPayTypes = this.getFrozenPayTypes(this.editData.payTypes.split(','), this.newData.payTypes)
       const data = {
         groupId: this.newData.groupId,
         active: this.newData.active,
         id: this.id,
         rebate: this.newData.rebate,
-        frozenPayTypes:frozenPayTypes,
+        frozenPayTypes: frozenPayTypes,
         usedPayTypes: this.newData.payTypes,
-        password:this.editData.password
+        password: this.newPassword ? this.newPassword : undefined
       }
 
       this.user_save(data)
     },
-    getFrozenPayTypes(oldData,newData){
-      console.log(oldData,newData)
-      let f = oldData.filter(function(v){ return !(newData.indexOf(v) > -1)})
+    getFrozenPayTypes(oldData, newData) {
+      console.log(oldData, newData)
+      const f = oldData.filter(function(v) { return !(newData.indexOf(v) > -1) })
       return f
     },
     user_save(data) {

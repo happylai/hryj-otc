@@ -2,6 +2,8 @@
  * Created by PanJiaChen on 16/11/18.
  */
 
+import has from 'has-value'
+
 /**
  * Parse the time to string
  * @param {(Object|string|number)} time
@@ -346,5 +348,44 @@ export function removeClass(ele, cls) {
   if (hasClass(ele, cls)) {
     const reg = new RegExp('(\\s|^)' + cls + '(\\s|$)')
     ele.className = ele.className.replace(reg, ' ')
+  }
+}
+
+export function groupsConstName(id, arr) {
+  if (id) {
+    const data = arr.filter((item) => { console.log('item', item, id); if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      return data[0].groupName
+    } else {
+      return '-'
+    }
+  } else {
+    return '-'
+  }
+}
+
+export function adminRolesConstName(id, arr) {
+  if (id) {
+    const data = arr.filter((item) => { console.log('item', item, id); if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      return data[0].zhName
+    } else {
+      return '-'
+    }
+  } else {
+    return '-'
+  }
+}
+
+export function userRolesConstName(id, arr) {
+  if (id) {
+    const data = arr.filter((item) => { console.log('item', item, id); if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      return data[0].zhName
+    } else {
+      return '-'
+    }
+  } else {
+    return '-'
   }
 }

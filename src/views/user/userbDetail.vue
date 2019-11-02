@@ -11,8 +11,7 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">用户名：{{ modals.nickName }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div class="">真实姓名：{{ modals.realName }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">
-            当前状态：<el-link v-if="modals.active" type="success" :underline="false">正常</el-link>
-            <el-link v-if="!modals.active" type="danger" :underline="false">冻结</el-link></div></el-col>
+            当前状态：<el-tag :type="editData.active?'success':'danger'">{{ editData.active?'正常':'冻结' }}</el-tag></div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">手机号：{{ modals.mobileContact }}</div></el-col>
@@ -58,7 +57,8 @@
 
       <el-table-column label="收款码" align="center">
         <template slot-scope="scope">
-          <img class="paymentImage" :src="scope.row.qrCode||''" alt="收款码">
+          <span v-if=" scope.row.payType===2||scope.row.qrCode===null">无</span>
+          <img v-else class="paymentImage" :src="scope.row.qrCode||''" alt="收款码">
         </template>
       </el-table-column>
 
@@ -78,7 +78,7 @@
 
     <el-card class="box-card marginT40">
       <div slot="header" class="clearfix">
-        <span class="card-title">用户资产（当前用户资产/冻结资产/保证金）</span>
+        <span class="card-title">用户资产（可用资产/冻结资产）</span>
         <!-- <el-button style="float: right; padding: 3px 0" type="text">审核</el-button> -->
       </div>
       <div class="text item">
@@ -100,8 +100,7 @@
     </el-card>
 
     <div class="section-title-container marginT40">
-      <span class="section-title">交易明细</span><span class="container-tip">  已经完成订单：总数<el-link type="primary">7342 </el-link> </span>
-
+      <span class="section-title">交易明细</span><span class="container-tip">  已经完成订单：总数<el-link type="primary">{{ modals.orders }} </el-link> </span>
     </div>
     <div class="filter-container" style="margin-bottom: 10px;">
       <el-button v-if="false" v-waves class="filter-item" type="primary" icon="el-icon-add" @click="handleFilter">
@@ -115,7 +114,7 @@
         <el-option v-for="item in CounterParty" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
       <el-select v-model="fliterQuery.status" placeholder="订单状态" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in TreadOrderStatus" :key="item.id" :label="item.label" :value="item.name" />
+        <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.name" />
       </el-select>
 
       <el-date-picker
@@ -158,7 +157,7 @@
 
       <el-table-column width="170px" align="center" label="支付类型">
         <template slot-scope="scope">
-          <span>{{ scope.row.payType }}</span>
+          <span>{{ scope.row.payType|payTypeName }}</span>
         </template>
       </el-table-column>
 
@@ -170,7 +169,7 @@
 
       <el-table-column align="center" label="手续费" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.authent }}</span>
+          <span>{{ scope.row.fee }}</span>
         </template>
       </el-table-column>
 
@@ -182,7 +181,7 @@
 
       <el-table-column align="center" label="订单状态" minwidth="300">
         <template slot-scope="scope">
-          <span>{{ scope.row.status }}</span>
+          <span>{{ scope.row.status|orderStatus }}</span>
         </template>
       </el-table-column>
 
@@ -213,7 +212,13 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">身份证号：</el-col>
-        <el-col :span="16">{{ editData.idNumber }}</el-col>
+        <el-col :span="8">{{ editData.idNumber }}</el-col>
+        <el-col :span="4">
+          <img v-if="editData.identityImageFront" class="idImage" :src="editData.identityImageFront" alt="身份证正面">
+        </el-col>
+        <el-col :span="4">
+          <img v-if="editData.identityImageBack" class="idImage" :src="editData.identityImageBack" alt="身份证反面">
+        </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">登陆邮箱：</el-col>
@@ -222,7 +227,7 @@
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">修改密码：</el-col>
         <el-col :span="16">
-          <el-input  v-model="editData.password" style="width: 240px" show-password type="text" placeholder="请输入密码" name="password" tabindex="2" />
+          <el-input v-model="newPassword" style="width: 240px" ype="text" placeholder="请输入密码" bindex="2" />
         </el-col>
       </el-row>
 
@@ -269,20 +274,20 @@
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">体现手续费：</el-col>
         <el-col :span="16">
-          <el-input v-model="editPayment.royalty" style="width: 240px"  type="text" placeholder="请输入手续费比例(%)" suffix="%"  tabindex="2" auto-complete="off" >
-          <template slot="append">%</template>
+          <el-input v-model="editPayment.royalty" style="width: 240px" type="text" placeholder="请输入手续费比例(%)" suffix="%" tabindex="2" auto-complete="off">
+            <template slot="append">%</template>
           </el-input>
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR" />
-        <el-col :span="16" v-if="editPayment.qrCode">
+        <el-col v-if="editPayment.qrCode" :span="16">
           <img :src="editPayment.qrCode" alt="收款码" class="payTypeImage">
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAudit(true)">确认</el-button>
-        <el-button type="info" @click="handleAudit(false)">取消</el-button>
+        <el-button type="primary" @click="handleEditroyalty(true)">确认</el-button>
+        <el-button type="info" @click="paymentDialogVisible=false">取消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -294,7 +299,7 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect, OrderStatus, CounterParty, PayType } from '@/utils/enumeration'
-import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, TreadOrderStatus } from '@/api/usermanage'
+import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, royalty_save } from '@/api/usermanage'
 import { order_details } from '@/api/order'
 
 export default {
@@ -305,7 +310,7 @@ export default {
     return {
       UserType,
       PayType,
-      TreadOrderStatus,
+      OrderStatus,
       CounterParty,
       Authents: [{ id: '',
         mame: '',
@@ -325,7 +330,7 @@ export default {
         current: 1,
         size: 10
       },
-
+      newPassword: undefined,
       loading: false,
       list: [],
       peyTypeList: [],
@@ -335,10 +340,10 @@ export default {
       },
       id: undefined,
       editDialogVisible: false,
-      paymentDialogVisible:false,
+      paymentDialogVisible: false,
       modals: {},
       editData: {
-        password:'',
+        password: ''
       },
       newData: {
         active: false,
@@ -346,7 +351,7 @@ export default {
         rebate: undefined,
         groupId: undefined
       },
-      editPayment:{}
+      editPayment: {}
 
     }
   },
@@ -370,9 +375,12 @@ export default {
       requestType[this.type]({ userId: id || this.id }).then(res => {
         if (res.code === 0) {
           this.modals = res.data
+          this.getPayTypes()
         }
         console.log('res')
       })
+    },
+    getPayTypes(id) {
       pay_types({ userId: id || this.id }).then(res => {
         if (res.code === 0) {
           this.peyTypeList = res.data.records
@@ -424,7 +432,7 @@ export default {
       const data = {
         active: this.newData.active,
         id: this.id,
-        password: this.newData.password
+        password: this.newPassword ? this.newPassword : undefined
       }
 
       this.user_save(data)
@@ -446,9 +454,34 @@ export default {
         this.$message.error(err || '操作失败')
       })
     },
-    clickEditPayment(data){
-      this.editPayment=data;
-      this.paymentDialogVisible=true
+    clickEditPayment(data) {
+      this.editPayment = data
+      this.paymentDialogVisible = true
+    },
+    handleEditroyalty() {
+      const data = {
+        'id': this.editPayment.id,
+        'payType': this.editPayment.payType,
+        'royalty': this.editPayment.royalty,
+        'userId': this.id
+      }
+      this.saveRoyalty(data)
+    },
+    saveRoyalty(data) {
+      royalty_save(data).then(res => {
+        if (res.code === 0) {
+          this.paymentDialogVisible = false
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+          this.getPayTypes()
+        } else {
+          this.$message.error('操作失败')
+        }
+      }).catch(err => {
+        this.$message.error(err || '操作失败')
+      })
     }
 
   }

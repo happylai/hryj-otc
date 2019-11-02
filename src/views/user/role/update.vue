@@ -7,10 +7,10 @@
       </el-button>
       <el-input v-model="fliterQuery.query" placeholder="用户名ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="fliterQuery.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
+        <el-option v-for="item in userRolesConst" :key="item.id" :label="item.zhName" :value="item.id" />
       </el-select>
       <el-select v-model="fliterQuery.groupId" placeholder="所在分组" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in Groups" :key="item.id" :label="item.label" :value="item.id" />
+        <el-option v-for="item in groupsConst" :key="item.id" :label="item.groupName" :value="item.id" />
       </el-select>
       <el-select v-model="fliterQuery.kycLevel" placeholder="认证方式" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in KycLevel" :key="item.id" :label="item.label" :value="item.name" />
@@ -41,12 +41,6 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="用户名">
-        <template slot-scope="scope">
-          <span>{{ scope.row.realName }}</span>
-        </template>
-      </el-table-column>
-
       <el-table-column width="80px" align="center" label="保证金">
         <template slot-scope="scope">
           <span>{{ scope.row.deposit }}</span>
@@ -61,25 +55,25 @@
 
       <el-table-column width="120px" align="center" label="当前角色">
         <template slot-scope="scope">
-          <span>{{ scope.row.currentRoleId|userTypeName }}</span>
+          <span>{{ userRolesConstName(scope.row.currentRoleId,userRolesConst) }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="认证方式" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.kycLevel }}</span>
+          <span>{{ scope.row.authType|authTypeName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="分组" width="90">
+      <el-table-column align="center" label="分组" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.pricingGroupId }}</span>
+          <span>{{ groupsConstName(scope.row.pricingGroupId,groupsConst) }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="收款方式" width="95">
         <template slot-scope="scope">
-          <span>{{ scope.row.payTypes }}</span>
+          <span>{{ scope.row.payTypes|payTypeNames }}</span>
         </template>
       </el-table-column>
 
@@ -114,7 +108,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import tip from '@/components/Tip'
-
+import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect, KycLevel } from '@/utils/enumeration'
 import { role_apply_list, role_apply_detail, role_apply_audit } from '@/api/usermanage'
@@ -125,7 +119,9 @@ export default {
   directives: { waves },
   data() {
     return {
-
+      groupsConstName,
+      userRolesConstName,
+      adminRolesConstName,
       activeType: '0',
       UserType,
       KycLevel,
@@ -161,7 +157,12 @@ export default {
     ...mapState({
       allList: state => state.order.allList,
       allListMeta: state => state.order.allMeta
-    })
+    }),
+    ...mapGetters([
+      'groupsConst',
+      'userRolesConst',
+      'adminRolesConst'
+    ])
   },
 
   mounted() {
@@ -210,7 +211,7 @@ export default {
     },
     toDetail(data) {
       console.log('to detail')
-      this.$router.push({ path: `/role/${data.id}`, query: { userId: data.userId, type: 1 }})
+      this.$router.push({ path: `/role/${data.id}`, query: { type: 1 }})
     }
   }
 }

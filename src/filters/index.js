@@ -1,11 +1,8 @@
 // import parseTime, formatTime and set to filter
 import has from 'has-value'
+import { get_system_const } from '@/api/admin'
 
-export {
-  parseTime,
-  formatTime
-}
-  from '@/utils'
+export { parseTime, formatTime } from '@/utils'
 import {
   PayType,
   OrderStatus,
@@ -18,7 +15,8 @@ import {
   CounterParty,
   KycLevel,
   AdvStatus,
-  AdvType
+  AdvType,
+  AuthType
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -26,6 +24,29 @@ import {
  * @param {string} label
  * @return {string}
  */
+
+let systemConst
+let loading = false
+const getSystemConst = (async function() {
+  console.log('aa---------------------------bb')
+  if (systemConst) {
+    return
+  } else if (loading) {
+    setTimeout(() => {
+      getSystemConst()
+    }, 500)
+  } else {
+    loading = true
+    await get_system_const().then(res => {
+      console.log(res)
+      systemConst = res.data
+      loading = false
+      return true
+    })
+    return true
+  }
+})()
+
 function pluralize(time, label) {
   if (time === 1) {
     return time + label
@@ -72,34 +93,39 @@ export function timestampFormat(timestamp) {
  * @param {number} digits
  */
 export function numberFormatter(num, digits) {
-  const si = [{
-    value: 1E18,
-    symbol: 'E'
-  },
-  {
-    value: 1E15,
-    symbol: 'P'
-  },
-  {
-    value: 1E12,
-    symbol: 'T'
-  },
-  {
-    value: 1E9,
-    symbol: 'G'
-  },
-  {
-    value: 1E6,
-    symbol: 'M'
-  },
-  {
-    value: 1E3,
-    symbol: 'k'
-  }
+  const si = [
+    {
+      value: 1e18,
+      symbol: 'E'
+    },
+    {
+      value: 1e15,
+      symbol: 'P'
+    },
+    {
+      value: 1e12,
+      symbol: 'T'
+    },
+    {
+      value: 1e9,
+      symbol: 'G'
+    },
+    {
+      value: 1e6,
+      symbol: 'M'
+    },
+    {
+      value: 1e3,
+      symbol: 'k'
+    }
   ]
   for (let i = 0; i < si.length; i++) {
     if (num >= si[i].value) {
-      return (num / si[i].value + 0.1).toFixed(digits).replace(/\.0+$|(\.[0-9]*[1-9])0+$/, '$1') + si[i].symbol
+      return (
+        (num / si[i].value + 0.1)
+          .toFixed(digits)
+          .replace(/\.0+$|(\.[0-9]*[1-9])0+$/, '$1') + si[i].symbol
+      )
     }
   }
   return num.toString()
@@ -110,7 +136,9 @@ export function numberFormatter(num, digits) {
  * @param {number} num
  */
 export function toThousandFilter(num) {
-  return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
+  return (+num || 0)
+    .toString()
+    .replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
 }
 
 /**
@@ -126,29 +154,34 @@ export function uppercaseFirst(string) {
  * @param {number} num
  */
 export function paymentStatus(num = 0) {
-  return (
-    num === null ? '-' : PayType[num].label
-  )
+  return num === null ? '-' : PayType[num].label
 }
 
 /**
  * PaymentStatus
  * @param {number} num
  */
-export function payTypeName(num ) {
-  return (
-    num === null ? '-' : PayType[num].label
-  )
+export function payTypeName(num) {
+  return num === null ? '-' : PayType[num].label
 }
 
 /**
  * OrderStatus
  * @param {number} num
  */
-export function orderStatus(num) {
-  return (
-   num===null?'-': OrderStatus[num].label
-  )
+export function orderStatus(id) {
+  if (id === 'null') {
+    return '-'
+  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+    const data = OrderStatus.filter((item) => { console.log('item', item, id); if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      return data[0].label
+    } else {
+      return '-'
+    }
+  } else {
+    return '-'
+  }
 }
 
 /**
@@ -156,9 +189,7 @@ export function orderStatus(num) {
  * @param {number} num
  */
 export function payTypeStatus(num) {
-  return (
-    num === null ? '-' : PayTypeStatus[num].label
-  )
+  return num === null ? '-' : PayTypeStatus[num].label
 }
 
 /**
@@ -173,7 +204,7 @@ export function payTypeNames(num) {
     for (var i = 0; i < data.length; i++) {
       typeName = typeName + ' ' + PayType[data[i]].label
       console.log('typeName', typeName, i)
-      if (i === (data.length - 1)) {
+      if (i === data.length - 1) {
         return typeName
       }
     }
@@ -188,9 +219,7 @@ export function payTypeNames(num) {
  * @param {number} num
  */
 export function authName(num) {
-  return (
-    num === null ? '-' : Auths[num].label
-  )
+  return num === null ? '-' : Auths[num].label
 }
 
 /**
@@ -198,9 +227,7 @@ export function authName(num) {
  * @param {number} num
  */
 export function roleName(num) {
-  return (
-    num === null ? '-' : Roles[num].label
-  )
+  return num === null ? '-' : Roles[num].label
 }
 
 /**
@@ -208,19 +235,25 @@ export function roleName(num) {
  * @param {number} num
  */
 export function userTypeName(num) {
-  return (
-    num === null ? '-' : num > 0 ? UserType[num - 1].label : '-'
-  )
+  return num === null ? '-' : num > 0 ? UserType[num - 1].label : '-'
 }
 
 /**
  * GroupName
  * @param {number} num
  */
-export function groupName(num) {
-  return (
-    num === null ? '-' : Groups[num].label
-  )
+export async function groupsConstName(id, arr) {
+  if (id) {
+    const data = arr.filter((item) => { console.log('item', item, id); if (item.id === id) { return item } })
+    console.log(' filter data', data)
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      return data[0].groupName
+    } else {
+      return '-'
+    }
+  } else {
+    return '-'
+  }
 }
 
 /**
@@ -228,9 +261,7 @@ export function groupName(num) {
  * @param {number} num
  */
 export function authentName(num) {
-  return (
-    num === null ? '-' : Authents[num].label
-  )
+  return num === null ? '-' : Authents[num].label
 }
 
 /**
@@ -238,9 +269,7 @@ export function authentName(num) {
  * @param {number} num
  */
 export function counterParty(num = null) {
-  return (
-    num === null ? '-' : CounterParty[num].label
-  )
+  return num === null ? '-' : CounterParty[num].label
 }
 
 /**
@@ -248,9 +277,7 @@ export function counterParty(num = null) {
  * @param {number} num
  */
 export function kycLevel(num = null) {
-  return (
-    num === null ? '-' : KycLevel[num].label
-  )
+  return num === null ? '-' : KycLevel[num].label
 }
 
 /**
@@ -258,9 +285,7 @@ export function kycLevel(num = null) {
  * @param {number} num
  */
 export function advType(num = null) {
-  return (
-    num === null ? '-' : AdvType[num].label
-  )
+  return num === null ? '-' : AdvType[num].label
 }
 
 /**
@@ -268,8 +293,13 @@ export function advType(num = null) {
  * @param {number} num
  */
 export function advStatus(num = null) {
-  return (
-    num === null ? '-' : AdvStatus[num].label
-  )
+  return num === null ? '-' : AdvStatus[num].label
 }
 
+/**
+ * AdvStatus
+ * @param {number} num
+ */
+export function authTypeName(num = null) {
+  return num === null ? '-' : AuthType[num].label
+}

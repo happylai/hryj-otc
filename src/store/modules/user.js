@@ -3,6 +3,8 @@ import {
   logout,
   getInfo
 } from '@/api/user'
+import { get_system_const } from '@/api/admin'
+
 import {
   getToken,
   setToken,
@@ -25,7 +27,10 @@ const state = {
   avatar: '',
   principal: {},
   roles: [],
-  userInfo: undefined
+  userInfo: undefined,
+  groups: [],
+  adminRoles: [],
+  userRoles: []
 }
 
 const mutations = {
@@ -45,6 +50,11 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_SYSTEM_CONST: (state, data) => {
+    state.groups = data.groups
+    state.adminRoles = data.adminRoles
+    state.userRoles = data.userRoles
   }
 }
 
@@ -71,7 +81,10 @@ const actions = {
         commit('SET_TOKEN', headers['x-auth-token'])
         commit('SET_USERINFO', data.data.data)
         setToken(headers['x-auth-token'])
-
+        await get_system_const().then(res => {
+          console.log(res)
+          commit('SET_SYSTEM_CONST', res.data)
+        })
         console.log('data', data)
         resolve()
       }).catch(err => {
@@ -82,17 +95,19 @@ const actions = {
   },
 
   // get user info
-  getInfo({
-    commit,
-    state
-  }) {
-    return new Promise((resolve, reject) => {
+  async getInfo({ commit, state }) {
+    return new Promise(async(resolve, reject) => {
       console.log('state', state)
       const role = state.userInfo ? state.userInfo.principal.roleList : ['ROLE_USER']
       const data = {
         roles: role
       }
+      var bb = '31312312312'
+      // const groupName= await get_combo().then(res=>{if(res.code===0){
+      //   return res.data
+      // }})
       commit('SET_ROLES', role)
+      // commit('SET_GROUPNAME',groupName)
       console.log('setRoles', role)
       resolve(data)
     })

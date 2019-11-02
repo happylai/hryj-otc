@@ -31,3 +31,12 @@ export function save(data) {
     data: data
   })
 }
+
+// 获取后台渲染所需数据
+export function get_system_const(data, meta) {
+  return request({
+    url: `/admin/system/renders`,
+    method: 'get',
+    params: data
+  })
+}

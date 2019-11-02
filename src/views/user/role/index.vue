@@ -49,43 +49,11 @@ export default {
       this.$router.push(`${this.$route.path}?tab=${val}`)
     }
   },
-  computed: {
-    ...mapState({
-      allList: state => state.order.allList,
-      allListMeta: state => state.order.allMeta
-    })
-  },
-  created() {
-    // init the default selected tab
-    const tab = this.$route.query.tab
-    if (tab) {
-      this.activeType = tab
-    }
-  },
+
   mounted() {
-    this.getList()
   },
   methods: {
-    showCreatedTimes() {
-      this.createdTimes = this.createdTimes + 1
-    },
-    getList() {
-      this.listLoading = true
-      this.$store.dispatch('order/getAllList')
-      // 	fetchList(this.fliterQuery).then(response => {
-      // 		this.list = response.data.items
-      // 		this.total = response.data.total
 
-      // 		// Just to simulate the time of the request
-      // 		setTimeout(() => {
-      // 			this.listLoading = false
-      // 		}, 1.5 * 1000)
-      // })
-    },
-    handleFilter() {
-      this.fliterQuery.page = 1
-      this.getList()
-    }
   }
 }
 </script>

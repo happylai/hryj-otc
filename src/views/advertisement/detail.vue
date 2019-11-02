@@ -23,7 +23,7 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">最小成交额：{{ modals.minLimit }}%</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">最大成交额：{{ modals.maxLimit }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div class="">定价方式：{{ modals.priceType===1&&modals.origin===0?'灵活价格':'固定价格' }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6" v-if="modals.origin===1"><div class="">一口价：{{ modals.price }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" v-if="modals.origin===1" :lg="6" :xl="6"><div class="">一口价：{{ modals.price }}</div></el-col>
         </el-row>
       </div>
     </el-card>
@@ -35,7 +35,7 @@
         <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
       <el-select v-model="fliterQuery.status" placeholder="订单状态" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in TreadOrderStatus" :key="item.id" :label="item.label" :value="item.name" />
+        <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.name" />
       </el-select>
 
       <el-date-picker
@@ -116,7 +116,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
-import { Groups, UserType, Authents, emptySelect, OrderStatus, CounterParty, PayType, TreadOrderStatus } from '@/utils/enumeration'
+import { Groups, UserType, Authents, emptySelect, OrderStatus, CounterParty, PayType } from '@/utils/enumeration'
 import { advertise, down_advertise } from '@/api/advertisement'
 import { order_details } from '@/api/order'
 
@@ -128,7 +128,7 @@ export default {
     return {
       UserType,
       PayType,
-      TreadOrderStatus,
+      OrderStatus,
       CounterParty,
       Authents: [{ id: '',
         mame: '',

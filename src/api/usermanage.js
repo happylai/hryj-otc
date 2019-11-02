@@ -154,6 +154,15 @@ export function pay_types(data) {
   })
 }
 
+// 用户支付方式编辑
+export function royalty_save(data) {
+  return request({
+    url: `/admin/user/royalty_save`,
+    method: 'post',
+    data
+  })
+}
+
 // 用户交易冻结
 export function freeze_deal(data) {
   return request({

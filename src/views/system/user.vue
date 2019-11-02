@@ -37,9 +37,9 @@
         <el-col :span="8" class="textAlingR">角色：</el-col>
         <el-col :span="16">
           <el-select v-model="newRole" placeholder="更换角色">
-            <el-option v-for="(item,index) in Roles" :key="index" :label="item.label" :value="item.id" />
+            <el-option v-for="(item,index) in adminRolesConst" :key="index" :label="item.zhName" :value="item.id" />
           </el-select>
-          <el-link type="danger" :underline="false">当前登录角色：{{ editData.role }}</el-link>
+          <el-link type="danger" :underline="false">当前登录角色：{{ adminRolesConstName(editData.role,adminRolesConst) }}</el-link>
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
@@ -82,7 +82,8 @@
 
 <script>
 import tabPane from './components/TabPane'
-import { mapState } from 'vuex' // 先要引入
+import { mapState, mapGetters } from 'vuex' // 先要引入
+import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves'
 import { freeze, save } from '@/api/admin'
@@ -106,6 +107,9 @@ export default {
       }
     }
     return {
+      groupsConstName,
+      userRolesConstName,
+      adminRolesConstName,
       SelectRoles: [{ label: '全部', id: '' }, ...Roles],
       Roles,
       Auths,
@@ -142,7 +146,12 @@ export default {
     ...mapState({
       list: state => state.admin.admins,
       meta: state => state.admin.meta
-    })
+    }),
+    ...mapGetters([
+      'groupsConst',
+      'userRolesConst',
+      'adminRolesConst'
+    ])
   },
   watch: {
     activeName(val) {

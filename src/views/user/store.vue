@@ -24,13 +24,13 @@
         搜索
       </el-button>
 
-      <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-plus" @click="handleFilter">
+      <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-plus" @click="dialogVisible=true">
         添加
       </el-button>
 
     </div>
 
-    <el-table stripe v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="loading" stripe :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
 
         align="center"
@@ -80,7 +80,19 @@
       </el-table-column>
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
-
+    <el-dialog :visible.sync="dialogVisible" title="添加用户">
+      <el-form ref="regForm" :model="regForm" :rules="loginRules" class="login-form" label-width="80px" auto-complete="on" label-position="right">
+        <el-form-item label="邮箱" class="addUserItem" prop="emailContact">
+          <el-input ref="emailContact" v-model="regForm.emailContact" autocomplete="off" placeholder="请输入邮箱" name="emailContact" type="text" tabindex="1" auto-complete="on" />
+        </el-form-item>
+        <el-form-item label="密码" class="addUserItem" prop="password">
+          <el-input ref="password" v-model="regForm.password" autocomplete="off" show-password :type="passwordType" placeholder="请输入密码" name="password" tabindex="2" auto-complete="on" />
+        </el-form-item>
+        <el-form-item label="" class="addUserItem">
+          <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handlAdd">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -89,23 +101,45 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import tip from '@/components/Tip'
+import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, KycLevel, emptySelect, PayType, AccountStatus } from '@/utils/enumeration'
-import { users_b } from '@/api/usermanage'
+import { users_b, user_b_save } from '@/api/usermanage'
+import { validateUsername, validateEamil, validatePassword } from '@/utils/validate'
 
 export default {
   name: 'Tab',
   components: { pagination, tip },
   directives: { waves },
   data() {
+    const validateConfirm = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请重复密码'))
+      } else if (value.length < 6) {
+        callback(new Error('密码必须大于6位数'))
+      } else if (this.regForm.password !== value) {
+        callback(new Error('密码不一致'))
+      } else {
+        callback()
+      }
+    }
     return {
+      groupsConstName,
+      userRolesConstName,
+      adminRolesConstName,
       AccountStatus,
       PayType,
       activeType: '0',
       UserType,
       KycLevel,
       Groups: [emptySelect, ...Groups],
+      loginRules: {
+        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        emailContact: [{ required: true, trigger: 'blur', validator: validateEamil }],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        confirm: [{ required: true, trigger: 'blur', validator: validateConfirm }]
+      },
       fliterQuery: {
         page: 1,
         size: 20,
@@ -125,6 +159,11 @@ export default {
       paginationMeta: {
         total: 10,
         pages: 1
+      },
+      regForm: {
+        emailContact: undefined,
+        password: undefined,
+        active: true
       }
     }
   },
@@ -133,7 +172,12 @@ export default {
     ...mapState({
       allList: state => state.order.allList,
       allListMeta: state => state.order.allMeta
-    })
+    }),
+    ...mapGetters([
+      'groupsConst',
+      'userRolesConst',
+      'adminRolesConst'
+    ])
   },
 
   mounted() {
@@ -179,6 +223,42 @@ export default {
     },
     goDetail(id) {
       this.$router.push({ path: `/user/store/${id}` })
+    },
+    handlAdd() {
+      console.log('click')
+      this.$refs.regForm.validate(valid => {
+        console.log('valid', valid)
+        if (valid) {
+          this.loading = true
+          const data = this.regForm
+          user_b_save(data).then(res => {
+            this.loading = false
+
+            if (res.code === 0) {
+              this.dialogVisible = false
+              this.$message({
+                message: '保存成功',
+                type: 'success'
+              })
+              this.dialogVisible = false
+              this.getList()
+              this.regForm = {
+                emailContact: undefined,
+                password: undefined,
+                active: true
+              }
+            } else {
+              this.$message.error(res.message || '操作失败')
+            }
+          }).catch(err => {
+            this.loading = false
+            this.$message.error(err || '操作失败')
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }

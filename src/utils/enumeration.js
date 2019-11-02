@@ -23,12 +23,12 @@ export const PayType = [{
 export const OrderStatus = [{
   name: 'UN_PAYED',
   id: 0,
-  label: '未支付'
+  label: '待支付'
 },
 {
   name: 'PAY_CONFIRMED',
   id: 1,
-  label: '支付确认中'
+  label: '确认已付款'
 },
 {
   name: 'CANCELED',
@@ -37,29 +37,29 @@ export const OrderStatus = [{
 },
 {
   name: 'PAY_RECEIVED',
-  id: 3,
-  label: '收到支付'
+  id: 4,
+  label: '确认已收款'
 },
 {
   name: 'COMPLETED',
-  id: 4,
+  id: 5,
   label: '完成'
 },
 {
   name: 'APPEALING',
-  id: 5,
+  id: 6,
   label: '申诉'
 },
 {
   nama: 'PAY_TIMEOUT',
-  id: 6,
+  id: 7,
   label: '支付超时'
 },
 {
   nama: 'RECEIVED_TIMEOUT',
-  id: 7,
+  id: 8,
   label: '收款超时'
-},
+}
 ]
 
 export const PayTypeStatus = [{
@@ -284,44 +284,6 @@ export const KycLevel = [{
 
 ]
 
-export const TreadOrderStatus = [{
-  id: 0,
-  name: 'UN_PAYED',
-  label: '未支付'
-},
-{
-  id: 1,
-  name: 'PAY_CONFIRMED',
-  label: '确认支付'
-},
-{
-  id: 2,
-  name: 'CANCELED',
-  label: '取消'
-},
-{
-  id: 3,
-  name: 'PAY_RECEIVED',
-  label: '已收到支付'
-},
-{
-  id: 4,
-  name: 'COMPLETED',
-  label: '支付完成'
-},
-{
-  id: 5,
-  name: 'APPEALING',
-  label: '申诉中'
-},
-{
-  id: 6,
-  name: 'PAY_TIMEOUT',
-  label: '支付超时'
-}
-
-]
-
 export const AccountStatus = [{
   id: 0,
   name: 'true',
@@ -382,6 +344,19 @@ export const FiatType = [{
 {
   id: 1,
   label: 'USDT'
+}
+]
+
+export const AuthType = [{
+  id: 0,
+  label: '未认证'
+},
+{
+  id: 1,
+  label: '支付认证'
+}, {
+  id: 2,
+  label: '身份认证'
 }
 ]
 

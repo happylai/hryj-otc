@@ -172,7 +172,7 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">手机号：</el-col>
-        <el-col :span="16" class="">
+        <el-col :span="16" >
           {{ editData.ip }}
           <el-checkbox v-model="ipOnly">
             <el-link type="danger" :underline="false">认证状态</el-link>

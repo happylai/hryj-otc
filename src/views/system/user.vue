@@ -3,7 +3,7 @@
     <div class="filter-container" style="margin-bottom: 10px;">
       <el-input v-model="querymeta.query" placeholder="用户名/账户/IP地址" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="querymeta.roleId" placeholder="选择权限" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in SelectRoles" :key="item.label+'srole'" :label="item.label" :value="item.id" />
+        <el-option v-for="item in adminRolesConst" :key="item.label+'srole'" :label="item.zhName" :value="item.id" />
       </el-select>
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
@@ -25,7 +25,7 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">登陆IP：</el-col>
-        <el-col :span="16" class="">
+        <el-col :span="16">
           {{ editData.ip }}
           <el-checkbox v-model="ipOnly">
             <el-link type="danger" :underline="false">是否限制改IP登录</el-link>

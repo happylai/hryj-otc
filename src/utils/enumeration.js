@@ -360,3 +360,62 @@ export const AuthType = [{
 }
 ]
 
+export const OrderAuditStatus = [
+  {
+    id: 0,
+    label: '待审核'
+  },
+  {
+    id: 1,
+    label: '审核通过'
+  },
+  {
+    id: 2,
+    label: '退回重新提交'
+  },
+  {
+    id: 3,
+    label: '订单已取消'
+  }
+]
+
+export const AppealeStatus = [
+  {
+    id: 0,
+    label: '待处理 '
+  },
+  {
+    id: 1,
+    label: '已处理'
+  }
+]
+
+export const AppealeResult = [
+  {
+    id: true,
+    label: '申诉方胜 '
+  },
+  {
+    id: false,
+    label: '申诉方败'
+  }
+]
+
+export const AppealeType = [
+  {
+    id: 0,
+    label: '买家未付款 '
+  },
+  {
+    id: 1,
+    label: '对方欺诈'
+  },
+  {
+    id: 2,
+    label: '卖家未确认收款 '
+  },
+  {
+    id: 3,
+    label: '其他'
+  }
+]

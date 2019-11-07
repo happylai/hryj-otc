@@ -213,3 +213,23 @@ export function scope_del(data) {
   })
 }
 
+// 保存代理奖励参数
+export function agent_award_save(data) {
+  return request({
+    url: `/admin/dictionary/agent_award_save`,
+    method: 'post',
+    data: qs.stringify(data),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
+// 获取代理奖励参数
+export function agent_award(data) {
+  return request({
+    url: `/admin/dictionary/agent_award`,
+    method: 'get',
+    params: data
+  })
+}

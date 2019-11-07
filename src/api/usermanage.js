@@ -175,3 +175,58 @@ export function freeze_deal(data) {
   })
 }
 
+// 代理商列表
+export function users_agent(meta, data) {
+  return request({
+    url: `/admin/user/agents`,
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta
+    }
+  })
+}
+
+// 代理商详情
+export function agent_detail(data) {
+  return request({
+    url: `/admin/user/agent`,
+    method: 'get',
+    params: data
+
+  })
+}
+
+// 代理商保存/新增
+export function agent_save(data) {
+  return request({
+    url: `/admin/user/agent_save`,
+    method: 'post',
+    data
+  })
+}
+
+// 代理商详情页面的下级代理
+export function agent_children(meta, data) {
+  return request({
+    url: `/admin/user/agent/children`,
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta
+    }
+  })
+}
+
+// 代理商收益明细列表查询
+export function agent_earnings(meta, data) {
+  return request({
+    url: `/admin/user/agent/earnings`,
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta
+    }
+
+  })
+}

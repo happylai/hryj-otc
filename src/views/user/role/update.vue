@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <tip />
     <div class="filter-container" style="margin-bottom: 10px;">
       <el-button v-if="false" v-waves class="filter-item" type="primary" icon="el-icon-add" @click="handleFilter">
@@ -211,7 +211,7 @@ export default {
     },
     toDetail(data) {
       console.log('to detail')
-      this.$router.push({ path: `/role/${data.id}`, query: { type: 1 }})
+      this.$router.push({ path: `/role/${data.id}`, query: { userId: data.userId, type: 1 }})
     }
   }
 }

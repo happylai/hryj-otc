@@ -4,14 +4,14 @@
     <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;" title="Tab with keep-alive" type="success" /> -->
     <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
       <el-tab-pane v-for="item in tabMapOptions" v-if="activeType<4" :key="item.key" :label="item.label" :name="item.key" />
-      <el-tab-pane v-for="item in tabMapOptions1" v-if="activeType>=4"  :key="item.key"  :label="item.label" :name="item.key" />
+      <el-tab-pane v-for="item in tabMapOptions1" v-if="activeType>=4" :key="item.key" :label="item.label" :name="item.key" />
     </el-tabs>
     <!-- <tab-pane :loading="loading" :data="list" @edit="handlEdit" /> -->
     <div class="filter-container" style="margin-bottom: 10px;">
       <el-select v-if="activeType!=='5'" v-model="addData.roleId" placeholder="选择角色" clearable style="width: 160px" class="filter-item">
         <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-if="activeType!=='3'" v-model="addData.payType" placeholder="支付方式" clearable style="width: 160px" class="filter-item">
+      <el-select v-model="addData.payType" placeholder="支付方式" clearable style="width: 160px" class="filter-item">
         <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
       <el-select v-if="activeType==='0'||activeType==='1'" v-model="addData.counterParty" placeholder="交易方" clearable style="width: 160px" class="filter-item">
@@ -19,13 +19,13 @@
       </el-select>
       <el-time-picker
         v-if="activeType==='1'"
-        is-range
         v-model="addData.date"
+        is-range
         range-separator="至"
         start-placeholder="开始时间"
         end-placeholder="结束时间"
-        placeholder="选择补贴时间段">
-      </el-time-picker>
+        placeholder="选择补贴时间段"
+      />
       <el-input v-model="addData.ratio" :placeholder="ratioPlaceHolder[activeType]+'%'" style="width: 180px;" class="filter-item" />
       <el-input v-if="activeType==='2'" v-model="addData.achieveAmount" placeholder="达量补贴达标标准" style="width: 180px;" class="filter-item" />
       <el-input v-model="addData.subsidyMax" :placeholder="placeHolder[activeType]" style="width: 180px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -66,7 +66,7 @@
 
       <el-table-column v-if="activeType=='1'" align="center" label="时间段">
         <template slot-scope="scope">
-          <span>{{ scope.row.startTime }}~{{scope.row.endTime}}</span>
+          <span>{{ scope.row.startTime }}~{{ scope.row.endTime }}</span>
         </template>
       </el-table-column>
 
@@ -113,17 +113,17 @@
         <el-col :span="8" class="textAlingR">补贴时间段：</el-col>
         <el-col :span="16">
           <el-time-picker
-            is-range
             v-model="editData.date"
+            is-range
             range-separator="至"
             start-placeholder="开始时间"
             end-placeholder="结束时间"
-            placeholder="选择补贴时间段">
-          </el-time-picker>
-          <el-link type="danger" :underline="false">当前补贴时间段：{{ editData.startTime }}~{{editData.endTime}}</el-link>
+            placeholder="选择补贴时间段"
+          />
+          <el-link type="danger" :underline="false">当前补贴时间段：{{ editData.startTime }}~{{ editData.endTime }}</el-link>
         </el-col>
       </el-row>
-      <el-row v-if="activeType=='2'"  :gutter="20" class="userRow inputRow">
+      <el-row v-if="activeType=='2'" :gutter="20" class="userRow inputRow">
         <el-col :span="8" class="textAlingR">达量标准：</el-col>
         <el-col :span="16">
           <el-input v-model="editData.newachieveAmount" style="width: 200px;height:30px" placeholder="请设置达量标准" />
@@ -162,31 +162,30 @@ export default {
       UserType,
       PayType,
       CounterParty,
-      type:0,
-      tab1:0,
-      tab1:4,
-      ratioPlaceHolder:[
-        '奖励比例','奖励比例','奖励比例','最高返利比例','交易提成比','提现手续费'
+      type: 0,
+      tab1: 0,
+      ratioPlaceHolder: [
+        '奖励比例', '奖励比例', '奖励比例', '层级差', '交易提成比', '提现手续费'
       ],
-      tabMapOptionsName:[
+      tabMapOptionsName: [
         { label: '交易补贴', key: '0' },
         { label: '夜间补贴', key: '1' },
         { label: '达量补贴', key: '2' },
-        { label: '返利补贴', key: '3' },
+        { label: '分销返利', key: '3' },
         { label: '站内交易', key: '4' },
         { label: 'B端商户', key: '5' }
       ],
-      tabMapOptions:[
+      tabMapOptions: [
         { label: '交易补贴', key: '0' },
         { label: '夜间补贴', key: '1' },
         { label: '达量补贴', key: '2' },
-        { label: '返利补贴', key: '3' },
+        { label: '分销返利', key: '3' }
       ],
-      tabMapOptions1:[
+      tabMapOptions1: [
         { label: '站内交易', key: '4' },
         { label: 'B端商户', key: '5' }
       ],
-      placeHolder:['单笔补贴最高限额','每天补贴最高限额','总补贴最高限额','补贴最高限额','最高提成限额','最高提成限额'],
+      placeHolder: ['单笔补贴最高限额', '每天补贴最高限额', '总补贴最高限额', '补贴最高限额', '最高提成限额', '最高提成限额'],
       activeType: '0',
       list: [],
       loading: false,
@@ -203,8 +202,8 @@ export default {
         payType: undefined,
         ratio: undefined,
         subsidyMax: undefined,
-        date:undefined,
-        achieveAmount:undefined,
+        date: undefined,
+        achieveAmount: undefined
       },
       editData: {
         roleId: 1
@@ -237,7 +236,7 @@ export default {
   },
   methods: {
     handleTabClick(tab, event) {
-      this.meta.current=1
+      this.meta.current = 1
       this.activeType = tab.name
       this.getList()
     },
@@ -284,32 +283,28 @@ export default {
     handleAdd() {
       const data = this.addData
       console.log('data', data)
-      if (!data.roleId&&this.activeType!=='5') {
+      if (!data.roleId && this.activeType !== '5') {
         this.$message.error('请选择角色')
-      } else if ((this.activeType !== '3') && (data.payType === '' || data.payType === undefined)) {
+      } else if ((data.payType === '' || data.payType === undefined)) {
         this.$message.error('请选择支付方式')
-      }else if ( this.activeType === '1' && (data.date === '' || data.date === undefined)) {
+      } else if (this.activeType === '1' && (data.date === '' || data.date === undefined)) {
         this.$message.error('请选择时间段')
-      }
-      else if ((this.activeType === '0' || this.activeType === '1') && (data.counterParty === '' || data.counterParty === undefined)) {
+      } else if ((this.activeType === '0' || this.activeType === '1') && (data.counterParty === '' || data.counterParty === undefined)) {
         this.$message.error('请选择交易方')
-      } 
-      else if (!data.ratio) {
+      } else if (!data.ratio) {
         this.$message.error(this.ratioPlaceHolder[this.activeType])
-      }
-      else if ( this.activeType === '2' && (data.achieveAmount === '' || data.achieveAmount === undefined)) {
+      } else if (this.activeType === '2' && (data.achieveAmount === '' || data.achieveAmount === undefined)) {
         this.$message.error('请填写达量标准')
-      } 
-      else if (!data.subsidyMax) {
+      } else if (!data.subsidyMax) {
         this.$message.error('请填写最高限额')
       } else {
         const postData = {
           roleId: data.roleId,
-          payType: this.activeType === '0' || this.activeType === '1' || this.activeType === '4'|| this.activeType === '5' ? data.payType : undefined,
+          payType: this.activeType === '0' || this.activeType === '1' || this.activeType === '4' || this.activeType === '5' ? data.payType : undefined,
           counterParty: this.activeType === '0' || this.activeType === '1' ? data.counterParty : undefined,
           ratio: data.ratio,
           subsidyMax: data.subsidyMax,
-          achieveAmount:data.achieveAmount,
+          achieveAmount: data.achieveAmount,
           type: this.activeType
         }
         if (this.activeType === '1') {
@@ -325,11 +320,11 @@ export default {
       const postData = {
         id: data.id,
         roleId: data.roleId,
-        payType: this.activeType === '0' || this.activeType === '1' || this.activeType === '4'|| this.activeType === '5' ? data.payType : undefined,
+        payType: this.activeType === '0' || this.activeType === '1' || this.activeType === '4' || this.activeType === '5' ? data.payType : undefined,
         counterParty: this.activeType === '0' || this.activeType === '1' ? data.counterParty : undefined,
         ratio: data.newratio ? data.newratio : data.ratio,
         subsidyMax: data.subsidyMax ? data.newsubsidyMax : data.subsidyMax,
-        achieveAmount:data.newachieveAmount?data.newachieveAmount:data.achieveAmount,
+        achieveAmount: data.newachieveAmount ? data.newachieveAmount : data.achieveAmount,
         type: data.type
       }
       if (this.activeType === '1') {

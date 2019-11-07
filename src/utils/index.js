@@ -353,7 +353,8 @@ export function removeClass(ele, cls) {
 
 export function groupsConstName(id, arr) {
   if (id) {
-    const data = arr.filter((item) => { console.log('item', item, id); if (item.id === id) { return item } })
+    id * 1
+    const data = arr.filter((item) => { if (item.id === id) { return item } })
     if (has({ foo: { bar: data }}, 'foo.bar')) {
       return data[0].groupName
     } else {
@@ -365,8 +366,11 @@ export function groupsConstName(id, arr) {
 }
 
 export function adminRolesConstName(id, arr) {
+  console.log('adminRolesConstName', id, arr)
   if (id) {
-    const data = arr.filter((item) => { console.log('item', item, id); if (item.id === id) { return item } })
+    id = id * 1
+    const data = arr.filter((item) => { console.log('item', item.id, id); if (item.id == id) { return item } })
+    console.log(' adminRolesConstName data', data)
     if (has({ foo: { bar: data }}, 'foo.bar')) {
       return data[0].zhName
     } else {
@@ -379,7 +383,8 @@ export function adminRolesConstName(id, arr) {
 
 export function userRolesConstName(id, arr) {
   if (id) {
-    const data = arr.filter((item) => { console.log('item', item, id); if (item.id === id) { return item } })
+    id * 1
+    const data = arr.filter((item) => { if (item.id === id) { return item } })
     if (has({ foo: { bar: data }}, 'foo.bar')) {
       return data[0].zhName
     } else {

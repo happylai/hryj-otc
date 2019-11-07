@@ -7,17 +7,17 @@
       </div>
       <div class="text item">
         <el-row :gutter="10" class="card-row">
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">用户ID：{{ modals.uuid }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">用户名：{{ modals.nickName }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div class="">真实姓名：{{ modals.realName }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>用户ID：{{ modals.uuid }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>用户名：{{ modals.nickName }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>真实姓名：{{ modals.realName }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>
             当前状态：<el-tag :type="editData.active?'success':'danger'">{{ editData.active?'正常':'冻结' }}</el-tag></div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">手机号：{{ modals.mobileContact }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">邮箱：{{ modals.emailContact }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div class="">申诉数：{{ modals.appealNum }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div class="">被申诉数：{{ modals.appealedNum }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>手机号：{{ modals.mobileContact }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>邮箱：{{ modals.emailContact }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>申诉数：{{ modals.appealNum }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>被申诉数：{{ modals.appealedNum }}</div></el-col>
         </el-row>
       </div>
     </el-card>
@@ -206,7 +206,7 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">手机号：</el-col>
-        <el-col :span="16" class="">
+        <el-col :span="16">
           {{ editData.mobileContact }}
         </el-col>
       </el-row>

@@ -1,7 +1,5 @@
 // import parseTime, formatTime and set to filter
 import has from 'has-value'
-import { get_system_const } from '@/api/admin'
-
 export { parseTime, formatTime } from '@/utils'
 import {
   PayType,
@@ -10,13 +8,14 @@ import {
   Auths,
   Roles,
   UserType,
-  Groups,
   Authents,
   CounterParty,
   KycLevel,
   AdvStatus,
   AdvType,
-  AuthType
+  AuthType,
+  OrderAuditStatus,
+  AppealeType
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -24,28 +23,6 @@ import {
  * @param {string} label
  * @return {string}
  */
-
-let systemConst
-let loading = false
-const getSystemConst = (async function() {
-  console.log('aa---------------------------bb')
-  if (systemConst) {
-    return
-  } else if (loading) {
-    setTimeout(() => {
-      getSystemConst()
-    }, 500)
-  } else {
-    loading = true
-    await get_system_const().then(res => {
-      console.log(res)
-      systemConst = res.data
-      loading = false
-      return true
-    })
-    return true
-  }
-})()
 
 function pluralize(time, label) {
   if (time === 1) {
@@ -173,7 +150,7 @@ export function orderStatus(id) {
   if (id === 'null') {
     return '-'
   } else if (has({ foo: { bar: id }}, 'foo.bar')) {
-    const data = OrderStatus.filter((item) => { console.log('item', item, id); if (item.id === id) { return item } })
+    const data = OrderStatus.filter((item) => { if (item.id === id) { return item } })
     if (has({ foo: { bar: data }}, 'foo.bar')) {
       return data[0].label
     } else {
@@ -198,18 +175,15 @@ export function payTypeStatus(num) {
  */
 export function payTypeNames(num) {
   if (has({ foo: num }, 'foo') && num !== null) {
-    console.log('hasvalue')
     const data = num.split(',')
     let typeName = ''
     for (var i = 0; i < data.length; i++) {
       typeName = typeName + ' ' + PayType[data[i]].label
-      console.log('typeName', typeName, i)
       if (i === data.length - 1) {
         return typeName
       }
     }
   } else {
-    console.log('dont has value', num)
     return '-'
   }
 }
@@ -244,8 +218,7 @@ export function userTypeName(num) {
  */
 export async function groupsConstName(id, arr) {
   if (id) {
-    const data = arr.filter((item) => { console.log('item', item, id); if (item.id === id) { return item } })
-    console.log(' filter data', data)
+    const data = arr.filter((item) => { if (item.id === id) { return item } })
     if (has({ foo: { bar: data }}, 'foo.bar')) {
       return data[0].groupName
     } else {
@@ -303,3 +276,42 @@ export function advStatus(num = null) {
 export function authTypeName(num = null) {
   return num === null ? '-' : AuthType[num].label
 }
+
+/**
+ * OrderAuditStatus
+ * @param {number} num
+ */
+export function orderAuditStatus(id) {
+  if (id === 'null') {
+    return '-'
+  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+    const data = OrderAuditStatus.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      return data[0].label
+    } else {
+      return '-'
+    }
+  } else {
+    return '-'
+  }
+}
+
+/**
+ * AppealeType
+ * @param {number} num
+ */
+export function appealeType(id) {
+  if (id === 'null') {
+    return '-'
+  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+    const data = AppealeType.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      return data[0].label
+    } else {
+      return '-'
+    }
+  } else {
+    return '-'
+  }
+}
+

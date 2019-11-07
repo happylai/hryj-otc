@@ -24,12 +24,6 @@
       </template>
     </el-table-column>
 
-    <el-table-column width="150px" align="center" label="权限">
-      <template slot-scope="scope">
-        <span>{{ scope.row.auth }}</span>
-      </template>
-    </el-table-column>
-
     <el-table-column align="center" label="创建时间" min-width="160">
       <template slot-scope="scope">
         <span>{{ scope.row.createTime|timestampFormat }}</span>

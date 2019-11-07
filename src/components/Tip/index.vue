@@ -22,7 +22,7 @@ export default {
     },
     showContact: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   computed: {

@@ -21,7 +21,7 @@ import Layout from '@/layout'
     title: 'title'               the name show in sidebar and breadcrumb (recommend set)
     icon: 'svg-name'             the icon show in the sidebar
     breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
+    activeMenu: '//list'  if set path, the sidebar will highlight the path you set
   }
  */
 
@@ -72,7 +72,7 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '订单管理',
-    icon: 'example'
+    icon: 'orderList'
     // roles: ['ROLE_USER']
   },
   children: [{
@@ -82,7 +82,7 @@ export const asyncRoutes = [{
 
     meta: {
       title: '订单列表',
-      icon: 'example'
+      icon: ''
     }
   },
   {
@@ -92,19 +92,44 @@ export const asyncRoutes = [{
 
     meta: {
       title: '出金审核',
-      icon: 'example'
+      icon: ''
     }
   },
   {
     path: 'appeal',
     name: 'appeal',
     component: () => import('@/views/order/appeal'),
+    // redirect: '/order/appeal/list',
 
     meta: {
       title: '订单申述',
-      icon: 'example'
+      icon: ''
+    }
+    // children: [
+    //   {
+    //     path: 'list',
+    //     name: 'appeal',
+    //     component: () => import('@/views/order/appeal'),
+
+    //     meta: {
+    //       title: '列表',
+    //       icon: ''
+    //     }
+    //   },
+
+    // ]
+  },
+  {
+    path: 'appeal/:id',
+    name: 'appealDetail',
+    component: () => import('@/views/order/appealDetail'),
+    hidden: true,
+    meta: {
+      title: '申述详情',
+      icon: ''
     }
   }
+
   ]
 },
 {
@@ -112,7 +137,7 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '用户管理',
-    icon: 'example'
+    icon: 'user'
     // roles: ['ROLE_USER']
   },
   children: [
@@ -122,7 +147,7 @@ export const asyncRoutes = [{
     //   component: () => import('@/views/user/payment'),
     //   meta: {
     //     title: '支付方式审核',
-    //     icon: 'example'
+    //     icon: ''
     //   }
     // },
     {
@@ -131,7 +156,7 @@ export const asyncRoutes = [{
       component: () => import('@/views/user/instation'),
       meta: {
         title: '站内用户',
-        icon: 'example'
+        icon: ''
       }
     },
     {
@@ -140,7 +165,7 @@ export const asyncRoutes = [{
       component: () => import('@/views/user/store'),
       meta: {
         title: 'B端商户',
-        icon: 'example'
+        icon: ''
       }
     },
 
@@ -150,7 +175,17 @@ export const asyncRoutes = [{
       component: () => import('@/views/user/agent'),
       meta: {
         title: '代理商',
-        icon: 'example'
+        icon: ''
+      }
+    },
+    {
+      path: 'agent/:id',
+      hidden: true,
+      name: 'angetUser',
+      component: () => import('@/views/user/agentDetail'),
+      meta: {
+        title: '详情',
+        icon: ''
       }
     },
     {
@@ -159,7 +194,7 @@ export const asyncRoutes = [{
       component: () => import('@/views/user/role/main'),
       meta: {
         title: '角色申请',
-        icon: 'example'
+        icon: ''
       },
       children: [
         {
@@ -168,7 +203,7 @@ export const asyncRoutes = [{
           component: () => import('@/views/user/role/index'),
           meta: {
             title: '角色申请',
-            icon: 'example'
+            icon: ''
           }
         },
         {
@@ -178,7 +213,7 @@ export const asyncRoutes = [{
           component: () => import('@/views/user/role/roleDetail'),
           meta: {
             title: '详情',
-            icon: 'example',
+            icon: '',
             activeMenu: '/role'
           }
         }
@@ -191,7 +226,7 @@ export const asyncRoutes = [{
       component: () => import('@/views/user/userDetail'),
       meta: {
         title: '详情',
-        icon: 'example',
+        icon: '',
         type: 1
       }
     },
@@ -202,7 +237,7 @@ export const asyncRoutes = [{
       component: () => import('@/views/user/userbDetail'),
       meta: {
         title: '详情',
-        icon: 'example',
+        icon: '',
         type: 2
       }
     }
@@ -215,7 +250,7 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '广告',
-    icon: 'example'
+    icon: 'iconguanggaoguanli'
     // roles: ['ROLE_USER']
   },
   children: [{
@@ -224,7 +259,7 @@ export const asyncRoutes = [{
     component: () => import('@/views/advertisement/index'),
     meta: {
       title: '广告管理',
-      icon: 'example'
+      icon: 'ad-manage'
     }
   },
   {
@@ -234,7 +269,7 @@ export const asyncRoutes = [{
     component: () => import('@/views/advertisement/detail'),
     meta: {
       title: '详情',
-      icon: 'example'
+      icon: ''
     }
   }
   ]
@@ -244,7 +279,7 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '财务管理',
-    icon: 'example'
+    icon: 'finance'
   },
   children: [{
     path: 'center',
@@ -252,7 +287,7 @@ export const asyncRoutes = [{
     component: () => import('@/views/finance/center'),
     meta: {
       title: '中央财务',
-      icon: 'example'
+      icon: ''
     }
   },
   {
@@ -261,7 +296,7 @@ export const asyncRoutes = [{
     component: () => import('@/views/finance/user'),
     meta: {
       title: '用户资产',
-      icon: 'example'
+      icon: ''
     }
   }
   ]
@@ -271,7 +306,7 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '数据中心',
-    icon: 'example'
+    icon: 'iconshujuzhongxin'
   },
   children: [{
     path: 'statistics',
@@ -279,7 +314,7 @@ export const asyncRoutes = [{
     component: () => import('@/views/analysis/index'),
     meta: {
       title: '数据统计',
-      icon: 'example'
+      icon: 'statistic'
     }
   }
   // {
@@ -288,7 +323,7 @@ export const asyncRoutes = [{
   //   component: () => import('@/views/order/index'),
   //   meta: {
   //     title: '用户资产',
-  //     icon: 'example'
+  //     icon: ''
   //   }
   // }
   ]
@@ -298,7 +333,7 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '参数设置',
-    icon: 'example'
+    icon: 'params'
     // roles: ['ROLE_USER']
   },
   children: [{
@@ -307,7 +342,7 @@ export const asyncRoutes = [{
     component: () => import('@/views/params/priceRules'),
     meta: {
       title: '定价规则',
-      icon: 'example'
+      icon: ''
     }
   },
   {
@@ -316,7 +351,7 @@ export const asyncRoutes = [{
     component: () => import('@/views/params/agent'),
     meta: {
       title: '代理奖励',
-      icon: 'example'
+      icon: ''
     }
   },
   {
@@ -325,8 +360,8 @@ export const asyncRoutes = [{
     component: () => import('@/views/params/allowance'),
     meta: {
       title: '补贴奖励',
-      icon: 'example',
-      type:1
+      icon: '',
+      type: 1
     }
   },
   {
@@ -335,8 +370,8 @@ export const asyncRoutes = [{
     component: () => import('@/views/params/allowance'),
     meta: {
       title: '交易提成',
-      icon: 'example',
-      type:2
+      icon: '',
+      type: 2
     }
   },
   {
@@ -345,7 +380,7 @@ export const asyncRoutes = [{
     component: () => import('@/views/params/time'),
     meta: {
       title: '时间设置',
-      icon: 'example'
+      icon: ''
     }
   },
   {
@@ -354,7 +389,7 @@ export const asyncRoutes = [{
     component: () => import('@/views/params/other'),
     meta: {
       title: '其他参数设置',
-      icon: 'example'
+      icon: ''
     }
   }
   ]
@@ -365,7 +400,7 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '系统设置',
-    icon: 'example'
+    icon: ''
   },
   children: [
     //   {
@@ -374,7 +409,7 @@ export const asyncRoutes = [{
     //   component: () => import('@/views/system/roles'),
     //   meta: {
     //     title: '后台角色管理',
-    //     icon: 'example'
+    //     icon: ''
     //   }
     // },
     // {
@@ -383,7 +418,7 @@ export const asyncRoutes = [{
     //   component: () => import('@/views/system/permission'),
     //   meta: {
     //     title: '权限设置',
-    //     icon: 'example'
+    //     icon: ''
     //   }
     // },
     {
@@ -392,7 +427,7 @@ export const asyncRoutes = [{
       component: () => import('@/views/system/user'),
       meta: {
         title: '后台用户列表',
-        icon: 'example'
+        icon: 'userList'
       }
     }
   ]

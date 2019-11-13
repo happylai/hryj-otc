@@ -94,9 +94,7 @@ export default {
     this.getList()
   },
   methods: {
-    showCreatedTimes() {
-      this.createdTimes = this.createdTimes + 1
-    },
+
     getList() {
       this.listLoading = true
       this.$store.dispatch('order/getAllList')

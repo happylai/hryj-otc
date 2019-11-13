@@ -55,6 +55,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column width="180px" align="center" label="所属代理商">
+        <template slot-scope="scope">
+          <span>{{ scope.row.parentAgent||'无' }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column width="120px" align="center" label="交易额">
         <template slot-scope="scope">
           <span>{{ scope.row.amount||'-' }}</span>
@@ -184,9 +190,7 @@ export default {
     this.getList()
   },
   methods: {
-    showCreatedTimes() {
-      this.createdTimes = this.createdTimes + 1
-    },
+
     paginationChange(e) {
       console.log('paginationChange', e)
       this.meta.size = e.limit

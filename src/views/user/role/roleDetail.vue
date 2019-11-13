@@ -196,6 +196,14 @@
         <el-col :span="8" class="textAlingR">返佣比:</el-col>
         <el-col :span="16">{{ editData.rebate }}</el-col>
       </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">可用余额:</el-col>
+        <el-col :span="16">{{ editData.balance }}</el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">交易量:</el-col>
+        <el-col :span="16">{{ editData.amount }}</el-col>
+      </el-row>
       <el-row v-if="type===1" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">角色升级：</el-col>
         <el-col :span="16">
@@ -231,7 +239,7 @@
       </el-row>
 
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click=" handleAudit(1) ">通过</el-button>
+        <el-button type="primary" @click=" handleAudit(1) ">{{ buttonText[type] }}</el-button>
         <el-button @click="handleAudit(2)">不通过</el-button>
       </span>
     </el-dialog>
@@ -281,7 +289,7 @@ export default {
         current: 1,
         size: 10
       },
-
+      buttonText: ['', '升级', '退保', '退激活金'],
       loading: false,
       list: [],
       paginationMeta: {

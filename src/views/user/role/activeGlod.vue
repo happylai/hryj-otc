@@ -4,7 +4,17 @@
     <div class="filter-container" style="margin-bottom: 10px;">
       <el-input v-model="fliterQuery.query" placeholder="用户名ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="fliterQuery.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in userRolesConst" :key="item.id" :label="item.zhName" :value="item.id" />
+        <el-option
+          v-for="item in [
+            {
+              zhName: '信任大宗',
+              id: -1
+            },...userRolesConst
+          ]"
+          :key="item.id"
+          :label="item.zhName"
+          :value="item.id"
+        />
       </el-select>
 
       <el-date-picker
@@ -48,6 +58,11 @@
       <el-table-column width="120px" align="center" label="可用余额">
         <template slot-scope="scope">
           <span>{{ scope.row.balance||'-' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="120px" align="center" label="交易量">
+        <template slot-scope="scope">
+          <span>{{ scope.row.amount||'-' }}</span>
         </template>
       </el-table-column>
 
@@ -95,10 +110,14 @@ export default {
   directives: { waves },
   data() {
     return {
+      ActiveUserType: [{
+        zhName: '信任大宗',
+        id: -1
+      }, ...UserType],
       groupsConstName,
       userRolesConstName,
       adminRolesConstName,
-      activeType: '1',
+      activeType: '2',
       UserType,
       Authents: [{ id: '',
         mame: '',
@@ -184,7 +203,7 @@ export default {
     },
     toDetail(data) {
       console.log('to detail')
-      this.$router.push({ path: `/role/${data.id}`, query: { userId: data.userId, type: 2 }})
+      this.$router.push({ path: `/role/${data.id}`, query: { userId: data.userId, type: 3 }})
     }
   }
 }

@@ -65,7 +65,7 @@
 
       <el-table-column width="120px" align="center" label="胜诉比">
         <template slot-scope="scope">
-          <span>{{ scope.row.appeal_win }}/{{ scope.row.appeal_total }}</span>
+          <span>{{ scope.row.appealWin }}/{{ scope.row.appealTotal }}</span>
         </template>
       </el-table-column>
 

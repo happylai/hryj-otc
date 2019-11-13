@@ -7,6 +7,9 @@
       <el-tab-pane :key="tabMapOptions[1].key" :label="tabMapOptions[1].label" :name="tabMapOptions[1].key">
         <surrender />
       </el-tab-pane>
+      <el-tab-pane :key="tabMapOptions[2].key" :label="tabMapOptions[2].label" :name="tabMapOptions[2].key">
+        <activeGlod />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -14,19 +17,21 @@
 <script>
 import update from './update'
 import surrender from './surrender'
+import activeGlod from './activeGlod'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import waves from '@/directive/waves' // waves directive
 import { OrderStatus, PayType, UserType } from '@/utils/enumeration'
 
 export default {
   name: 'Tab',
-  components: { update, surrender },
+  components: { update, surrender, activeGlod },
   directives: { waves },
   data() {
     return {
       tabMapOptions: [
         { label: '角色升级', key: '0' },
-        { label: '退保审核', key: '1' }
+        { label: '退保审核', key: '1' },
+        { label: '退激活金', key: '2' }
       ],
       activeType: '0',
       UserType,

@@ -7,11 +7,11 @@
       <el-tab-pane v-for="item in tabMapOptions1" v-if="activeType>=4" :key="item.key" :label="item.label" :name="item.key" />
     </el-tabs>
     <!-- <tab-pane :loading="loading" :data="list" @edit="handlEdit" /> -->
-    <div class="filter-container" style="margin-bottom: 10px;">
-      <el-select v-if="activeType!=='5'" v-model="addData.roleId" placeholder="选择角色" clearable style="width: 160px" class="filter-item">
+    <div v-if="activeType!=='3'" class="filter-container" style="margin-bottom: 10px;">
+      <el-select v-if="activeType!=='5'&&activeType!=='3'" v-model="addData.roleId" placeholder="选择角色" clearable style="width: 160px" class="filter-item">
         <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-model="addData.payType" placeholder="支付方式" clearable style="width: 160px" class="filter-item">
+      <el-select v-if="activeType!=='3'" v-model="addData.payType" placeholder="支付方式" clearable style="width: 160px" class="filter-item">
         <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
       <el-select v-if="activeType==='0'||activeType==='1'" v-model="addData.counterParty" placeholder="交易方" clearable style="width: 160px" class="filter-item">
@@ -26,8 +26,9 @@
         end-placeholder="结束时间"
         placeholder="选择补贴时间段"
       />
-      <el-input v-model="addData.ratio" :placeholder="ratioPlaceHolder[activeType]+'%'" style="width: 180px;" class="filter-item" />
-      <el-input v-if="activeType==='2'" v-model="addData.achieveAmount" placeholder="达量补贴达标标准" style="width: 180px;" class="filter-item" />
+      <el-input v-if="activeType!=='3'" v-model="addData.ratio" :placeholder="ratioPlaceHolder[activeType]" style="width: 180px;" class="filter-item" />
+      <el-input v-if="activeType!=='3'&&activeType==='2'" v-model="addData.achieveAmount" placeholder="达量补贴达标标准" style="width: 180px;" class="filter-item" />
+      <el-input v-if="activeType==='0'||activeType==='3'" v-model="addData.levelDiffer" :placeholder="activeType==='0'?'层级差':'激活金'" style="width: 180px;" class="filter-item" />
       <el-input v-model="addData.subsidyMax" :placeholder="placeHolder[activeType]" style="width: 180px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" @click="handleAdd">
         确认添加
@@ -35,7 +36,7 @@
     </div>
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
-        v-if="activeType!=='5'"
+        v-if="activeType!=='5'&&activeType!=='3'"
         align="center"
         label="角色"
         width="120"
@@ -58,7 +59,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="ratioPlaceHolder[activeType]+'%'">
+      <el-table-column align="center" :label="ratioPlaceHolder[activeType]">
         <template slot-scope="scope">
           <span>{{ scope.row.ratio }}</span>
         </template>
@@ -76,9 +77,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="placeHolder[this.activeType]">
+      <el-table-column v-if="activeType!=='3'" align="center" :label="placeHolder[this.activeType]">
         <template slot-scope="scope">
           <span>{{ scope.row.subsidyMax }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-if="activeType==='3'||activeType==='0'" align="center" :label="activeType==='0'?'层级差':'上级奖励'">
+        <template slot-scope="scope">
+          <span>{{ scope.row.levelDiffer||'-' }}</span>
         </template>
       </el-table-column>
 
@@ -90,7 +97,7 @@
     </el-table>   <pagination v-show="meta.total>0" :total="meta.total" :page.sync="meta.pages" :limit.sync="meta.size" @pagination="metaChange" />
 
     <el-dialog :visible.sync="dialogVisible" :title="tabMapOptionsName[activeType].label" style="min-width: 800px;">
-      <el-row :gutter="20" class="userRow">
+      <el-row v-if="activeType!=='3'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">当前角色：</el-col>
         <el-col :span="16">{{ editData.roleId|userTypeName }}</el-col>
       </el-row>
@@ -103,10 +110,10 @@
         <el-col :span="16">{{ editData.counterParty|counterParty }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow inputRow">
-        <el-col :span="8" class="textAlingR">补贴比例：</el-col>
+        <el-col :span="8" class="textAlingR">{{ ratioPlaceHolder[activeType] }}：</el-col>
         <el-col :span="16">
-          <el-input v-model="editData.newratio" style="width: 200px;height:30px" placeholder="请输入补贴比例(如:1.9)" />
-          <el-link type="danger" :underline="false">当前补贴比例：{{ editData.ratio }}</el-link>
+          <el-input v-model="editData.newratio" style="width: 200px;height:30px" :placeholder="'请输入'+ratioPlaceHolder[activeType]+'(如:1.9)'" />
+          <el-link type="danger" :underline="false">当前{{ ratioPlaceHolder[activeType] }}：{{ editData.ratio }}</el-link>
         </el-col>
       </el-row>
       <el-row v-if="activeType=='1'" :gutter="20" class="userRow inputRow">
@@ -130,11 +137,18 @@
           <el-link type="danger" :underline="false">当前达量标准：{{ editData.achieveAmount }}</el-link>
         </el-col>
       </el-row>
-      <el-row :gutter="20" class="userRow inputRow">
+      <el-row v-if="activeType!=='3'" :gutter="20" class="userRow inputRow">
         <el-col :span="8" class="textAlingR">补贴限额：</el-col>
         <el-col :span="16">
           <el-input v-model="editData.newsubsidyMax" style="width: 200px;height:30px" placeholder="请设置补贴限额(如:1000)" />
           <el-link type="danger" :underline="false">当前补贴限额：{{ editData.subsidyMax }}</el-link>
+        </el-col>
+      </el-row>
+      <el-row v-if="activeType==='0'||activeType==='3'" :gutter="20" class="userRow inputRow">
+        <el-col :span="8" class="textAlingR">{{ activeType==='0'?'层级差':'上级奖励' }}：</el-col>
+        <el-col :span="16">
+          <el-input v-model="editData.newlevelDiffer" style="width: 200px;height:30px" :placeholder="'请设置'+activeType==='0'?'层级差':'上级奖励'+'(如:1000)'" />
+          <el-link type="danger" :underline="false">当前{{ activeType==='0'?'层级差':'上级奖励' }}：{{ editData.levelDiffer }}</el-link>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -165,13 +179,13 @@ export default {
       type: 0,
       tab1: 0,
       ratioPlaceHolder: [
-        '奖励比例', '奖励比例', '奖励比例', '层级差', '交易提成比', '提现手续费'
+        '奖励比例%', '奖励比例%', '奖励比例%', '邀请奖励', '交易提成比%', '提现手续费%'
       ],
       tabMapOptionsName: [
         { label: '交易补贴', key: '0' },
         { label: '夜间补贴', key: '1' },
         { label: '达量补贴', key: '2' },
-        { label: '分销返利', key: '3' },
+        { label: '邀请奖励', key: '3' },
         { label: '站内交易', key: '4' },
         { label: 'B端商户', key: '5' }
       ],
@@ -179,7 +193,7 @@ export default {
         { label: '交易补贴', key: '0' },
         { label: '夜间补贴', key: '1' },
         { label: '达量补贴', key: '2' },
-        { label: '分销返利', key: '3' }
+        { label: '邀请奖励', key: '3' }
       ],
       tabMapOptions1: [
         { label: '站内交易', key: '4' },
@@ -198,6 +212,7 @@ export default {
       },
       addData: {
         roleId: undefined,
+        levelDiffer: undefined,
         counterParty: undefined,
         payType: undefined,
         ratio: undefined,
@@ -283,7 +298,7 @@ export default {
     handleAdd() {
       const data = this.addData
       console.log('data', data)
-      if (!data.roleId && this.activeType !== '5') {
+      if (!data.roleId && (this.activeType !== '5' || this.activeType !== '3')) {
         this.$message.error('请选择角色')
       } else if ((data.payType === '' || data.payType === undefined)) {
         this.$message.error('请选择支付方式')
@@ -295,16 +310,19 @@ export default {
         this.$message.error(this.ratioPlaceHolder[this.activeType])
       } else if (this.activeType === '2' && (data.achieveAmount === '' || data.achieveAmount === undefined)) {
         this.$message.error('请填写达量标准')
-      } else if (!data.subsidyMax) {
+      } else if ((this.activeType === '0' || this.activeType === '3') && (data.levelDiffer === '' || data.levelDiffer === undefined)) {
+        this.$message.error(this.activeType === '0' ? '请填写层级差' : '上级奖励')
+      } else if (this.activeType !== '3' && !data.subsidyMax) {
         this.$message.error('请填写最高限额')
       } else {
         const postData = {
-          roleId: data.roleId,
+          roleId: this.activeType !== '5' || this.activeType !== '3' ? data.roleId : undefined,
+          levelDiffer: this.activeType === '0' || this.activeType === '3' ? data.levelDiffer : undefined,
           payType: this.activeType === '0' || this.activeType === '1' || this.activeType === '4' || this.activeType === '5' ? data.payType : undefined,
           counterParty: this.activeType === '0' || this.activeType === '1' ? data.counterParty : undefined,
           ratio: data.ratio,
-          subsidyMax: data.subsidyMax,
-          achieveAmount: data.achieveAmount,
+          subsidyMax: this.activeType !== '3' ? data.subsidyMax : undefined,
+          achieveAmount: this.activeType === '2' ? data.achieveAmount : undefined,
           type: this.activeType
         }
         if (this.activeType === '1') {
@@ -325,6 +343,7 @@ export default {
         ratio: data.newratio ? data.newratio : data.ratio,
         subsidyMax: data.subsidyMax ? data.newsubsidyMax : data.subsidyMax,
         achieveAmount: data.newachieveAmount ? data.newachieveAmount : data.achieveAmount,
+        levelDiffer: data.newlevelDiffer ? data.newlevelDiffer : data.levelDiffer,
         type: data.type
       }
       if (this.activeType === '1') {

@@ -10,6 +10,7 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>用户ID：{{ modals.uuid }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>用户名：{{ modals.nickName }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>真实姓名：{{ modals.realName }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>所属代理商：{{ modals.parentAgent||'无' }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>
             当前状态：<el-tag :type="editData.active?'success':'danger'">{{ editData.active?'正常':'冻结' }}</el-tag></div></el-col>
         </el-row>
@@ -198,7 +199,13 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">真实姓名：</el-col>
-        <el-col :span="16">{{ editData.email }}</el-col>
+        <el-col :span="16">{{ editData.email||'-' }}</el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">所属代理商：</el-col>
+        <el-col :span="16">
+          {{ editData.parentAgent||'无' }}
+        </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">认证状态：：</el-col>
@@ -207,12 +214,12 @@
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">手机号：</el-col>
         <el-col :span="16">
-          {{ editData.mobileContact }}
+          {{ editData.mobileContact||'-' }}
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">身份证号：</el-col>
-        <el-col :span="8">{{ editData.idNumber }}</el-col>
+        <el-col :span="8">{{ editData.idNumber||'-' }}</el-col>
         <el-col :span="4">
           <img v-if="editData.identityImageFront" class="idImage" :src="editData.identityImageFront" alt="身份证正面">
         </el-col>

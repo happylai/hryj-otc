@@ -169,9 +169,7 @@ export default {
     this.getList()
   },
   methods: {
-    showCreatedTimes() {
-      this.createdTimes = this.createdTimes + 1
-    },
+
     paginationChange(e) {
       console.log('paginationChange', e)
       this.meta.size = e.limit

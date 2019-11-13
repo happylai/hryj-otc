@@ -11,18 +11,18 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8">
             <div class="card-item borderR">
               <div class="cart-i-t">交易提成 </div>
-              <div class="cart-i-v">{{ modals.balance }}</div>
+              <div class="cart-i-v">{{ modals.royalty||'-' }}</div>
             </div>
           </el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8">
             <div class="card-item borderR">
               <div class="cart-i-t">保证金（已退保：34517690.00）</div>
-              <div class="cart-i-v">{{ modals.balance }}</div>
+              <div class="cart-i-v">{{ modals.deposit||'-' }}</div>
             </div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8">
             <div class="card-item ">
-              <div class="cart-i-t">激活金 <el-link :underline="false" type="success">(已退还)</el-link> </div>
-              <div class="cart-i-v">{{ modals.activeGold }}</div>
+              <div class="cart-i-t">激活金</div>
+              <div class="cart-i-v">{{ modals.activeBalance||'-' }}</div>
             </div>
           </el-col>
         </el-row>
@@ -31,129 +31,113 @@
 
     <el-card class="box-card marginT20">
       <div slot="header" class="clearfix">
-        <span class="card-title">补贴支出（交易补贴/夜间补贴/达量补贴/订单补贴/返利补贴）</span>
+        <span class="card-title">补贴支出（交易补贴/夜间补贴/达量补贴/退还激活金/返利补贴）</span>
         <!-- <el-button style="float: right; padding: 3px 0" type="text">审核</el-button> -->
       </div>
       <div class="text item">
         <el-row :gutter="10">
-          <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8">
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5">
             <div class="card-item borderR">
-              <div class="cart-i-t">交易提成 </div>
-              <div class="cart-i-v">{{ modals.balance }}</div>
+              <div class="cart-i-t">交易补贴 </div>
+              <div class="cart-i-v">{{ modals.dealSubsidy }}</div>
             </div>
           </el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8">
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5">
             <div class="card-item borderR">
-              <div class="cart-i-t">保证金（已退保：34517690.00）</div>
-              <div class="cart-i-v">{{ modals.balance }}</div>
-            </div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8">
+              <div class="cart-i-t">夜间补贴</div>
+              <div class="cart-i-v">{{ modals.nightSubsidy }}</div>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5">
+            <div class="card-item borderR">
+              <div class="cart-i-t">达量补贴</div>
+              <div class="cart-i-v">{{ modals.amountSubsidy }}</div>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5">
+            <div class="card-item borderR">
+              <div class="cart-i-t">退还激活金 </div>
+              <div class="cart-i-v">{{ modals.depositBack }}</div>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="card-item ">
-              <div class="cart-i-t">激活金 <el-link :underline="false" type="success">(已退还)</el-link> </div>
-              <div class="cart-i-v">{{ modals.activeGold }}</div>
+              <div class="cart-i-t">邀请奖励</div>
+              <div class="cart-i-v">{{ modals.rebateSubsidy }}</div>
             </div>
           </el-col>
         </el-row>
       </div>
     </el-card>
 
-
-    <h2>交易明细</h2>
+    <h2>流水统计</h2>
     <div class="filter-container" style="margin-bottom: 10px;">
-      <el-button v-if="false" v-waves class="filter-item" type="primary" icon="el-icon-add" @click="handleFilter">
-        新增
-      </el-button>
-      <el-input v-model="fliterQuery.query" placeholder="用户名ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="fliterQuery.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
-      </el-select>
-      <el-select v-model="fliterQuery.groupId" placeholder="所在分组" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in Groups" :key="item.id" :label="item.label" :value="item.id" />
-      </el-select>
-      <el-select v-model="fliterQuery.authent" placeholder="认证方式" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in Authents" :key="item.id" :label="item.label" :value="item.id" />
-      </el-select>
+      <el-radio-group v-model="dateBucket" @change="dateBucketChange">
+        <el-radio-button :label="7">最近一周</el-radio-button>
+        <el-radio-button :label="14">最近两周</el-radio-button>
+        <el-radio-button :label="30">最近30天</el-radio-button>
+      </el-radio-group>
       <el-date-picker
         v-model="fliterQuery.date"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
+        @change='dateChange'
       />
-      <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
-        搜索
-      </el-button>
 
     </div>
     <el-table :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
         v-loading="loading"
         align="center"
-        label="用户"
-        width="65"
+        label="日期"
+        width="120"
         element-loading-text="请给我点时间！"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.uuid }}</span>
+          <span>{{ scope.row.createDay }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="用户名">
+      <el-table-column min-width="120px" align="center" label="下单数">
         <template slot-scope="scope">
-          <span>{{ scope.row.realName }}</span>
+          <span>{{ scope.row.placeOrderCount }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="80px" align="center" label="保证金">
+      <el-table-column min-width="120px" align="center" label="下单总额">
         <template slot-scope="scope">
-          <span>{{ scope.row.deposit }}</span>
+          <span>{{ scope.row.orderAmount }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="70px" align="center" label="返佣比%">
+      <el-table-column min-width="120px" align="center" label="成交订单数">
         <template slot-scope="scope">
-          <span>{{ scope.row.rebate }}</span>
+          <span>{{ scope.row.passOrderCount }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" label="当前角色">
+      <el-table-column min-width="120px" label="实践成交额">
         <template slot-scope="scope">
-          <span>{{ scope.row.price }}</span>
+          <span>{{ scope.row.realityAmount }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="认证方式" width="55">
+      <el-table-column align="center" label="交易提成" min-width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.authent }}</span>
+          <span>{{ scope.row.royalty }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="分组" width="90">
+      <el-table-column align="center" label="系统补贴" min-width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.group }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="收款方式" width="95">
-        <template slot-scope="scope">
-          <span>{{ scope.row.fee }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="申请时间" minwidth="300">
-        <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column class-name="status-col" label="操作" width="110">
-        <template slot-scope="{row}">
-          <el-button type="primary" size="small">查看</el-button>
+          <span>{{ scope.row.systemSubsidy }}</span>
         </template>
       </el-table-column>
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="paginationMeta.pages" :limit.sync="meta.size" @pagination="paginationChange" />
-    <el-dialog :visible.sync="dialogVisible" title="基础信息审核">
+    <!-- <el-dialog :visible.sync="dialogVisible" title="基础信息审核">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户名ID：</el-col>
         <el-col :span="16">{{ editData.username }}</el-col>
@@ -172,7 +156,7 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">手机号：</el-col>
-        <el-col :span="16" >
+        <el-col :span="16">
           {{ editData.ip }}
           <el-checkbox v-model="ipOnly">
             <el-link type="danger" :underline="false">认证状态</el-link>
@@ -234,7 +218,7 @@
         <el-button type="primary" @click=" saveEdit() ">通过</el-button>
         <el-button @click="dialogVisible = false">不通过</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -244,7 +228,7 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect } from '@/utils/enumeration'
-import { role_apply_list, role_apply_detail, role_apply_audit } from '@/api/usermanage'
+import { finance_central, finance_central_flow } from '@/api/finance'
 
 export default {
   name: 'Tab',
@@ -284,6 +268,7 @@ export default {
         deposit: 43,
         activeGold: 423
       },
+      dateBucket:7,
       editData: {}
 
     }
@@ -294,21 +279,17 @@ export default {
   },
 
   mounted() {
-    this.id = this.$route.params.id
-    this.detail(this.id)
+    this.dateBucketChange(7)
+    this.detail()
   },
   methods: {
-    showCreatedTimes() {
-      this.createdTimes = this.createdTimes + 1
-    },
 
     detail(id) {
       this.listLoading = true
-      role_apply_detail({ applyId: id || this.id }).then(res => {
+      finance_central().then(res => {
         if (res.code === 0) {
           this.modals = res.data
         }
-        console.log('res')
       })
     },
 
@@ -336,7 +317,29 @@ export default {
       meta.current = 1
       this.getList(meta, data)
     },
-    getList() {},
+    getList(meta,data) {
+      finance_central_flow(meta,data).then(res=>{
+        if(res.code===0){
+          this.list = res.data.records
+          this.meta.current = res.data.current
+          this.paginationMeta.total = res.data.total
+          this.paginationMeta.pages = res.data.pages
+        }
+      })
+    },
+    dateBucketChange(e) {
+      console.log("e",e)
+      const start=this.$moment().subtract(e, 'days')
+      const end=this.$moment(new Date())
+      
+      this.fliterQuery.date=[start,end];
+      this.handleFilter()
+    },
+    dateChange(e) {
+      console.log('datachange',e)
+      this.dateBucket=undefined;
+      this.handleFilter()
+    },
     clickAduit() {
       this.dialogVisible = true
       this.editData = this.modals

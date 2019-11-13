@@ -66,7 +66,7 @@
       <el-table-column label="收款码" align="center">
         <template slot-scope="scope">
           <span v-if=" scope.row.payType===2||scope.row.qrCode===null">无</span>
-          <img v-else class="paymentImage" :src="scope.row.qrCode||''" alt="收款码">
+          <img v-else v-lazy="scope.row.qrCode" class="paymentImage" :preview="scope.row.id+'payment'" alt="收款码">
         </template>
       </el-table-column>
 

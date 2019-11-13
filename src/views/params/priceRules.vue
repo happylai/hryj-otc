@@ -4,7 +4,7 @@
       <el-tab-pane :key="tabMapOptions[0].key" :label="tabMapOptions[0].label" :name="tabMapOptions[0].key">
         <div>
           <el-row :gutter="20" class="userRow">
-            <el-col :span="20" >
+            <el-col :span="20">
               <el-select v-model="price.token" placeholder="请选择币种" clearable style="width: 140px" class="filter-item" @change="filterChange">
                 <el-option v-for="item in TokenType" :key="item.label+'tokenType'" :label="item.label" :value="item.label" />
               </el-select>
@@ -31,7 +31,7 @@
 
         </div>
         <el-row :gutter="20" class="userRow marginT20">
-          <el-col :span="24" >
+          <el-col :span="24">
             <span class="price_title">接单范围</span>
             <el-link type="primary" @click="dialogVisible=true">去添加></el-link>
           </el-col>
@@ -219,6 +219,8 @@ export default {
           console.log('res', res)
           if (res.code === 0) {
             this.modals = res.data
+            this.priceType1Active = res.data.active
+            this.priceType2Active = !res.data.active
             this.getList()
           }
         }

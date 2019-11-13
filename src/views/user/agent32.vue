@@ -27,80 +27,8 @@
       </el-button>
     </div>
 
-    <el-table
-      v-loading="listLoading"
-      :data="tableListData2"
-      :row-style="toggleDisplayTr"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%"
-    >
-      <el-table-column
-        v-loading="listLoading"
-        align="center"
-        label=""
-        width="50"
-      >
-        <template slot-scope="scope">
-          <p :style="`margin-left: ${scope.row.__level * 20}px;margin-top:0;margin-bottom:0`"><i class="el-icon-arrow-right" :class="toggleFoldingClass(scope.row)" @click="toggleFoldingStatus(scope.row)" /></p>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-loading="loading"
-        align="center"
-        label="用户ID"
-        width="180"
-        element-loading-text="请给我点时间！"
-      >
-        <template slot-scope="scope">
-          <span>{{ scope.row.userId }}</span>
-        </template>
-      </el-table-column>
+    <tree-table :data="list" :columns="columns" border />>
 
-      <el-table-column width="90px" align="center" label="交易总额">
-        <template slot-scope="scope">
-          <span>{{ scope.row.totalAmount }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="120px" align="center" label="下级用户">
-        <template slot-scope="scope">
-          <span>{{ scope.row.childNum }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="手机号" min-width="120">
-        <template slot-scope="scope">
-          <span>{{ scope.row.mobileContact }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="邮箱" width="140">
-        <template slot-scope="scope">
-          <span>{{ scope.row.emailContact }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="注册时间" min-width="240">
-        <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="账号状态" width="95">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.active?'success':'danger'">{{ scope.row.active?'正常':'冻结' }}</el-tag>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" class-name="status-col" label="操作" width="280">
-        <template slot-scope="scope">
-          <el-button type="primary" size="small" @click="handleAddAgent(scope.row.userId)">添加下级代理商</el-button>
-          <el-button type="primary" size="small" @click="goDetail(scope.row.userId)">查看</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
     <el-dialog :visible.sync="showAddUser" title="添加代理商">
       <el-form ref="regForm" :model="regForm" :rules="loginRules" class="login-form" label-width="140px" auto-complete="on" label-position="right">
@@ -119,7 +47,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-  </div>
+    </tree-table></div>
 </template>
 
 <script>

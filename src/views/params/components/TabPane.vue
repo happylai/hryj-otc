@@ -2,7 +2,7 @@
   <el-table v-loading="loading" :data="data" border fit highlight-current-row style="width: 800px">
     <el-table-column align="center" label="角色" width="100" element-loading-text="请给我点时间！">
       <template slot-scope="scope">
-        <span>{{ scope.row.roleId|userTypeName }}</span>
+        <span>{{ userRolesConstName( scope.row.roleId,userRolesConst) }}</span>
       </template>
     </el-table-column>
 
@@ -22,7 +22,8 @@
 
 <script>
 // import { fetchList } from '@/api/article'
-
+import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
+import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 export default {
   filters: {
     statusFilter(status) {
@@ -50,6 +51,7 @@ export default {
   },
   data() {
     return {
+      userRolesConstName,
       list: null,
       listQuery: {
         page: 1,
@@ -58,6 +60,13 @@ export default {
         sort: '+id'
       }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'groupsConst',
+      'userRolesConst',
+      'adminRolesConst'
+    ])
   },
   created() {
     // this.getList()

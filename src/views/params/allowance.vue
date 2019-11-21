@@ -231,10 +231,11 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      // allList: state => state.order.allList,
-      allListMeta: state => state.order.allMeta
-    })
+    ...mapGetters([
+      'groupsConst',
+      'userRolesConst',
+      'adminRolesConst'
+    ])
   },
   created() {
     // init the default selected tab
@@ -300,7 +301,7 @@ export default {
       console.log('data', data)
       if (!data.roleId && (this.activeType !== '5' || this.activeType !== '3')) {
         this.$message.error('请选择角色')
-      } else if ((data.payType === '' || data.payType === undefined)) {
+      } else if (((data.payType === '' || data.payType === undefined) && this.activeType !== '3')) {
         this.$message.error('请选择支付方式')
       } else if (this.activeType === '1' && (data.date === '' || data.date === undefined)) {
         this.$message.error('请选择时间段')
@@ -318,7 +319,7 @@ export default {
         const postData = {
           roleId: this.activeType !== '5' || this.activeType !== '3' ? data.roleId : undefined,
           levelDiffer: this.activeType === '0' || this.activeType === '3' ? data.levelDiffer : undefined,
-          payType: this.activeType === '0' || this.activeType === '1' || this.activeType === '4' || this.activeType === '5' ? data.payType : undefined,
+          payType: this.activeType !== '3' ? data.payType : undefined,
           counterParty: this.activeType === '0' || this.activeType === '1' ? data.counterParty : undefined,
           ratio: data.ratio,
           subsidyMax: this.activeType !== '3' ? data.subsidyMax : undefined,
@@ -335,13 +336,14 @@ export default {
     },
     handleSave() {
       const data = this.editData
+      console.log("handleSave",data)
       const postData = {
         id: data.id,
         roleId: data.roleId,
         payType: this.activeType === '0' || this.activeType === '1' || this.activeType === '4' || this.activeType === '5' ? data.payType : undefined,
         counterParty: this.activeType === '0' || this.activeType === '1' ? data.counterParty : undefined,
         ratio: data.newratio ? data.newratio : data.ratio,
-        subsidyMax: data.subsidyMax ? data.newsubsidyMax : data.subsidyMax,
+        subsidyMax: data.newsubsidyMax ? data.newsubsidyMax : data.subsidyMax,
         achieveAmount: data.newachieveAmount ? data.newachieveAmount : data.achieveAmount,
         levelDiffer: data.newlevelDiffer ? data.newlevelDiffer : data.levelDiffer,
         type: data.type

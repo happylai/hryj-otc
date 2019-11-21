@@ -132,6 +132,34 @@ export const UserType = [
   }
 ]
 
+export const UserTypeName = [
+  {
+    id: 0,
+    name: 'visitor',
+    label: '游客'
+  },
+  {
+    id: 1,
+    name: 'general',
+    label: '普通'
+  },
+  {
+    id: 2,
+    name: 'super',
+    label: '超级'
+  },
+  {
+    id: 3,
+    name: 'huge',
+    label: '大宗'
+  },
+  {
+    id: 4,
+    name: 'extreme',
+    label: '至尊'
+  }
+]
+
 export const TimeParamsType = [{
   id: 0,
   label: ''

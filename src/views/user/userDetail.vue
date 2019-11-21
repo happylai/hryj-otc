@@ -267,7 +267,6 @@
         <el-col :span="8" class="textAlingR">角色升级：</el-col>
         <el-col :span="16">
           <el-link type="success" :underline="false">超级 {{ userRolesConstName(editData.currentRoleId,userRolesConst) }}</el-link>
-
           <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.currentRoleId,userRolesConst) }}</el-link>
         </el-col>
       </el-row>
@@ -285,9 +284,9 @@
         <el-col :span="8" class="textAlingR">所在分组：</el-col>
         <el-col :span="16">
           <el-select v-model="newData.groupId" placeholder="选择分组">
-            <el-option v-for="(item,inedex) in Groups" :key="inedex+'auth'" :label="item.label" :value="item.id" />
+            <el-option v-for="(item,inedex) in groupsConst" :key="inedex+'auth'" :label="item.groupName" :value="item.id" />
           </el-select>
-          <el-link type="danger" :underline="false">当前分组：{{ editData.pricingGroupId }}</el-link>
+          <el-link type="danger" :underline="false">当前分组：{{ groupsConstName(editData.pricingGroupId,groupsConst) }}</el-link>
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">

@@ -7,7 +7,7 @@ import {
   PayTypeStatus,
   Auths,
   Roles,
-  UserType,
+  UserTypeName,
   Authents,
   CounterParty,
   KycLevel,
@@ -208,8 +208,16 @@ export function roleName(num) {
  * userTypeName
  * @param {number} num
  */
-export function userTypeName(num) {
-  return num === null ? '-' : num > 0 ? UserType[num - 1].label : '-'
+export function userTypeName(id) {
+
+  if (id === 'null') {
+    return '-'
+  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+    return UserTypeName[id].label
+  } else {
+    return '-'
+  }
+
 }
 
 /**

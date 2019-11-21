@@ -43,7 +43,7 @@
         element-loading-text="请给我点时间！"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.roleId|userTypeName }}</span>
+          <span>{{ userRolesConstName(scope.row.roleId,userRolesConst) }}</span>
         </template>
       </el-table-column>
 
@@ -99,7 +99,7 @@
     <el-dialog :visible.sync="dialogVisible" :title="tabMapOptionsName[activeType].label" style="min-width: 800px;">
       <el-row v-if="activeType!=='3'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">当前角色：</el-col>
-        <el-col :span="16">{{ editData.roleId|userTypeName }}</el-col>
+        <el-col :span="16">{{ userRolesConstName(editData.roleId,userRolesConst)  }}</el-col>
       </el-row>
       <el-row v-if="activeType=='0'||activeType=='1'||activeType=='2'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">支付方式：</el-col>
@@ -166,13 +166,14 @@ import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { UserType, TimeParamsType, PayType, CounterParty } from '@/utils/enumeration'
 import { subsidies, subsidy_save } from '@/api/params'
-
+import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 export default {
   name: 'Tab',
   components: { tabPane, pagination },
   directives: { waves },
   data() {
     return {
+      userRolesConstName,
       UserType,
       PayType,
       CounterParty,

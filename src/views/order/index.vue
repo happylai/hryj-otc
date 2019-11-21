@@ -6,7 +6,7 @@
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
       <tip />
       <div class="filter-container" style="margin-bottom: 10px;">
-        <el-input v-model="fliterQuery.query" placeholder="订单ID/广告ID/首付款昵称/卖家/卖家/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-input v-model="fliterQuery.query" placeholder="订单ID/广告ID/首付款昵称/卖家/卖家" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
         <el-select v-model="fliterQuery.payType" placeholder="支付方式" clearable style="width: 140px" class="filter-item">
           <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
@@ -152,67 +152,67 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">类型：</el-col>
-        <el-col :span="16" >{{ editData.mobileContact }}</el-col>
+        <el-col :span="16">{{ editData.mobileContact }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">币种：</el-col>
-        <el-col :span="16" >{{ editData.token }}</el-col>
+        <el-col :span="16">{{ editData.token }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">买家：</el-col>
-        <el-col :span="16" >{{ editData.buyer }}</el-col>
+        <el-col :span="16">{{ editData.buyer }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">卖家：</el-col>
-        <el-col :span="16" >{{ editData.seller }}</el-col>
+        <el-col :span="16">{{ editData.seller }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">订单状态：</el-col>
-        <el-col :span="16" >{{ editData.orderStatus }}</el-col>
+        <el-col :span="16">{{ editData.orderStatus }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">付款状态：</el-col>
-        <el-col :span="16" >{{ editData.isPay }}</el-col>
+        <el-col :span="16">{{ editData.isPay }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">收款状态：</el-col>
-        <el-col :span="16" >{{ editData.isConfirm }}</el-col>
+        <el-col :span="16">{{ editData.isConfirm }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">支付方式：</el-col>
-        <el-col :span="16" >{{ editData.mobileContact|payTypeNames }}</el-col>
+        <el-col :span="16">{{ editData.mobileContact|payTypeNames }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">交易金额：</el-col>
-        <el-col :span="16" >{{ editData.amount }}</el-col>
+        <el-col :span="16">{{ editData.amount }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">成交额：</el-col>
-        <el-col :span="16" >{{ editData.legalAmount }}</el-col>
+        <el-col :span="16">{{ editData.legalAmount }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">交易补贴：</el-col>
-        <el-col :span="16" >{{ editData.orderSubsidy }}</el-col>
+        <el-col :span="16">{{ editData.orderSubsidy }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">夜间补贴：</el-col>
-        <el-col :span="16" >{{ editData.nightSubsidy }}</el-col>
+        <el-col :span="16">{{ editData.nightSubsidy }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">达量补贴：</el-col>
-        <el-col :span="16" >{{ editData.amountSubsidy }}</el-col>
+        <el-col :span="16">{{ editData.amountSubsidy }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">订单补贴：</el-col>
-        <el-col :span="16" >无</el-col>
+        <el-col :span="16">无</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">下级返佣：</el-col>
-        <el-col :span="16" >无</el-col>
+        <el-col :span="16">无</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">放币时间：</el-col>
-        <el-col :span="16" >无</el-col>
+        <el-col :span="16">无</el-col>
       </el-row>
 
       <span slot="footer" class="dialog-footer">

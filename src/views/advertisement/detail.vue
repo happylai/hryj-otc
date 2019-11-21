@@ -8,29 +8,29 @@
       </div>
       <div class="text item">
         <el-row :gutter="10" class="card-row">
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div >广告ID：{{ modals.uuid }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div >交易类型：{{ modals.type|advType }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div >交易币种：{{ modals.token }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div >法币币种：{{ modals.fiat }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>广告ID：{{ modals.uuid }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>交易类型：{{ modals.type|advType }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>交易币种：{{ modals.token }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>法币币种：{{ modals.fiat }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div >金额：{{ modals.amount }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div >成交量：{{ modals.successAmount }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div >支付方式：{{ modals.payTypes|payTypeNames }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>金额：{{ modals.amount }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>成交量：{{ modals.successAmount }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>支付方式：{{ modals.payTypes|payTypeNames }}</div></el-col>
 
         </el-row>
         <el-row :gutter="10" class="card-row">
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div >最小成交额：{{ modals.minLimit }}%</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div >最大成交额：{{ modals.maxLimit }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div >定价方式：{{ modals.priceType===1&&modals.origin===0?'灵活价格':'固定价格' }}</div></el-col>
-          <el-col v-if="modals.origin===1" :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div >一口价：{{ modals.price }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>最小成交额：{{ modals.minLimit }}%</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>最大成交额：{{ modals.maxLimit }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>定价方式：{{ modals.priceType===1&&modals.origin===0?'灵活价格':'固定价格' }}</div></el-col>
+          <el-col v-if="modals.origin===1" :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>一口价：{{ modals.price }}</div></el-col>
         </el-row>
       </div>
     </el-card>
 
     <h2>订单明细</h2>
     <div class="filter-container" style="margin-bottom: 10px;">
-      <el-input v-model="fliterQuery.query" placeholder="订单ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="fliterQuery.query" placeholder="订单ID/交易人" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="fliterQuery.payType" placeholder="支付方式" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>

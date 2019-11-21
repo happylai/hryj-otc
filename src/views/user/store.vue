@@ -9,7 +9,7 @@
 
     <div class="filter-container" style="margin-bottom: 10px;">
 
-      <el-input v-model="fliterQuery.query" placeholder="用户名ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="fliterQuery.query" placeholder="用户ID/代理ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="fliterQuery.active" placeholder="账号状态" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in AccountStatus" :key="item.id" :label="item.label" :value="item.name" />
       </el-select>

@@ -51,12 +51,12 @@ export const OrderStatus = [{
   label: '申诉'
 },
 {
-  nama: 'PAY_TIMEOUT',
+  name: 'PAY_TIMEOUT',
   id: 7,
   label: '支付超时'
 },
 {
-  nama: 'RECEIVED_TIMEOUT',
+  name: 'RECEIVED_TIMEOUT',
   id: 8,
   label: '收款超时'
 }

@@ -8,12 +8,12 @@
           <el-select v-model="fliterQuery.type" placeholder="申述类型" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeType" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
-          <el-select v-model="fliterQuery.status" placeholder="申述状态" clearable style="width: 140px" class="filter-item">
+          <!-- <el-select v-model="fliterQuery.status" placeholder="申述状态" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeStatus" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
           <el-select v-model="fliterQuery.result" placeholder="处理结果" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeResult" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
+          </el-select> -->
           <el-date-picker
             v-model="fliterQuery.creatDate"
             type="daterange"
@@ -104,12 +104,12 @@
           <el-select v-model="fliterQuery.type" placeholder="申述类型" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeType" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
-          <el-select v-model="fliterQuery.status" placeholder="申述状态" clearable style="width: 140px" class="filter-item">
+          <!-- <el-select v-model="fliterQuery.status" placeholder="申述状态" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeStatus" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
           <el-select v-model="fliterQuery.result" placeholder="处理结果" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeResult" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
+          </el-select> -->
           <el-date-picker
             v-model="fliterQuery.creatDate"
             type="daterange"
@@ -122,16 +122,21 @@
             搜索
           </el-button>
         </div>
-        <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+        <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
+          <el-table-column
+            align="center"
+            type="selection"
+            width="55"
+          />
           <el-table-column
 
             align="center"
-            label="消息ID"
+            label="流水号"
             min-width="120"
             element-loading-text="请给我点时间！"
           >
             <template slot-scope="scope">
-              <span>{{ scope.row.id }}</span>
+              <span>{{ scope.row.merchantOrderNo }}</span>
             </template>
           </el-table-column>
 
@@ -161,11 +166,14 @@
 
           <el-table-column align="center" class-name="status-col" label="操作" min-width="220">
             <template slot-scope="scope">
-              <el-button type="primary" size="small" @click="handleReplace(scope.row)">补单</el-button>
+              <el-button type="primary" size="small" @click="handleReplace(scope.row.id)">补单</el-button>
               <el-button type="primary" size="small" @click="clickDetail(scope.row)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
+        <div style="margin-top: 20px">
+          <el-button @click="handleAuditBanch()">批量补单</el-button>
+        </div>
         <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
 
       </el-tab-pane>
@@ -217,7 +225,8 @@ export default {
         pages: 1
       },
       dialogVisible: false,
-      editData: {}
+      editData: {},
+      multipleSelection: []
     }
   },
   watch: {
@@ -357,13 +366,13 @@ export default {
         this.detailLoading = false
       })
     },
-    handleReplace(data) {
+    handleReplace(id) {
       this.$confirm('是否补单', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then((val) => {
-        order_redo({ ids: data.id }).then(res => {
+        order_redo({ ids: id }).then(res => {
           if (res.code === 0) {
             this.getList()
             this.$message({
@@ -378,8 +387,22 @@ export default {
           this.detailLoading = false
         })
       })
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    handleAuditBanch() {
+      const data = this.multipleSelection
+      var newData = []
+      data.map(item => {
+        newData.push(item.id)
+      })
+      const postIds = newData.join(',')
+      console.log('postIDs', postIds)
+      this.handleReplace(postIds)
     }
   }
+
 }
 </script>
 

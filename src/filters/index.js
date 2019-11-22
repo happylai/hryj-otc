@@ -143,6 +143,25 @@ export function payTypeName(num) {
 }
 
 /**
+ * OrderStatusTagName
+ * @param {number} num
+ */
+export function orderStatusTagName(id) {
+  if (id === 'null') {
+    return '-'
+  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+    const data = OrderStatus.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      return data[0].tagType
+    } else {
+      return '-'
+    }
+  } else {
+    return '-'
+  }
+}
+
+/**
  * OrderStatus
  * @param {number} num
  */
@@ -209,7 +228,6 @@ export function roleName(num) {
  * @param {number} num
  */
 export function userTypeName(id) {
-
   if (id === 'null') {
     return '-'
   } else if (has({ foo: { bar: id }}, 'foo.bar')) {
@@ -217,7 +235,6 @@ export function userTypeName(id) {
   } else {
     return '-'
   }
-
 }
 
 /**
@@ -275,6 +292,26 @@ export function advType(num = null) {
  */
 export function advStatus(num = null) {
   return num === null ? '-' : AdvStatus[num].label
+}
+
+/**
+ * AdvStatusTagName
+ * @param {number} num
+ */
+export function advStatusTagName(id = null) {
+  if (id === 'null') {
+    return '-'
+  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+    const data = AdvStatus.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      return data[0].tagType
+    } else {
+      return '-'
+    }
+  } else {
+    return '-'
+  }
+  // return num === null ? '-' : AdvStatus[num].tagType
 }
 
 /**

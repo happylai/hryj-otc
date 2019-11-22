@@ -23,42 +23,55 @@ export const PayType = [{
 export const OrderStatus = [{
   name: 'UN_PAYED',
   id: 0,
-  label: '待支付'
+  label: '待支付',
+  tagType: 'warning'
 },
 {
   name: 'PAY_CONFIRMED',
   id: 1,
-  label: '确认已付款'
+  label: '确认已付款',
+  tagType: ''
+
 },
 {
   name: 'CANCELED',
   id: 2,
-  label: '取消'
+  label: '取消',
+  tagType: 'info'
+
 },
 {
   name: 'PAY_RECEIVED',
   id: 4,
-  label: '确认已收款'
+  label: '确认已收款',
+  tagType: ''
+
 },
 {
   name: 'COMPLETED',
   id: 5,
-  label: '完成'
+  label: '完成',
+  tagType: 'success'
 },
 {
   name: 'APPEALING',
   id: 6,
-  label: '申诉'
+  label: '申诉',
+  tagType: 'danger'
 },
 {
   name: 'PAY_TIMEOUT',
   id: 7,
-  label: '支付超时'
+  label: '支付超时',
+  tagType: 'danger'
+
 },
 {
   name: 'RECEIVED_TIMEOUT',
   id: 8,
-  label: '收款超时'
+  label: '收款超时',
+  tagType: 'danger'
+
 }
 ]
 
@@ -327,17 +340,22 @@ export const AccountStatus = [{
 export const AdvStatus = [{
   id: 0,
   name: 'true',
-  label: '下架'
+  label: '下架',
+  tagType: 'danger'
 },
 {
   id: 1,
   name: 'false',
-  label: '上架'
+  label: '上架',
+  tagType: 'success'
+
 },
 {
   id: 2,
   name: 'false',
-  label: '关闭'
+  label: '关闭',
+  tagType: 'info'
+
 }
 ]
 

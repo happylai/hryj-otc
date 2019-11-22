@@ -276,6 +276,10 @@ export default {
     },
 
     handleAudit(data) {
+      if (!this.resultReason) {
+        this.$message.error('请输入申诉处理描述')
+        return false
+      }
       const postData = {
         adminId: this.adminId,
         id: this.id,
@@ -298,7 +302,7 @@ export default {
       console.log('data', data)
       order_appeal_audit(data).then(res => {
         if (res.code === 0) {
-          this.getList()
+          this.detail(this.id)
           this.$message({
             message: '操作成功',
             type: 'success'

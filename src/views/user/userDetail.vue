@@ -201,7 +201,7 @@
 
       <el-table-column align="center" label="订单状态" minwidth="300">
         <template slot-scope="scope">
-          <span>{{ scope.row.status|orderStatus }}</span>
+          <el-tag :type="scope.row.status|orderStatusTagName">{{ scope.row.status|orderStatus }}</el-tag>
         </template>
       </el-table-column>
 
@@ -234,10 +234,10 @@
         <el-col :span="8" class="textAlingR">身份证号：</el-col>
         <el-col :span="8">{{ editData.idNumber }}</el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageFront" class="idImage" v-lazy="editData.identityImageFront" alt="身份证正面">
+          <img v-if="editData.identityImageFront" v-lazy="editData.identityImageFront" class="idImage" alt="身份证正面">
         </el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageBack" class="idImage" v-lazy="editData.identityImageBack" alt="身份证反面">
+          <img v-if="editData.identityImageBack" v-lazy="editData.identityImageBack" class="idImage" alt="身份证反面">
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
@@ -440,13 +440,13 @@ export default {
       this.dialogVisible = true
       this.editData = this.modals
       this.newData.active = this.editData.active
-      this.newData.payTypes = this.editData.payTypes?this.editData.payTypes.split(','):undefined
+      this.newData.payTypes = this.editData.payTypes ? this.editData.payTypes.split(','):undefined
       this.newData.groupId = this.editData.pricingGroupId
       this.newData.rebate = this.editData.rebate
       this.editData.password = undefined
     },
     handleAudit() {
-      const frozenPayTypes =  this.editData.payTypes? this.getFrozenPayTypes(this.editData.payTypes.split(','), this.newData.payTypes):undefined
+      const frozenPayTypes = this.editData.payTypes ? this.getFrozenPayTypes(this.editData.payTypes.split(','), this.newData.payTypes):undefined
       const data = {
         groupId: this.newData.groupId,
         active: this.newData.active,

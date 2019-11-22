@@ -82,7 +82,7 @@
 
       <el-table-column align="center" label="状态" minwidth="300">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderStatus|orderStatus }}</span>
+          <el-tag :type="scope.row.orderStatus|orderStatusTagName">{{ scope.row.orderStatus|orderStatus }}</el-tag>
         </template>
       </el-table-column>
 

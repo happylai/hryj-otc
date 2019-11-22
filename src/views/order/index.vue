@@ -49,7 +49,7 @@
 
         <el-table-column width="80px" align="center" label="类型">
           <template slot-scope="scope">
-            <span>{{ scope.row.type|advType }}</span>
+            <el-link :type="scope.row.type? 'danger':'success'" :underline="false">{{ scope.row.type|advType }}</el-link>
           </template>
         </el-table-column>
 
@@ -109,7 +109,7 @@
 
         <el-table-column align="center" label="状态" width="95">
           <template slot-scope="scope">
-            <span>{{ scope.row.orderStatus|orderStatus }}</span>
+            <el-tag :type="scope.row.orderStatus|orderStatusTagName">{{ scope.row.orderStatus|orderStatus }}</el-tag>
           </template>
         </el-table-column>
 
@@ -172,11 +172,15 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">付款状态：</el-col>
-        <el-col :span="16">{{ editData.isPay }}</el-col>
+        <el-col :span="16">
+          <el-tag :type="editData.isPay?'success':'danger'">{{ editData.isPay?'已付款':'未付款' }}</el-tag>
+        </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">收款状态：</el-col>
-        <el-col :span="16">{{ editData.isConfirm }}</el-col>
+        <el-col :span="16">
+          <el-tag :type="editData.isConfirm?'success':'danger'">{{ editData.isConfirm?'已收款':'未收款' }}</el-tag>
+        </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">支付方式：</el-col>

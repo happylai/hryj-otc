@@ -75,7 +75,7 @@
 
       <el-table-column align="center" label="类型" width="90">
         <template slot-scope="scope">
-          <span>{{ scope.row.type|advType }}</span>
+          <el-link :type="scope.row.type? 'danger':'success'" :underline="false">{{ scope.row.type|advType }}</el-link>
         </template>
       </el-table-column>
 
@@ -93,28 +93,19 @@
 
       <el-table-column align="center" label="状态" width="95">
         <template slot-scope="scope">
-          <span>{{ scope.row.status|advStatus }}</span>
+          <el-tag :type="scope.row.status|advStatusTagName">{{ scope.row.status|advStatus }}</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column class-name="status-col" align="center" label="操作" min-width="180px">
         <template slot-scope="scope">
-          <el-button type="primary" :disabled="scope.row.status===0" size="small" @click="handleRemove(scope.row.id)">下架</el-button>
+          <el-button type="danger" :disabled="scope.row.status===0" size="small" @click="handleRemove(scope.row.id)">下架</el-button>
           <el-button type="primary" size="small" @click="goDetail(scope.row.id)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
 
-    <el-dialog :visible.sync="dialogPvVisible" title="订单详情">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="Channel" />
-        <el-table-column prop="pv" label="Pv" />
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 

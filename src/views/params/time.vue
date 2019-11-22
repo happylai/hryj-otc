@@ -6,7 +6,7 @@
       <div class="filter-container" style="margin-bottom: 10px;">
         <el-input v-model="addData.time" :placeholder="TimeParamsTypePlaceHolder[TimeParamsType]+'(分钟)'" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
         <el-select v-model="addData.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
-          <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
+          <el-option v-for="item in userRolesConst" :key="item.id" :label="item.zhName" :value="item.id" />
         </el-select>
 
         <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" @click="handleAdd">
@@ -22,7 +22,7 @@
     <el-dialog :visible.sync="dialogVisible" :title="TimeParamsTypePlaceHolder[TimeParamsType]+'设置'">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">当前角色：</el-col>
-        <el-col :span="16">{{ editData.roleId|userTypeName }}</el-col>
+        <el-col :span="16">{{ userRolesConstName(editData.roleId,userRolesConst) }} </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">倒计时：</el-col>
@@ -42,6 +42,7 @@
 <script>
 import tabPane from './components/TabPane'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
+import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { UserType, TimeParamsType } from '@/utils/enumeration'
@@ -53,6 +54,9 @@ export default {
   directives: { waves },
   data() {
     return {
+      groupsConstName,
+      userRolesConstName,
+      adminRolesConstName,
       UserType,
       tabMapOptions: [
         { label: '买家付款超时', key: '0' },
@@ -93,10 +97,12 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      // allList: state => state.order.allList,
-      allListMeta: state => state.order.allMeta
-    })
+
+    ...mapGetters([
+      'groupsConst',
+      'userRolesConst',
+      'adminRolesConst'
+    ])
   },
   created() {
     // init the default selected tab
@@ -140,7 +146,7 @@ export default {
       const postData = {
         id: data.id,
         roleId: data.roleId,
-        time: data.newtime?data.newtime*1:data.time * 1,
+        time: data.newtime ? data.newtime * 1 : data.time * 1,
         type: data.type
       }
       this.save(postData)

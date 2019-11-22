@@ -12,8 +12,8 @@
       <el-select v-model="fliterQuery.groupId" placeholder="所在分组" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in groupsConst" :key="item.id" :label="item.groupName" :value="item.id" />
       </el-select>
-      <el-select v-model="fliterQuery.kycLevel" placeholder="认证方式" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in KycLevel" :key="item.id" :label="item.label" :value="item.name" />
+      <el-select v-model="fliterQuery.authent" placeholder="认证方式" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in AuthType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
       <el-date-picker
         v-model="fliterQuery.date"
@@ -53,9 +53,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="认证方式" width="80">
+      <el-table-column align="center" label="认证方式" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.authType|authTypeName }}</span>
+           <el-tag :type="scope.row.authType>0?'success':'info'">{{ scope.row.authType|authTypeName }}</el-tag>
         </template>
       </el-table-column>
 
@@ -104,7 +104,7 @@ import pagination from '@/components/Pagination'
 import tip from '@/components/Tip'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 import waves from '@/directive/waves' // waves directive
-import { Groups, UserType, Authents, emptySelect, KycLevel } from '@/utils/enumeration'
+import { Groups, UserType, AuthType, emptySelect, KycLevel } from '@/utils/enumeration'
 import { role_apply_list, role_apply_detail, role_apply_audit } from '@/api/usermanage'
 
 export default {
@@ -119,19 +119,15 @@ export default {
       activeType: '0',
       UserType,
       KycLevel,
-      Authents: [{ id: '',
-        mame: '',
-        label: '请选择'
-      }, ...Authents],
+      AuthType,
       Groups: [emptySelect, ...Groups],
       fliterQuery: {
         page: 1,
         size: 20,
         date: null,
         query: undefined,
-        authent: undefined,
         groupId: undefined,
-        kycLevel: undefined
+        authent: undefined
       },
       meta: {
         current: 1,
@@ -186,7 +182,7 @@ export default {
       const fliterQuery = this.fliterQuery
       console.log('fliterQuery', this.fliterQuery)
       const data = {
-        kycLevel: fliterQuery.kycLevel,
+        authent: fliterQuery.authent,
         groupId: fliterQuery.groupId,
         query: fliterQuery.query,
         roleId: fliterQuery.roleId,

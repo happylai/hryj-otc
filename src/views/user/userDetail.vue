@@ -9,10 +9,10 @@
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>用户ID：{{ modals.uuid }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>用户名：{{ modals.nickName }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>当前角色：{{ userRolesConstName(modals.currentRoleId,userRolesConst) }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>当前角色：{{ userRolesConstName(modals.roleId,userRolesConst) }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>
             当前状态： <el-tag :type="modals.active?'success':'danger'">{{ modals.active?'正常':'冻结' }}</el-tag></div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>认证方式：{{ modals.kycLevel|kycLevel }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>认证方式：{{ modals.authType|authTypeName }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>真实姓名：{{ modals.realName }}</div></el-col>
@@ -254,7 +254,7 @@
         <el-col :span="8" class="textAlingR">角色升级：</el-col>
         <el-col :span="16">
           <el-link type="success" :underline="false">超级 {{ userRolesConstName(editData.currentRoleId,userRolesConst) }}</el-link>
-          <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.currentRoleId,userRolesConst) }}</el-link>
+          <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.roleId,userRolesConst) }}</el-link>
         </el-col>
       </el-row>
       <el-row v-else-if="type===2" :gutter="20" class="userRow">

@@ -281,8 +281,20 @@ export function advStatus(num = null) {
  * AdvStatus
  * @param {number} num
  */
-export function authTypeName(num = null) {
-  return num === null ? '-' : AuthType[num].label
+export function authTypeName(id = null) {
+  // return num === null ? '-' : AuthType[num].label
+  if (id === 'null') {
+    return '-'
+  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+    const data = AuthType.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      return data[0].label
+    } else {
+      return '-'
+    }
+  } else {
+    return '-'
+  }
 }
 
 /**

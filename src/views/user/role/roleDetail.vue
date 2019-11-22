@@ -178,10 +178,10 @@
         <el-col :span="8" class="textAlingR">身份证号：</el-col>
         <el-col :span="8">{{ editData.idNumber }}</el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageFront" class="idImage" :src="editData.identityImageFront" alt="身份证正面">
+          <img v-if="editData.identityImageFront" class="idImage" v-lazy="editData.identityImageFront" alt="身份证正面">
         </el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageBack" class="idImage" :src="editData.identityImageBack" alt="身份证反面">
+          <img v-if="editData.identityImageBack" class="idImage" v-lazy="editData.identityImageBack" alt="身份证反面">
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">

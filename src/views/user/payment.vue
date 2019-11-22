@@ -83,7 +83,7 @@
         </el-col>
         <el-col :span="8">
           <div class="grid-content">
-            <img class="qrimage" :src="payInfo.cloudQrCode" alt="云闪付二维码" />
+            <img class="qrimage" v-lazy="payInfo.cloudQrCode" alt="云闪付二维码" />
           </div>
         </el-col>
       </el-row>
@@ -142,7 +142,7 @@
         </el-col>
         <el-col :span="8">
           <div class="grid-content">
-            <img class="qrimage" :src="payInfo.weixinQrCode" alt="微信二维码" />
+            <img class="qrimage" v-lazy="payInfo.weixinQrCode" alt="微信二维码" />
           </div>
         </el-col>
       </el-row>
@@ -176,7 +176,7 @@
         </el-col>
         <el-col :span="8">
           <div class="grid-content">
-            <img class="qrimage" :src="payInfo.aliQrCode" alt="支付宝二维码" />
+            <img class="qrimage" v-lazy="payInfo.aliQrCode" alt="支付宝二维码" />
           </div>
         </el-col>
       </el-row>

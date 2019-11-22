@@ -30,7 +30,7 @@
         <el-input ref="captcha" v-model="loginForm.captcha" type="text" placeholder=" 请输入验证码" name="captcha" tabindex="2" auto-complete="on" @keyup.enter.native="handleLogin" />
         <span class="show-pwd" @click="getCaptcha">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          <img :src="captchaUrl" alt="">
+          <img v-lazy="captchaUrl" alt="">
         </span>
       </el-form-item> -->
 

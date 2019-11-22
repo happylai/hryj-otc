@@ -59,7 +59,7 @@
       <el-table-column label="收款码" align="center">
         <template slot-scope="scope">
           <span v-if=" scope.row.payType===2||scope.row.qrCode===null">无</span>
-          <img v-else class="paymentImage" :src="scope.row.qrCode||''" alt="收款码">
+          <img v-else class="paymentImage" v-lazy="scope.row.qrCode||''" alt="收款码">
         </template>
       </el-table-column>
 
@@ -221,10 +221,10 @@
         <el-col :span="8" class="textAlingR">身份证号：</el-col>
         <el-col :span="8">{{ editData.idNumber||'-' }}</el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageFront" class="idImage" :src="editData.identityImageFront" alt="身份证正面">
+          <img v-if="editData.identityImageFront" class="idImage" v-lazy="editData.identityImageFront" alt="身份证正面">
         </el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageBack" class="idImage" :src="editData.identityImageBack" alt="身份证反面">
+          <img v-if="editData.identityImageBack" class="idImage" v-lazy="editData.identityImageBack" alt="身份证反面">
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
@@ -289,7 +289,7 @@
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR" />
         <el-col v-if="editPayment.qrCode" :span="16">
-          <img :src="editPayment.qrCode" alt="收款码" class="payTypeImage">
+          <img v-lazy="editPayment.qrCode" alt="收款码" class="payTypeImage">
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">

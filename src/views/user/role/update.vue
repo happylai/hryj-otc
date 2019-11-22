@@ -47,12 +47,6 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="返佣比%">
-        <template slot-scope="scope">
-          <span>{{ scope.row.rebate||'-' }}</span>
-        </template>
-      </el-table-column>
-
       <el-table-column width="120px" align="center" label="当前角色">
         <template slot-scope="scope">
           <span>{{ userRolesConstName(scope.row.currentRoleId,userRolesConst) }}</span>

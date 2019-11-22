@@ -76,7 +76,7 @@
         />
         <span class="show-pwd" @click="getCaptcha">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          <img :src="captchaUrl" alt="">
+          <img v-lazy="captchaUrl" alt="">
         </span>
       </el-form-item>
 

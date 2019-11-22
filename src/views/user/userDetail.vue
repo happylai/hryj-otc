@@ -21,7 +21,6 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>邮箱：{{ modals.emailContact }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>返佣比：{{ modals.rebate }}%</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>申诉数：{{ modals.appealNum }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>被申诉数：{{ modals.appealedNum }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>收付款方式：{{ modals.payTypes|payTypeNames }}</div></el-col>
@@ -235,10 +234,10 @@
         <el-col :span="8" class="textAlingR">身份证号：</el-col>
         <el-col :span="8">{{ editData.idNumber }}</el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageFront" class="idImage" :src="editData.identityImageFront" alt="身份证正面">
+          <img v-if="editData.identityImageFront" class="idImage" v-lazy="editData.identityImageFront" alt="身份证正面">
         </el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageBack" class="idImage" :src="editData.identityImageBack" alt="身份证反面">
+          <img v-if="editData.identityImageBack" class="idImage" v-lazy="editData.identityImageBack" alt="身份证反面">
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
@@ -249,18 +248,6 @@
         <el-col :span="8" class="textAlingR">修改密码：</el-col>
         <el-col :span="16">
           <el-input v-model="newPassword" style="width: 240px" name="changepassword" type="text" placeholder="请输入密码" tabindex="2" />
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">返佣比:</el-col>
-        <el-col :span="16">
-          <el-input
-            v-model="newData.rebate"
-            placeholder="设置返佣比"
-            style="width: 120px;"
-            class="filter-ite"
-          />
-          <el-link type="danger" :underline="false">当前返佣比：{{ editData.rebate }}</el-link>
         </el-col>
       </el-row>
       <el-row v-if="type==='1'" :gutter="20" class="userRow">
@@ -453,13 +440,13 @@ export default {
       this.dialogVisible = true
       this.editData = this.modals
       this.newData.active = this.editData.active
-      this.newData.payTypes = this.editData.payTypes.split(',')
+      this.newData.payTypes = this.editData.payTypes?this.editData.payTypes.split(','):undefined
       this.newData.groupId = this.editData.pricingGroupId
       this.newData.rebate = this.editData.rebate
       this.editData.password = undefined
     },
     handleAudit() {
-      const frozenPayTypes = this.getFrozenPayTypes(this.editData.payTypes.split(','), this.newData.payTypes)
+      const frozenPayTypes =  this.editData.payTypes? this.getFrozenPayTypes(this.editData.payTypes.split(','), this.newData.payTypes):undefined
       const data = {
         groupId: this.newData.groupId,
         active: this.newData.active,

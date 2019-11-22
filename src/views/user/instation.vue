@@ -94,11 +94,6 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="返佣比%" width="95">
-        <template slot-scope="scope">
-          <span>{{ scope.row.rebate }}</span>
-        </template>
-      </el-table-column>
 
       <el-table-column align="center" label="所在分组" width="95">
         <template slot-scope="scope">
@@ -134,7 +129,7 @@
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">账号：</el-col>
         <el-col :span="16">
-          {{ auditData.uuid }}
+          {{ auditData.account }}
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
@@ -152,7 +147,7 @@
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR" />
         <el-col :span="16">
-          <img src="" class="payTypeImage">
+          <img v-lazy="auditData.qrCode" class="payTypeImage">
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">

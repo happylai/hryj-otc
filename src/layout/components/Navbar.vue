@@ -8,7 +8,7 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <el-avatar class="user-avatar" icon="el-icon-user-solid" shape="square">user name</el-avatar>
-          <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
+          <!-- <img v-lazy="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
           <span class="userName">{{ name }}</span>
           <i class="el-icon-caret-bottom" />
         </div>

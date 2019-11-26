@@ -6,19 +6,19 @@
       </template>
     </el-table-column>
 
-    <el-table-column width="180px" align="center" label="账号">
+    <el-table-column min-width="180px" align="center" label="账号">
       <template slot-scope="scope">
         <span>{{ scope.row.email }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column width="80px" align="center" label="IP地址">
+    <el-table-column width="140px" align="center" label="IP地址">
       <template slot-scope="scope">
         <span>{{ scope.row.ip||'-' }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column width="150px" align="center" label="角色">
+    <el-table-column min-width="150px" align="center" label="角色">
       <template slot-scope="scope">
         <span>{{ adminRolesConstName(scope.row.role,adminRolesConst) }}</span>
       </template>

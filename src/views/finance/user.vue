@@ -121,7 +121,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column min-width="120px" label="实践成交额">
+          <el-table-column min-width="120px" label="实际成交额">
             <template slot-scope="scope">
               <span>{{ scope.row.realityAmount }}</span>
             </template>
@@ -204,7 +204,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column min-width="120px" label="实践成交额">
+          <el-table-column min-width="120px" label="实际成交额">
             <template slot-scope="scope">
               <span>{{ scope.row.realityAmount }}</span>
             </template>

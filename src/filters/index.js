@@ -64,6 +64,17 @@ export function timestampFormat(timestamp) {
 }
 
 /**
+ * @param {number} timesArray
+ */
+export function timesArrayFormat(timesArray) {
+  if (timesArray) {
+    return `${timesArray.slice(0, 3).join('-')} ${timesArray.slice(3, 6).join(':')}`
+  } else {
+    return ''
+  }
+}
+
+/**
  * Number formatting
  * like 10000 => 10k
  * @param {number} num

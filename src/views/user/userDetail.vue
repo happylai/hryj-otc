@@ -22,8 +22,8 @@
         </el-row>
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>申诉数：{{ modals.appealNum }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>被申诉数：{{ modals.appealedNum }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>收付款方式：{{ modals.payTypes|payTypeNames }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>被申诉数：{{ modals.appealedNum }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="4"><div>收付款方式：{{ modals.payTypes|payTypeNames }}</div></el-col>
           <!-- <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div >所在分组：{{ modals.pricingGroupId|groupName }}</div></el-col> -->
         </el-row>
       </div>
@@ -103,7 +103,7 @@
           </el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6">
             <div class="card-item ">
-              <div class="cart-i-t">激活金 <el-link :underline="false" :type="modals.toBOrders>300000?'success':'info'">{{ modals.toBOrders>300000?'(已退还)':'(未退还)' }} </el-link> </div>
+              <div class="cart-i-t">激活金 <el-link :underline="false" :type="modals.isBack?'success':'info'">{{ modals.isBack?'(已退还)':'(未退还)' }} </el-link> </div>
               <div class="cart-i-v">{{ modals.activeBalance }}</div>
             </div>
           </el-col>
@@ -440,13 +440,13 @@ export default {
       this.dialogVisible = true
       this.editData = this.modals
       this.newData.active = this.editData.active
-      this.newData.payTypes = this.editData.payTypes ? this.editData.payTypes.split(','):undefined
+      this.newData.payTypes = this.editData.payTypes ? this.editData.payTypes.split(',') : undefined
       this.newData.groupId = this.editData.pricingGroupId
       this.newData.rebate = this.editData.rebate
       this.editData.password = undefined
     },
     handleAudit() {
-      const frozenPayTypes = this.editData.payTypes ? this.getFrozenPayTypes(this.editData.payTypes.split(','), this.newData.payTypes):undefined
+      const frozenPayTypes = this.editData.payTypes ? this.getFrozenPayTypes(this.editData.payTypes.split(','), this.newData.payTypes) : undefined
       const data = {
         groupId: this.newData.groupId,
         active: this.newData.active,

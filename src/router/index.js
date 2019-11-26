@@ -302,6 +302,36 @@ export const asyncRoutes = [{
   ]
 },
 {
+  path: '/message',
+  component: Layout,
+  meta: {
+    title: '留言板',
+    icon: 'chat'
+  },
+  children: [
+    {
+      path: '',
+      name: 'message',
+      component: () => import('@/views/message/index'),
+      meta: {
+        title: '留言板',
+        icon: 'chat'
+      }
+    },
+    {
+      path: ':id',
+      name: 'chat',
+      hidden: true,
+      component: () => import('@/views/message/chat'),
+      meta: {
+        title: '留言板',
+        icon: ''
+      }
+    }
+  ]
+
+},
+{
   path: '/analysis',
   component: Layout,
   meta: {

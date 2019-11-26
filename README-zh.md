@@ -9,13 +9,13 @@ npm install --registry=https://registry.npm.taobao.org
 
 # 启动服务
 npm run dev
-```
+```bash
 
 浏览器访问 [http://localhost:9528](http://localhost:9528)
 
 ## 发布
 
-```bash
+
 # 构建测试环境
 npm run build:stage
 

@@ -63,13 +63,13 @@
           <el-col :span="12">
             <div class="card-item borderR">
               <div class="cart-i-t">总调用次数 </div>
-              <div class="cart-i-v">{{ modals.balance }}</div>
+              <div class="cart-i-v"/>
             </div>
           </el-col>
           <el-col :span="12">
             <div class="card-item ">
               <div class="cart-i-t">失败次数</div>
-              <div class="cart-i-v">{{ modals.deposit }}</div>
+              <div class="cart-i-v"/>
             </div>
           </el-col>
 
@@ -87,13 +87,13 @@
           <el-col :span="12">
             <div class="card-item borderR">
               <div class="cart-i-t">总调用次数 </div>
-              <div class="cart-i-v">{{ modals.balance }}</div>
+              <div class="cart-i-v"/>
             </div>
           </el-col>
           <el-col :span="12">
             <div class="card-item ">
               <div class="cart-i-t">失败次数</div>
-              <div class="cart-i-v">{{ modals.deposit }}</div>
+              <div class="cart-i-v"/>
             </div>
           </el-col>
 
@@ -111,13 +111,13 @@
           <el-col :span="12">
             <div class="card-item borderR">
               <div class="cart-i-t">总调用次数 </div>
-              <div class="cart-i-v">{{ modals.balance }}</div>
+              <div class="cart-i-v"/>
             </div>
           </el-col>
           <el-col :span="12">
             <div class="card-item ">
               <div class="cart-i-t">失败次数</div>
-              <div class="cart-i-v">{{ modals.deposit }}</div>
+              <div class="cart-i-v"/>
             </div>
           </el-col>
 

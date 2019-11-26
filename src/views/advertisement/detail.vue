@@ -101,7 +101,7 @@
 
       <el-table-column align="center" label="订单状态" minwidth="300">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status|orderStatusTagName">{{ scope.row.status|orderStatus }}</el-tag>
+          <el-link  :underline="false" :type="scope.row.status|orderStatusTagName">{{ scope.row.status|orderStatus }}</el-link>
         </template>
       </el-table-column>
 

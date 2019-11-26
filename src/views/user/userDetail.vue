@@ -103,7 +103,7 @@
           </el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6">
             <div class="card-item ">
-              <div class="cart-i-t">激活金 <el-link :underline="false" :type="modals.isBack?'success':'info'">{{ modals.isBack?'(已退还)':'(未退还)' }} </el-link> </div>
+              <div class="cart-i-t">激活金 <span>{{ modals.isBack?'(已退还)':'(未退还)' }} </span> </div>
               <div class="cart-i-v">{{ modals.activeBalance }}</div>
             </div>
           </el-col>
@@ -201,7 +201,7 @@
 
       <el-table-column align="center" label="订单状态" minwidth="300">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status|orderStatusTagName">{{ scope.row.status|orderStatus }}</el-tag>
+          <el-link :underline="false" :type="scope.row.status|orderStatusTagName">{{ scope.row.status|orderStatus }}</el-link>
         </template>
       </el-table-column>
 

@@ -1,41 +1,23 @@
 <template>
   <div class="tab-container">
-    <!-- <el-tag>mounted times ：{{ createdTimes }}</el-tag>
-    <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;" title="Tab with keep-alive" type="success" /> -->
-    <el-tabs v-model="activeName" style="margin-top:15px;">
-      <div class="filter-container" style="margin-bottom: 10px;">
-        <el-input v-model="listQuery.keywords" placeholder="订单ID/广告ID/买家/卖家/备注" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        <el-select v-model="listQuery.importance" placeholder="订单类型" clearable style="width: 140px" class="filter-item">
-          <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
-        </el-select>
-        <el-select v-model="listQuery.type" placeholder="支付方式" clearable class="filter-item" style="width: 140px">
-          <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
-        </el-select>
-        <el-select v-model="listQuery.sort" placeholder="订单状态" style="width: 140px" class="filter-item" @change="handleFilter">
-          <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.id" />
-        </el-select>
-        <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
-          搜索
-        </el-button>
+    <el-tabs v-model="activeId" style="margin-top:15px;" @tab-click="handleClick">
 
-      </div>
-      <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key">
-        <keep-alive>
-          <tab-pane v-if="activeName==item.key" :data="allList" :type="item.key" @create="showCreatedTimes" />
-        </keep-alive>
-      </el-tab-pane>
-      <pagination v-show="allListMeta.total>0" :total="allListMeta.total" :page.sync="allListMeta.pages" :limit.sync="allListMeta.size" @pagination="getList" />
+      <el-tab-pane v-for="item in tabMapOptions" :key="item.id" :label="item.zhName" :name="item.id.toString()" />
+
+      <el-tree
+        ref="roleTree"
+        :data="list"
+        show-checkbox
+        node-key="id"
+        :default-expanded-keys="[2, 3]"
+        :default-checked-keys="defaultPremission"
+        :props="defaultProps"
+        @check-change="getCheckedKeys"
+      />
     </el-tabs>
-
-    <el-dialog :visible.sync="dialogPvVisible" title="订单详情">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="Channel" />
-        <el-table-column prop="pv" label="Pv" />
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
-      </span>
-    </el-dialog>
+    <el-button v-waves class="filter-item" style="margin-top: 40px" type="primary" @click="handleSave">
+      保存
+    </el-button>
   </div>
 </template>
 
@@ -45,7 +27,8 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import Pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { OrderStatus, PayType } from '@/utils/enumeration'
-
+import { role_save, role_list, current_permission_add_list, role_permission_list, all_permission_list, role_delete, role_permission_delete, role_permission_add } from '@/api/role'
+import arrayDiffer from 'array-differ'
 export default {
   name: 'Tab',
   components: { tabPane },
@@ -53,64 +36,108 @@ export default {
   data() {
     return {
       tabMapOptions: [
-        { label: '交易所用户订单', key: 'all' },
-        { label: '站点用户订单', key: 'site' }
+        { label: 'zhName', id: '0' }
       ],
-      activeName: 'all',
-      createdTimes: 0,
-      listQuery: {
-        page: 1,
-        limit: 20,
-        importance: undefined,
-        keywords: undefined,
-        orderType: undefined,
-        paymentType: undefined,
-        orderStatus: undefined,
-        dialogPvVisible: true
-        // orderStatus:OrderStatus,
-        // payType:PayType
-      }
-    }
-  },
-  watch: {
-    activeName(val) {
-      this.$router.push(`${this.$route.path}?tab=${val}`)
+      activeId: '1',
+      list: [],
+      defaultProps: {
+        label: 'title'
+      },
+      defaultPremission: [],
+      checkPremission: []
+
     }
   },
   computed: {
-    ...mapState({
-      allList: state => state.order.allList,
-      allListMeta: state => state.order.allMeta
-    })
+
   },
-  created() {
-    // init the default selected tab
-    const tab = this.$route.query.tab
-    if (tab) {
-      this.activeName = tab
-    }
+  watch: {
+
   },
+
   mounted() {
     this.getList()
   },
   methods: {
-
+    handleClick(tab, event) {
+      this.activeId = tab.name
+      this.defaultPremission = []
+      this.checkPremission = []
+      this.$refs.roleTree.setCheckedKeys([])
+      this.getCurrentPerList(this.activeId)
+    },
     getList() {
       this.listLoading = true
-      this.$store.dispatch('order/getAllList')
-      // 	fetchList(this.listQuery).then(response => {
-      // 		this.list = response.data.items
-      // 		this.total = response.data.total
-
-      // 		// Just to simulate the time of the request
-      // 		setTimeout(() => {
-      // 			this.listLoading = false
-      // 		}, 1.5 * 1000)
-      // })
+      role_list().then(res => {
+        if (res.code === 0) {
+          this.tabMapOptions = res.data
+          this.activeId = res.data[0].id.toString()
+          this.getAllList(this.activeId)
+          this.getCurrentPerList(this.activeId)
+        }
+      })
+    },
+    getAllList(id) {
+      all_permission_list(id).then(res => {
+        if (res.code === 0) {
+          this.list = res.data
+        }
+      })
+    },
+    getCurrentPerList(id) {
+      role_permission_list(id).then(res => {
+        if (res.code === 0) {
+          this.permission_list = res.data
+          this.defaultPremission = this.permission_list.map(item => item.id)
+        }
+      })
+    },
+    getCheckedKeys() {
+      console.log(this.$refs.roleTree.getCheckedKeys())
+      this.checkPremission = this.$refs.roleTree.getCheckedKeys()
     },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
+    },
+    handleSave() {
+      const defaultPremission = this.defaultPremission
+      const currentPremission = this.$refs.roleTree.getCheckedKeys()
+      const dec = arrayDiffer(defaultPremission, currentPremission)
+      if (dec.length) {
+        this.rolePerDel(dec, currentPremission)
+      } else {
+        this.rolePerAdd(currentPremission)
+      }
+    },
+    rolePerDel(dec, currentPremission) {
+      const postData = {
+        rolePermissionIds: dec.join(',')
+      }
+      role_permission_delete(postData).then(res => {
+        if (res.code === 0) {
+          this.rolePerAdd(currentPremission)
+        }
+      })
+    },
+    rolePerAdd(data) {
+      const postData = {
+        permissionIds: data,
+        roleId: this.activeId
+      }
+      role_permission_add(postData).then(res => {
+        if (res.code === 0) {
+          this.dialogVisible = false
+          // this.getAllList(this.activeId)
+          this.getCurrentPerList(this.activeId)
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+        } else {
+          this.$message.error('操作失败')
+        }
+      })
     }
   }
 }

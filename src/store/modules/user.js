@@ -30,7 +30,9 @@ const state = {
   userInfo: undefined,
   groups: [],
   adminRoles: [],
-  userRoles: []
+  userRoles: [],
+  route: [],
+  authorities: []
 }
 
 const mutations = {
@@ -51,6 +53,10 @@ const mutations = {
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
+  SET_AUTH: (state, authorities) => {
+    state.authorities = authorities
+  },
+
   SET_SYSTEM_CONST: (state, data) => {
     state.groups = data.groups
     state.adminRoles = data.adminRoles
@@ -80,6 +86,10 @@ const actions = {
         } = response
         commit('SET_TOKEN', headers['x-auth-token'])
         commit('SET_USERINFO', data.data.data)
+        console.log('logindata', data)
+        const authorities = data.data.data.authorities
+        commit('SET_AUTH', authorities)
+
         setToken(headers['x-auth-token'])
         await get_system_const().then(res => {
           console.log(res)
@@ -99,10 +109,11 @@ const actions = {
     return new Promise(async(resolve, reject) => {
       console.log('state', state)
       const role = state.userInfo ? state.userInfo.principal.roleList : ['ROLE_USER']
+
       const data = {
         roles: role
       }
-      var bb = '31312312312'
+
       // const groupName= await get_combo().then(res=>{if(res.code===0){
       //   return res.data
       // }})

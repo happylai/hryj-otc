@@ -62,6 +62,17 @@ export function all_permission_list() {
   })
 }
 
+// 获取当前角色对应的权限操作数据
+export function role_permission_owner_list(roleId) {
+  return request({
+    url: `/admin/role/permission_owner/${roleId}`,
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
 // 获取角色对应的权限列表
 export function role_permission_list(roleId) {
   return request({

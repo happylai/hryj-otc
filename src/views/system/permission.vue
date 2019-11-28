@@ -6,10 +6,11 @@
 
       <el-tree
         ref="roleTree"
+        :check-strictly="true"
         :data="list"
         show-checkbox
         node-key="id"
-        :default-expanded-keys="[2, 3]"
+        :default-expand-all='true'
         :default-checked-keys="defaultPremission"
         :props="defaultProps"
         @check-change="getCheckedKeys"
@@ -27,7 +28,7 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import Pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { OrderStatus, PayType } from '@/utils/enumeration'
-import { role_save, role_list, current_permission_add_list, role_permission_list, all_permission_list, role_delete, role_permission_delete, role_permission_add } from '@/api/role'
+import { role_save, role_list, current_permission_add_list, role_permission_list, all_permission_list, role_delete, role_permission_delete, role_permission_add, role_permission_owner_list } from '@/api/role'
 import arrayDiffer from 'array-differ'
 export default {
   name: 'Tab',
@@ -62,7 +63,7 @@ export default {
     handleClick(tab, event) {
       this.activeId = tab.name
       this.defaultPremission = []
-      this.checkPremission = []
+
       this.$refs.roleTree.setCheckedKeys([])
       this.getCurrentPerList(this.activeId)
     },
@@ -72,7 +73,7 @@ export default {
         if (res.code === 0) {
           this.tabMapOptions = res.data
           this.activeId = res.data[0].id.toString()
-          this.getAllList(this.activeId)
+
           this.getCurrentPerList(this.activeId)
         }
       })
@@ -85,12 +86,43 @@ export default {
       })
     },
     getCurrentPerList(id) {
-      role_permission_list(id).then(res => {
+      role_permission_owner_list(id).then(res => {
         if (res.code === 0) {
-          this.permission_list = res.data
-          this.defaultPremission = this.permission_list.map(item => item.id)
+          this.list = res.data
+          this.defaultPremission = this.getValue(res.data, 'owner', 'id')
+          this.checkPremission = this.getValue(res.data, 'owner', 'id')
         }
       })
+    },
+    getValue(data, flag, value) {
+      const temp = []
+      for (let i = 0; i < data.length; i++) {
+        const item = data[i]
+        if (item[flag]) {
+          temp.push(item[value])
+        }
+        if (item.children) {
+          temp.push(...this.getValue(item.children, flag, value))
+        }
+      }
+      return temp
+    },
+    getCurrentValue(data, flag, value, current) {
+      const temp = []
+      for (let i = 0; i < data.length; i++) {
+        const item = data[i]
+        if (item[flag] === current) {
+          console.log('item[flag] === current', item[flag], current, item[flag] === current)
+          temp.push(item[value])
+        }
+        if (item.children) {
+          const temp2 = this.getCurrentValue(item.children, flag, value, current)
+          if (temp2) {
+            temp.push(...temp2)
+          }
+        }
+      }
+      return temp
     },
     getCheckedKeys() {
       console.log(this.$refs.roleTree.getCheckedKeys())
@@ -104,15 +136,25 @@ export default {
       const defaultPremission = this.defaultPremission
       const currentPremission = this.$refs.roleTree.getCheckedKeys()
       const dec = arrayDiffer(defaultPremission, currentPremission)
+      console.log('defaultPremission', defaultPremission, 'currentPremission', currentPremission, 'dec', dec)
       if (dec.length) {
-        this.rolePerDel(dec, currentPremission)
+        var rolePermissionIds = []
+        for (let i = 0; i < dec.length; i++) {
+          const item = dec[i]
+          rolePermissionIds.push(...this.getCurrentValue(this.list, 'id', 'rolePermissionId', item))
+        }
+        console.log('rolePermissionIds', rolePermissionIds)
+      }
+
+      if (rolePermissionIds && rolePermissionIds.length) {
+        this.rolePerDel(rolePermissionIds, currentPremission)
       } else {
         this.rolePerAdd(currentPremission)
       }
     },
-    rolePerDel(dec, currentPremission) {
+    rolePerDel(rolePermissionIds, currentPremission) {
       const postData = {
-        rolePermissionIds: dec.join(',')
+        rolePermissionIds: rolePermissionIds.join(',')
       }
       role_permission_delete(postData).then(res => {
         if (res.code === 0) {

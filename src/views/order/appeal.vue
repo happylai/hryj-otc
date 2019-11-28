@@ -41,7 +41,7 @@
 
           <el-table-column min-width="120" align="center" label="申诉类型">
             <template slot-scope="scope">
-              <span>{{ scope.row.type }}</span>
+              <span>{{ scope.row.type|appealeType }}</span>
             </template>
           </el-table-column>
 
@@ -53,7 +53,8 @@
 
           <el-table-column align="center" label="发起人证据" min-width="120">
             <template slot-scope="scope">
-              <span>{{ scope.row.sourceProof }}</span>
+              <img v-if="scope.row.sourceProof" v-lazy="scope.row.sourceProof" class="appealImage" :preview="scope.row.id+'apple0'">
+              <span v-else="!scope.row.paymentUrlOne">无</span>
             </template>
           </el-table-column>
 
@@ -409,5 +410,8 @@ export default {
 <style scoped>
   .tab-container {
     margin: 30px;
+  }
+  .appealImage{
+    max-width:40px;
   }
 </style>

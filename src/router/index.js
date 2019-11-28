@@ -227,7 +227,7 @@ export const asyncRoutes = [{
 {
   path: '/advertising',
   component: Layout,
-  name: 'adverting_manage',
+  name: 'advertising_list',
   meta: {
     title: '广告',
     icon: 'iconguanggaoguanli'
@@ -285,7 +285,7 @@ export const asyncRoutes = [{
 {
   path: '/message',
   component: Layout,
-  name: 'message_board',
+  name: 'message_list',
   meta: {
     title: '留言板',
     icon: 'chat'

@@ -316,6 +316,7 @@ export const asyncRoutes = [{
 {
   path: '/records',
   name: '/records_manage',
+  name: 'records_statistics',
   component: Layout,
   meta: {
     title: '数据中心',

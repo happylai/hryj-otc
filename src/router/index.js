@@ -384,7 +384,7 @@ export const asyncRoutes = [{
 
     component: () => import('@/views/params/allowance'),
     meta: {
-      title: '交易提成',
+      title: 'B端手续费',
       icon: '',
       type: 2
     }

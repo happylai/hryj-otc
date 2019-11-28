@@ -4,8 +4,11 @@
     <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;" title="Tab with keep-alive" type="success" /> -->
     <el-tabs v-model="ParamsType" style="margin-top:15px;" @tab-click="handleTabClick">
       <div class="filter-container" style="margin-bottom: 10px;">
-        <el-select v-if="ParamsType!=='4'&&ParamsType!=='2'" v-model="addData.roleId" :placeholder="'选择'+roleName[ParamsType]" clearable style="width: 140px" class="filter-item">
+        <!-- <el-select v-if="ParamsType!=='4'&&ParamsType!=='2'" v-model="addData.roleId" :placeholder="'选择'+roleName[ParamsType]" clearable style="width: 140px" class="filter-item">
           <el-option v-for="item in UserType" :key="item.id" :disabled="ParamsType==1&&(item.id===1||item.id===4)" :label="item.label" :value="item.id" />
+        </el-select> -->
+        <el-select  v-if="ParamsType!=='4'&&ParamsType!=='2'" v-model="addData.roleId" :placeholder="'选择'+roleName[ParamsType]" clearable style="width: 140px" class="filter-item">
+          <el-option v-for="item in userRolesConst" :disabled="!addUserType[ParamsType].includes(item.id)" :key="item.id" :label="item.zhName" :value="item.id" />
         </el-select>
         <el-input v-model="addData.addNewData" :placeholder="ParamsTypePlaceHolder[ParamsType]" style="width: 200px;" class="filter-item" />
 
@@ -74,7 +77,7 @@
     <el-table v-else v-loading="loading" :data="list" border fit highlight-current-row style="width: 800px">
       <el-table-column v-if="ParamsType!=='4'" align="center" :label="roleName[ParamsType]" width="100" element-loading-text="请给我点时间！">
         <template slot-scope="scope">
-          <span>{{ scope.row.roleId|userTypeName }}</span>
+          <span>{{ userRolesConstName(scope.row.roleId,userRolesConst)  }}</span>
         </template>
       </el-table-column>
 
@@ -197,16 +200,16 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
-import { UserType, TokenType, FiatType, DealType } from '@/utils/enumeration'
+import {  TokenType, FiatType, DealType } from '@/utils/enumeration'
 import { deposits, deposit_save, active_golds, active_gold_save, cancel_nums, cancel_num_save, groups, group_save, groups_scopes, get_group_scopes_add, scopes_add } from '@/api/params'
-
+import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 export default {
   name: 'Tab',
   components: { pagination },
   directives: { waves },
   data() {
     return {
-      UserType,
+      userRolesConstName,
       TokenType,
       FiatType,
       DealType,
@@ -217,6 +220,10 @@ export default {
         { label: '分组设置', key: '4', name: 'num' }
 
       ],
+      addUserType:{
+        1:[5,6,7,-1,8],
+        3:[4,5,6,7,8],
+      },
       ParamsTypePlaceHolder: {
         1: '保证金',
         2: '激活金',
@@ -260,10 +267,11 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      // allList: state => state.order.allList,
-      allListMeta: state => state.order.allMeta
-    })
+    ...mapGetters([
+      'groupsConst',
+      'userRolesConst',
+      'adminRolesConst'
+    ])
   },
   watch: {
     activeName(val) {
@@ -371,7 +379,7 @@ export default {
           groupName: this.addData.addNewData
         }
         this.save(data)
-      } else if (!this.addData.roleId && this.ParamsType !== 2) {
+      } else if (!this.addData.roleId && this.ParamsType !== '2') {
         this.$message.error('请选择角色')
       } else {
         const data = {

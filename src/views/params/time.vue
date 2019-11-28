@@ -6,7 +6,7 @@
       <div class="filter-container" style="margin-bottom: 10px;">
         <el-input v-model="addData.time" :placeholder="TimeParamsTypePlaceHolder[TimeParamsType]+'(分钟)'" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
         <el-select v-model="addData.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
-          <el-option v-for="item in userRolesConst" :key="item.id" :label="item.zhName" :value="item.id" />
+          <el-option v-for="item in userRolesConst" :disabled="!addUserType[TimeParamsType].includes(item.id)" :key="item.id" :label="item.zhName" :value="item.id" />
         </el-select>
 
         <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" @click="handleAdd">
@@ -14,7 +14,7 @@
         </el-button>
 
       </div>
-      <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
+      <el-tab-pane v-for="item in tabMapOptions" :key="item.key" v-if="item.visible" :label="item.label" :name="item.key" />
     </el-tabs>
     <tab-pane :loading="loading" :data="list" @edit="handlEdit" />
     <!-- <pagination v-show="meta.total>0" :total="meta.total" :page.sync="meta.pages" :limit.sync="meta.size" @pagination="getList" /> -->
@@ -59,11 +59,11 @@ export default {
       adminRolesConstName,
       UserType,
       tabMapOptions: [
-        { label: '买家付款超时', key: '0' },
-        { label: '卖家确认超时', key: '1' },
-        { label: '触发申述时间', key: '2' },
-        { label: '解冻货币时间', key: '3' },
-        { label: '一键接单时间', key: '4' }
+        { label: '买家付款超时', key: '0' ,visible:true },
+        { label: '卖家确认超时', key: '1' ,visible:true},
+        { label: '触发申述时间', key: '2' ,visible:false},
+        { label: '解冻货币时间', key: '3' ,visible:true},
+        { label: '一键接单时间', key: '4' ,visible:true}
       ],
       TimeParamsTypePlaceHolder: {
         0: '超时参数',
@@ -71,6 +71,12 @@ export default {
         2: '申述激活时间',
         3: '自动解冻时间',
         4: '一键接单时间'
+      },
+      addUserType:{
+        0:[4,5,6,7,8],
+        1:[4,5,6,7,8],
+        3:[6,7,8],
+        4:[5,6,7,8]
       },
       TimeParamsType: '0',
       loading: false,

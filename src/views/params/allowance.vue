@@ -8,8 +8,8 @@
     </el-tabs>
     <!-- <tab-pane :loading="loading" :data="list" @edit="handlEdit" /> -->
     <div v-if="activeType!=='3'" class="filter-container" style="margin-bottom: 10px;">
-      <el-select v-if="activeType!=='5'&&activeType!=='3'" v-model="addData.roleId" placeholder="选择角色" clearable style="width: 160px" class="filter-item">
-        <el-option v-for="item in UserType" :key="item.id" :label="item.label" :value="item.id" />
+      <el-select v-if="activeType!=='5'&&activeType!=='3'&&activeType!=='4'" v-model="addData.roleId" placeholder="选择角色" clearable style="width: 160px" class="filter-item">
+        <el-option v-for="item in userRolesConst" :disabled="!addUserType[activeType].includes(item.id)" :key="item.id" :label="item.zhName" :value="item.id" />
       </el-select>
       <el-select v-if="activeType!=='3'" v-model="addData.payType" placeholder="支付方式" clearable style="width: 160px" class="filter-item">
         <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
@@ -36,7 +36,7 @@
     </div>
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
-        v-if="activeType!=='5'&&activeType!=='3'"
+        v-if="activeType!=='5'&&activeType!=='3'&&activeType!=='4'"
         align="center"
         label="角色"
         width="120"
@@ -97,7 +97,7 @@
     </el-table>   <pagination v-show="meta.total>0" :total="meta.total" :page.sync="meta.pages" :limit.sync="meta.size" @pagination="metaChange" />
 
     <el-dialog :visible.sync="dialogVisible" :title="tabMapOptionsName[activeType].label" style="min-width: 800px;">
-      <el-row v-if="activeType!=='3'" :gutter="20" class="userRow">
+      <el-row v-if="activeType!=='3'&&activeType!=='4'&&activeType!=='5'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">当前角色：</el-col>
         <el-col :span="16">{{ userRolesConstName(editData.roleId,userRolesConst)  }}</el-col>
       </el-row>
@@ -187,8 +187,8 @@ export default {
         { label: '夜间补贴', key: '1' },
         { label: '达量补贴', key: '2' },
         { label: '邀请奖励', key: '3' },
-        { label: '站内交易', key: '4' },
-        { label: 'B端商户', key: '5' }
+        { label: '入金手续费', key: '4' },
+        { label: '出金手续费', key: '5' }
       ],
       tabMapOptions: [
         { label: '交易补贴', key: '0' },
@@ -197,10 +197,19 @@ export default {
         { label: '邀请奖励', key: '3' }
       ],
       tabMapOptions1: [
-        { label: '站内交易', key: '4' },
-        { label: 'B端商户', key: '5' }
+        { label: '入金手续费', key: '4' },
+        { label: '出金手续费', key: '5' }
       ],
       placeHolder: ['单笔补贴最高限额', '每天补贴最高限额', '总补贴最高限额', '补贴最高限额', '最高提成限额', '最高提成限额'],
+      addUserType:{
+        0:[5,6,7,8],
+        1:[5,6,7,8],
+        2:[5,6,7,8],
+
+
+
+
+      },
       activeType: '0',
       list: [],
       loading: false,
@@ -243,7 +252,7 @@ export default {
     const tab = this.$route.query.tab
 
     const name = this.$route.name
-    if (name === 'commission') {
+    if (name === 'parameter_commission') {
       this.activeType = '4'
     } else if (tab) {
     }
@@ -300,7 +309,7 @@ export default {
     handleAdd() {
       const data = this.addData
       console.log('data', data)
-      if (!data.roleId && (this.activeType !== '5' || this.activeType !== '3')) {
+      if (!data.roleId && (this.activeType !== '5' || this.activeType !== '3'|| this.activeType !== '4')) {
         this.$message.error('请选择角色')
       } else if (((data.payType === '' || data.payType === undefined) && this.activeType !== '3')) {
         this.$message.error('请选择支付方式')

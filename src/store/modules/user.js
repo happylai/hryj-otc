@@ -117,7 +117,7 @@ const actions = {
       // const groupName= await get_combo().then(res=>{if(res.code===0){
       //   return res.data
       // }})
-      commit('SET_ROLES', role)
+      commit('SET_ROLES', 'default')
       // commit('SET_GROUPNAME',groupName)
       console.log('setRoles', role)
       resolve(data)

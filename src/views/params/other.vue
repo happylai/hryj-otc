@@ -7,13 +7,13 @@
         <!-- <el-select v-if="ParamsType!=='4'&&ParamsType!=='2'" v-model="addData.roleId" :placeholder="'选择'+roleName[ParamsType]" clearable style="width: 140px" class="filter-item">
           <el-option v-for="item in UserType" :key="item.id" :disabled="ParamsType==1&&(item.id===1||item.id===4)" :label="item.label" :value="item.id" />
         </el-select> -->
-        <el-select  v-if="ParamsType!=='4'&&ParamsType!=='2'" v-model="addData.roleId" :placeholder="'选择'+roleName[ParamsType]" clearable style="width: 140px" class="filter-item">
-          <el-option v-for="item in userRolesConst" :disabled="!addUserType[ParamsType].includes(item.id)" :key="item.id" :label="item.zhName" :value="item.id" />
+        <el-select v-if="ParamsType!=='4'&&ParamsType!=='2'" v-model="addData.roleId" :placeholder="'选择'+roleName[ParamsType]" clearable style="width: 140px" class="filter-item">
+          <el-option v-for="item in userRolesConst" :key="item.id" :disabled="!addUserType[ParamsType].includes(item.id)" :label="item.zhName" :value="item.id" />
         </el-select>
         <el-input v-model="addData.addNewData" :placeholder="ParamsTypePlaceHolder[ParamsType]" style="width: 200px;" class="filter-item" />
 
         <el-input v-show="ParamsType==='2'" v-model="addData.minVolume" placeholder="达标交易了(如：300000)" style="width: 200px;" class="filter-item" />
-        <el-link v-show="ParamsType==='2'" type="danger" :underline="false">*交易量达标系统自动退还</el-link>
+        <!-- <el-link v-show="ParamsType==='2'" type="danger" :underline="false">*交易量达标系统自动退还</el-link> -->
 
         <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" @click="handleAdd">
           确认添加
@@ -77,7 +77,7 @@
     <el-table v-else v-loading="loading" :data="list" border fit highlight-current-row style="width: 800px">
       <el-table-column v-if="ParamsType!=='4'" align="center" :label="roleName[ParamsType]" width="100" element-loading-text="请给我点时间！">
         <template slot-scope="scope">
-          <span>{{ userRolesConstName(scope.row.roleId,userRolesConst)  }}</span>
+          <span>{{ userRolesConstName(scope.row.roleId,userRolesConst) }}</span>
         </template>
       </el-table-column>
 
@@ -177,7 +177,7 @@
     <el-dialog :visible.sync="dialogVisible" :title="ParamsTypePlaceHolder[ParamsType]+'设置'">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">{{ ParamsType===1?'升级角色':'当前角色' }}：</el-col>
-        <el-col :span="16">{{ editData.roleId|userTypeName }}</el-col>
+        <el-col :span="16">{{ userRolesConstName(editData.roleId,userRolesConst) }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">{{ ParamsTypePlaceHolder[ParamsType] }}：</el-col>
@@ -200,7 +200,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
-import {  TokenType, FiatType, DealType } from '@/utils/enumeration'
+import { TokenType, FiatType, DealType } from '@/utils/enumeration'
 import { deposits, deposit_save, active_golds, active_gold_save, cancel_nums, cancel_num_save, groups, group_save, groups_scopes, get_group_scopes_add, scopes_add } from '@/api/params'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 export default {
@@ -220,9 +220,9 @@ export default {
         { label: '分组设置', key: '4', name: 'num' }
 
       ],
-      addUserType:{
-        1:[5,6,7,-1,8],
-        3:[4,5,6,7,8],
+      addUserType: {
+        1: [5, 6, 7, -1, 8],
+        3: [4, 5, 6, 7, 8]
       },
       ParamsTypePlaceHolder: {
         1: '保证金',

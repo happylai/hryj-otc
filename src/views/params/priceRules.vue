@@ -335,7 +335,9 @@ export default {
     filterChange() {
       const p = this.price
       console.log('filter change')
-      if (p.TokenType !== undefined && p.fiat !== undefined && p.dealType !== undefined) {
+      if (p.token !== undefined && p.fiat !== undefined && p.dealType !== undefined) {
+        console.log('filter change')
+
         this.getPriceDetail()
       }
     },

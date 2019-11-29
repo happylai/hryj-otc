@@ -5,8 +5,8 @@
       <el-tab-pane v-for="item in tabMapOptions" :key="item.id" :label="item.zhName" :name="item.id.toString()" />
 
       <el-tree
+        :loading='loading'
         ref="roleTree"
-        :check-strictly="true"
         :data="list"
         show-checkbox
         node-key="id"
@@ -45,7 +45,8 @@ export default {
         label: 'title'
       },
       defaultPremission: [],
-      checkPremission: []
+      checkPremission: [],
+      loading:false
 
     }
   },
@@ -68,14 +69,18 @@ export default {
       this.getCurrentPerList(this.activeId)
     },
     getList() {
-      this.listLoading = true
+      this.loading = true
       role_list().then(res => {
+        this.loading=false
         if (res.code === 0) {
           this.tabMapOptions = res.data
           this.activeId = res.data[0].id.toString()
 
           this.getCurrentPerList(this.activeId)
         }
+      }).catch(err=>{
+        this.loading=false
+        
       })
     },
     getAllList(id) {

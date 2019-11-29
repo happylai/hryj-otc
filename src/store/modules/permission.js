@@ -6,9 +6,12 @@ import { asyncRoutes, constantRoutes } from '@/router'
  * @param route
  */
 function hasPermission(authorities, route) {
-  console.log("authorities",authorities,route)
+  let authName=route.meta.authName
+  console.log("authorities",authorities,route.name,route.meta.authName,route.meta.authName.includes('order_list'))
   // return authorities.some(authority => route.name.includes(authority.authority))
-  return authorities.some(authority => authority.authority===route.name)
+  // return authorities.some(authority => (route.meta.authName.includes(authority.authority) )
+  return authorities.some(authority =>  authName.includes(authority.authority))
+  
 }
 
 /**

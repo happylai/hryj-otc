@@ -73,8 +73,8 @@ export const asyncRoutes = [{
   name: 'order_manage',
   meta: {
     title: '订单管理',
-    icon: 'orderList'
-    // roles: ['ROLE_USER']
+    icon: 'orderList',
+    authName: ['order_list','order_withdraw','order_appeal',]
   },
   children: [{
     path: 'index',
@@ -82,7 +82,9 @@ export const asyncRoutes = [{
     component: () => import('@/views/order/index'),
     meta: {
       title: '订单列表',
-      icon: ''
+      icon: '',
+      authName: ['order_list']
+
     }
   },
   {
@@ -92,7 +94,9 @@ export const asyncRoutes = [{
 
     meta: {
       title: '出金审核',
-      icon: ''
+      icon: '',
+      authName: ['order_withdraw']
+
     }
   },
   {
@@ -103,7 +107,9 @@ export const asyncRoutes = [{
 
     meta: {
       title: '订单申述',
-      icon: ''
+      icon: '',
+      authName: ['order_appeal']
+
     }
   },
   {
@@ -113,7 +119,9 @@ export const asyncRoutes = [{
     hidden: true,
     meta: {
       title: '申述详情',
-      icon: ''
+      icon: '',
+      authName: ['order_appeal']
+
     }
   }
 
@@ -125,7 +133,9 @@ export const asyncRoutes = [{
   name: 'user_manage',
   meta: {
     title: '用户管理',
-    icon: 'user'
+    icon: 'user',
+    authName: ['user_instation','user_store','user_anget','user_role_apply']
+
     // roles: ['ROLE_USER']
   },
   children: [
@@ -135,7 +145,9 @@ export const asyncRoutes = [{
       component: () => import('@/views/user/instation'),
       meta: {
         title: '站内用户',
-        icon: ''
+        icon: '',
+        authName: ['user_instation']
+
       }
     },
     {
@@ -144,7 +156,10 @@ export const asyncRoutes = [{
       component: () => import('@/views/user/store'),
       meta: {
         title: 'B端商户',
-        icon: ''
+        icon: '',
+        authName: ['user_store']
+
+
       }
     },
 
@@ -154,7 +169,9 @@ export const asyncRoutes = [{
       component: () => import('@/views/user/agent'),
       meta: {
         title: '代理商',
-        icon: ''
+        icon: '',
+        authName: ['user_anget']
+
       }
     },
     {
@@ -164,7 +181,9 @@ export const asyncRoutes = [{
       component: () => import('@/views/user/agentDetail'),
       meta: {
         title: '详情',
-        icon: ''
+        icon: '',
+        authName: ['user_anget']
+        
       }
     },
     {
@@ -173,7 +192,9 @@ export const asyncRoutes = [{
       component: () => import('@/views/user/role/main'),
       meta: {
         title: '角色申请',
-        icon: ''
+        icon: '',
+        authName: ['user_role_apply']
+        
       },
       children: [
         {
@@ -182,7 +203,9 @@ export const asyncRoutes = [{
           component: () => import('@/views/user/role/index'),
           meta: {
             title: '角色申请',
-            icon: ''
+            icon: '',
+            authName: ['user_role_apply']
+
           }
         },
         {
@@ -193,7 +216,9 @@ export const asyncRoutes = [{
           meta: {
             title: '详情',
             icon: '',
-            activeMenu: '/role'
+            activeMenu: '/role',
+            authName: ['user_role_apply']
+            
           }
         }
       ]
@@ -206,7 +231,9 @@ export const asyncRoutes = [{
       meta: {
         title: '详情',
         icon: '',
-        type: 1
+        type: 1,
+        authName: ['user_instation']
+
       }
     },
     {
@@ -217,7 +244,9 @@ export const asyncRoutes = [{
       meta: {
         title: '详情',
         icon: '',
-        type: 2
+        type: 2,
+        authName: ['user_store']
+
       }
     }
 
@@ -227,10 +256,12 @@ export const asyncRoutes = [{
 {
   path: '/advertising',
   component: Layout,
-  name: 'advertising_list',
+  name: 'advertising_manage',
   meta: {
     title: '广告',
-    icon: 'iconguanggaoguanli'
+    icon: 'iconguanggaoguanli',
+    authName: ['advertising_list']
+
     // roles: ['ROLE_USER']
   },
   children: [{
@@ -239,7 +270,9 @@ export const asyncRoutes = [{
     component: () => import('@/views/advertisement/index'),
     meta: {
       title: '广告管理',
-      icon: 'ad-manage'
+      icon: 'ad-manage',
+      authName: ['advertising_list']
+
     }
   },
   {
@@ -249,7 +282,9 @@ export const asyncRoutes = [{
     component: () => import('@/views/advertisement/detail'),
     meta: {
       title: '详情',
-      icon: ''
+      icon: '',
+      authName: ['advertising_list']
+
     }
   }
   ]
@@ -260,7 +295,9 @@ export const asyncRoutes = [{
   name: 'finance_manage',
   meta: {
     title: '财务管理',
-    icon: 'finance'
+    icon: 'finance',
+    authName: ['finance_center','finance_user']
+
   },
   children: [{
     path: 'center',
@@ -268,7 +305,9 @@ export const asyncRoutes = [{
     component: () => import('@/views/finance/center'),
     meta: {
       title: '中央财务',
-      icon: ''
+      icon: '',
+      authName: ['finance_center']
+
     }
   },
   {
@@ -277,7 +316,9 @@ export const asyncRoutes = [{
     component: () => import('@/views/finance/user'),
     meta: {
       title: '用户资产',
-      icon: ''
+      icon: '',
+      authName: ['finance_user']
+
     }
   }
   ]
@@ -288,7 +329,9 @@ export const asyncRoutes = [{
   name: 'message_list',
   meta: {
     title: '留言板',
-    icon: 'chat'
+    icon: 'chat',
+    authName: ['message_list']
+
   },
   children: [
     {
@@ -297,7 +340,9 @@ export const asyncRoutes = [{
       component: () => import('@/views/message/index'),
       meta: {
         title: '留言板',
-        icon: 'chat'
+        icon: 'chat',
+        authName: ['message_list']
+
       }
     },
     {
@@ -307,7 +352,9 @@ export const asyncRoutes = [{
       component: () => import('@/views/message/chat'),
       meta: {
         title: '留言板',
-        icon: ''
+        icon: '',
+        authName: ['message_list']
+
       }
     }
   ]
@@ -315,12 +362,13 @@ export const asyncRoutes = [{
 },
 {
   path: '/records',
-  name: '/records_manage',
-  name: 'records_statistics',
+  name: 'records_center',
   component: Layout,
   meta: {
     title: '数据中心',
-    icon: 'iconshujuzhongxin'
+    icon: 'iconshujuzhongxin',
+    authName: ['records_statistics']
+
   },
   children: [{
     path: 'statistics',
@@ -328,7 +376,9 @@ export const asyncRoutes = [{
     component: () => import('@/views/analysis/index'),
     meta: {
       title: '数据统计',
-      icon: 'statistic'
+      icon: 'statistic',
+      authName: ['records_statistics']
+
     }
   }
   // {
@@ -348,7 +398,9 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '参数设置',
-    icon: 'params'
+    icon: 'params',
+    authName: ['parameter_price','parameter_agent_award','parameter_allowance','parameter_commission','parameter_time','parameter_other']
+
     // roles: ['ROLE_USER']
   },
   children: [{
@@ -357,7 +409,9 @@ export const asyncRoutes = [{
     component: () => import('@/views/params/priceRules'),
     meta: {
       title: '定价规则',
-      icon: ''
+      icon: '',
+      authName: ['parameter_price']
+
     }
   },
   {
@@ -366,7 +420,9 @@ export const asyncRoutes = [{
     component: () => import('@/views/params/agent'),
     meta: {
       title: '代理奖励',
-      icon: ''
+      icon: '',
+      authName: ['parameter_agent_award']
+
     }
   },
   {
@@ -376,7 +432,9 @@ export const asyncRoutes = [{
     meta: {
       title: '补贴奖励',
       icon: '',
-      type: 1
+      type: 1,
+      authName: ['parameter_allowance']
+      
     }
   },
   {
@@ -387,7 +445,9 @@ export const asyncRoutes = [{
     meta: {
       title: 'B端手续费',
       icon: '',
-      type: 2
+      type: 2,
+      authName: ['parameter_commission']
+
     }
   },
   {
@@ -396,7 +456,9 @@ export const asyncRoutes = [{
     component: () => import('@/views/params/time'),
     meta: {
       title: '时间设置',
-      icon: ''
+      icon: '',
+      authName: ['parameter_time']
+      
     }
   },
   {
@@ -405,7 +467,9 @@ export const asyncRoutes = [{
     component: () => import('@/views/params/other'),
     meta: {
       title: '其他参数设置',
-      icon: ''
+      icon: '',
+      authName: ['parameter_other']
+
     }
   }
   ]
@@ -417,7 +481,9 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '系统设置',
-    icon: 'setting'
+    icon: 'setting',
+    authName: ['system_roles_manage','system_permission','system_admin_user']
+
   },
   children: [
     {
@@ -426,7 +492,9 @@ export const asyncRoutes = [{
       component: () => import('@/views/system/roles'),
       meta: {
         title: '后台角色管理',
-        icon: ''
+        icon: '',
+        authName: ['system_roles_manage']
+        
       }
     },
     {
@@ -435,7 +503,9 @@ export const asyncRoutes = [{
       component: () => import('@/views/system/permission'),
       meta: {
         title: '权限设置',
-        icon: ''
+        icon: '',
+        authName: ['system_permission']
+
       }
     },
     {
@@ -444,7 +514,9 @@ export const asyncRoutes = [{
       component: () => import('@/views/system/user'),
       meta: {
         title: '后台用户列表',
-        icon: ''
+        icon: '',
+        authName: ['system_admin_user']
+
       }
     }
   ]
@@ -454,7 +526,12 @@ export const asyncRoutes = [{
 {
   path: '*',
   redirect: '/404',
-  hidden: true
+  hidden: true,
+  meta:{
+    authName: ['all']
+
+  }
+  
 }
 ]
 

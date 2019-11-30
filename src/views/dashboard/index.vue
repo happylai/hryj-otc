@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">欢迎来到OTC后台管理系统</div>
+    <div class="dashboard-text">欢迎来到小助pay齐管理系统</div>
   </div>
 </template>
 

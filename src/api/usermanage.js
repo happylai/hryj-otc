@@ -227,6 +227,24 @@ export function agent_earnings(meta, data) {
     headers: {
       ...meta
     }
+  })
+}
 
+//
+// 获取当前用户对应的交易补贴
+export function get_deal_subsidy(data) {
+  return request({
+    url: `/admin/user/user_web/deal_subsidy`,
+    method: 'get',
+    params: data
+  })
+}
+
+// 保存用户交易补贴
+export function deal_subsidy(data) {
+  return request({
+    url: `/admin/user/user_web/deal_subsidy_save`,
+    method: 'post',
+    data
   })
 }

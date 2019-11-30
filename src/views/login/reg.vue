@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">OTC后台管理 注册</h3>
+        <h3 class="title">小助pay齐管理 注册</h3>
       </div>
 
       <el-form-item prop="username">
@@ -40,7 +40,7 @@
         </span>
       </el-form-item>
 
-    <el-form-item prop="repatePassword">
+      <el-form-item prop="repatePassword">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
@@ -60,7 +60,7 @@
         </span>
       </el-form-item>
 
-    <el-form-item prop="captcha">
+      <el-form-item prop="captcha">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
@@ -93,7 +93,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import {captcha } from "@/api/user"
+import { captcha } from '@/api/user'
 export default {
   name: 'Login',
   data() {
@@ -111,19 +111,18 @@ export default {
         callback()
       }
     }
-    const validateRepatePassword = (rule, value, callback)=>{
-        if (value.length < 6) {
-					callback(new Error('密码必须大于6位数'))
-        }
-       else if(this.loginForm.password!==value){
-				callback(new Error('密码不一致'))
-        }
+    const validateRepatePassword = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error('密码必须大于6位数'))
+      } else if (this.loginForm.password !== value) {
+        callback(new Error('密码不一致'))
       }
+    }
     return {
       loginForm: {
         username: '',
         password: '',
-        repatePassword:''
+        repatePassword: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -132,7 +131,7 @@ export default {
       },
       loading: false,
       passwordType: 'password',
-      captchaUrl:'',
+      captchaUrl: '',
       redirect: undefined
     }
   },
@@ -145,7 +144,7 @@ export default {
     }
   },
   mounted: function() {
-    console.group('------mounted 挂载结束状态------');
+    console.group('------mounted 挂载结束状态------')
     // this.getCaptcha()
   },
   methods: {
@@ -159,9 +158,9 @@ export default {
         this.$refs.password.focus()
       })
     },
-    getCaptcha(){
-      captcha.then(res=>{
-        console.log("captcha",res)
+    getCaptcha() {
+      captcha.then(res => {
+        console.log('captcha', res)
       })
     },
     handleLogin() {

@@ -1,9 +1,10 @@
 <template>
   <div class="tab-container">
-    <el-card class="box-card">
+    <el-card v-loading="detailLoading" class="box-card">
       <div slot="header" class="clearfix">
         <span class="card-title">基础信息</span>
         <el-button style="float: right; " type="primary" size="small" @click="clickAduit">编辑</el-button>
+        <el-button style="float: right; margin-right:10px " type="primary" size="small" @click="clickApply">交易补贴</el-button>
       </div>
       <div class="text item">
         <el-row :gutter="10" class="card-row">
@@ -31,7 +32,7 @@
 
     <h2 class="marginT40">收付款方式</h2>
 
-    <el-table :data="peyTypeList" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="payTypeLoading" :data="peyTypeList" border fit highlight-current-row style="width: 100%">
       <el-table-column
         v-loading="loading"
         align="center"
@@ -207,7 +208,7 @@
 
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="paginationMeta.pages" :limit.sync="meta.size" @pagination="paginationChange" />
-    <el-dialog :visible.sync="dialogVisible" title="基础信息修改">
+    <el-dialog v-loading="orderLoading" :visible.sync="dialogVisible" title="基础信息修改">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户ID：</el-col>
         <el-col :span="16">{{ editData.uuid }}</el-col>
@@ -301,6 +302,49 @@
         <el-button @click="dialogVisible=false">取消</el-button>
       </span>
     </el-dialog>
+    <el-dialog :visible.sync="dialogVisibleApply" title="补贴比例">
+      <el-row :gutter="10" class="supplyRow">
+        <el-col :offset="4" :span="5">支付宝</el-col>
+        <el-col :span="5">微信</el-col>
+        <el-col :span="5">银行卡</el-col>
+        <el-col :span="5">云闪付</el-col>
+      </el-row>
+      <el-row v-if="showBuy" :gutter="10" class="supplyRow">
+        <el-col :span="4" class="textAlingR supplyType">买</el-col>
+        <el-col :span="5">
+          <el-input v-model="subsidyBuy[0].rebate" placeholder="支付宝补贴" />
+        </el-col>
+        <el-col :span="5">
+          <el-input v-model="subsidyBuy[1].rebate" placeholder="微信补贴" />
+        </el-col>
+        <el-col :span="5">
+          <el-input v-model="subsidyBuy[2].rebate" placeholder="银行卡补贴" />
+        </el-col>
+        <el-col :span="5">
+          <el-input v-model="subsidyBuy[3].rebate" placeholder="云闪付补贴" />
+        </el-col>
+      </el-row>
+      <el-row v-if="showSell" :gutter="10" class="supplyRow">
+        <el-col :span="4" class="textAlingR supplyType">
+          卖</el-col>
+        <el-col :span="5">
+          <el-input v-model="subsidySell[0].rebate" placeholder="支付宝补贴" />
+        </el-col>
+        <el-col :span="5">
+          <el-input v-model="subsidySell[1].rebate" placeholder="微信补贴" />
+        </el-col>
+        <el-col :span="5">
+          <el-input v-model="subsidySell[2].rebate" placeholder="银行卡补贴" />
+        </el-col>
+        <el-col :span="5">
+          <el-input v-model="subsidySell[3].rebate" placeholder="云闪付补贴" />
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button v-loading="supplyLoading" type="primary" @click=" handleNewApply() ">保存</el-button>
+        <el-button @click="dialogVisibleApply=false">取消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -312,7 +356,7 @@ import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/util
 
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect, OrderStatus, CounterParty, PayType } from '@/utils/enumeration'
-import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit } from '@/api/usermanage'
+import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, get_deal_subsidy, deal_subsidy } from '@/api/usermanage'
 import { order_details } from '@/api/order'
 
 export default {
@@ -356,6 +400,7 @@ export default {
       },
       id: undefined,
       dialogVisible: false,
+      dialogVisibleApply: false,
       modals: {},
       editData: {},
       newData: {
@@ -363,7 +408,25 @@ export default {
         payTypes: [],
         rebate: undefined,
         groupId: undefined
-      }
+      },
+      subsidyBuy: {
+        0: { rebate: undefined },
+        1: { rebate: undefined },
+        2: { rebate: undefined },
+        3: { rebate: undefined }
+      },
+      subsidySell: {
+        0: { rebate: undefined },
+        1: { rebate: undefined },
+        2: { rebate: undefined },
+        3: { rebate: undefined }
+      },
+      showBuy: false,
+      showSell: false,
+      supplyLoading: false,
+      detailLoading: false,
+      payTypeLoading: false,
+      orderLoading: false
 
     }
   },
@@ -383,22 +446,32 @@ export default {
     this.type = this.$route.meta.type
     this.detail(this.id)
     this.getList(null, { userId: this.id })
+    this.get_subsidy()
   },
   methods: {
 
     detail(id) {
       const requestType = ['', user_web, user_b]
-      this.listLoading = true
+      this.detailLoading = true
       requestType[this.type]({ userId: id || this.id }).then(res => {
+        this.detailLoading = false
+
         if (res.code === 0) {
           this.modals = res.data
         }
         console.log('res')
+      }).catch(() => {
+        this.detailLoading = false
       })
+      this.payTypeLoading = true
       pay_types({ userId: id || this.id }).then(res => {
+        this.payTypeLoading = false
+
         if (res.code === 0) {
           this.peyTypeList = res.data.records
         }
+      }).catch(() => {
+        this.payTypeLoading = false
       })
     },
 
@@ -427,13 +500,18 @@ export default {
       this.getList(meta, data)
     },
     getList(meta, data) {
+      this.orderLoading = true
       order_details(meta || this.meta, data || { userId: this.id }).then(res => {
+        this.orderLoading = false
+
         if (res.code === 0) {
           this.list = res.data.records
           this.meta.current = res.data.current
           this.paginationMeta.total = res.data.total
           this.paginationMeta.pages = res.data.pages
         }
+      }).catch(() => {
+        this.orderLoading = false
       })
     },
     clickAduit() {
@@ -459,6 +537,9 @@ export default {
 
       this.user_save(data)
     },
+    clickApply() {
+      this.dialogVisibleApply = true
+    },
     getFrozenPayTypes(oldData, newData) {
       console.log(oldData, newData)
       const f = oldData.filter(function(v) { return !(newData.indexOf(v) > -1) })
@@ -479,6 +560,76 @@ export default {
         }
       }).catch(err => {
         this.$message.error(err || '操作失败')
+      })
+    },
+    get_subsidy() {
+      get_deal_subsidy({ userId: this.id }).then(res => {
+        if (res.code === 0) {
+          this.subsidyList = res.data
+          this.showSell = res.data.showSell
+          this.showBuy = res.data.showBuy
+          const subsidyes = res.data.subsidies
+          var subsidySell = this.subsidySell
+          var subsidyBuy = this.subsidyBuy
+          subsidyes.map(item => {
+            if (item.partyEnum === 1) {
+              subsidySell[item.payType] = item
+            } else {
+              subsidyBuy[item.payType] = item
+            }
+          })
+          this.subsidySell = subsidySell
+          this.subsidyBuy = subsidyBuy
+        }
+      })
+    },
+    handleNewApply() {
+      const sell = this.subsidySell
+      const subsidies = []
+      for (const i in sell) {
+        if (sell[i]) {
+          const data = {
+            'partyEnum': '1',
+            'payType': i,
+            'id': sell[i].id || undefined,
+            'rebate': sell[i].rebate
+          }
+          subsidies.push(data)
+          // this.addApply(data)
+        }
+      }
+      if (this.showBuy) {
+        const buy = this.subsidyBuy
+        for (const i in buy) {
+          if (buy[i].rebate) {
+            const data = {
+              'partyEnum': '0',
+              'payType': i,
+              'id': buy[i].id || undefined,
+              'rebate': buy[i].rebate
+            }
+            subsidies.push(data)
+          }
+        }
+      }
+      const postData = {
+        subsidies: subsidies,
+        userId: this.id
+      }
+      this.addApply(postData)
+    },
+    addApply(data) {
+      this.supplyLoading = true
+      deal_subsidy(data).then(res => {
+        this.supplyLoading = false
+
+        if (res.code === 0) {
+          this.$message({
+            type: 'success',
+            message: '操作成功'
+          })
+          this.get_subsidy()
+        }
       })
     }
 
@@ -532,5 +683,14 @@ export default {
 .userRow {
   min-height: 20px;
   margin: 10px 0;
+}
+.supplyRow{
+  margin:10px 0;
+  min-height: 20px;
+}
+.supplyType{
+  line-height: 40px;
+  font-size: 16px;
+  font-weight: bold;
 }
 </style>

@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'OTC后台管理',
+  title: '小助pay齐管理',
 
   /**
    * @type {boolean} true | false

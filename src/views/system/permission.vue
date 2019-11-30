@@ -5,12 +5,12 @@
       <el-tab-pane v-for="item in tabMapOptions" :key="item.id" :label="item.zhName" :name="item.id.toString()" />
 
       <el-tree
-        :loading='loading'
         ref="roleTree"
+        v-loading="loading"
         :data="list"
         show-checkbox
         node-key="id"
-        :default-expand-all='true'
+        :default-expand-all="true"
         :default-checked-keys="defaultPremission"
         :props="defaultProps"
         @check-change="getCheckedKeys"
@@ -46,7 +46,7 @@ export default {
       },
       defaultPremission: [],
       checkPremission: [],
-      loading:false
+      loading: false
 
     }
   },
@@ -71,16 +71,15 @@ export default {
     getList() {
       this.loading = true
       role_list().then(res => {
-        this.loading=false
+        this.loading = false
         if (res.code === 0) {
           this.tabMapOptions = res.data
           this.activeId = res.data[0].id.toString()
 
           this.getCurrentPerList(this.activeId)
         }
-      }).catch(err=>{
-        this.loading=false
-        
+      }).catch(err => {
+        this.loading = false
       })
     },
     getAllList(id) {

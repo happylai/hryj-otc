@@ -4,7 +4,7 @@
       <el-input v-model="roleAdd.zhName" placeholder="请输入后台角色中文名" style="width: 200px;" class="filter-item" @keyup.enter.native="handleAdd" />
       <el-input v-model="roleAdd.name" placeholder="请输入后台角色英文名" style="width: 200px;" class="filter-item" @keyup.enter.native="handleAdd" />
       <el-input v-model="roleAdd.description" placeholder="角色描述" style="width: 200px;" class="filter-item" @keyup.enter.native="handleAdd" />
-      <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-plus" @click="handleAdd">
+      <el-button v-loading="addLoading" v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-plus" @click="handleAdd">
         确定添加
       </el-button>
 
@@ -33,7 +33,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="dialogVisible" title="后台角色编辑" width="40%">
+    <el-dialog v-loading="listLoading" :visible.sync="dialogVisible" title="后台角色编辑" width="40%">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">中文角色名：</el-col>
         <el-col :span="16">
@@ -54,7 +54,7 @@
       </el-row>
 
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAudit(true)">保存</el-button>
+        <el-button v-loading="addLoading" type="primary" @click="handleAudit(true)">保存</el-button>
         <el-button type="info" @click="handleAudit(false)">取消</el-button>
       </span>
     </el-dialog>
@@ -83,6 +83,8 @@ export default {
       },
       dialogVisible: false,
       loading: false,
+      addLoading: false,
+      listLoading: false,
       Edit: {
         name: undefined,
         zhName: undefined,
@@ -107,6 +109,7 @@ export default {
     getList() {
       this.listLoading = true
       role_list().then(res => {
+        this.listLoading = false
         if (res.code === 0) {
           this.list = res.data
         }
@@ -136,7 +139,11 @@ export default {
       }
     },
     handleSave(data) {
+      this.addLoading = true
+
       role_save(data).then(res => {
+        this.addLoading = false
+
         if (res.code === 0) {
           this.$message({
             message: '操作成功',
@@ -155,6 +162,8 @@ export default {
           this.dialogVisible = false
           this.getList()
         }
+      }).catch(() => {
+        this.addLoading = false
       })
     },
     clickDelete(id) {

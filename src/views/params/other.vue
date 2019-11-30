@@ -12,7 +12,7 @@
         </el-select>
         <el-input v-model="addData.addNewData" :placeholder="ParamsTypePlaceHolder[ParamsType]" style="width: 200px;" class="filter-item" />
 
-        <el-input v-show="ParamsType==='2'" v-model="addData.minVolume" placeholder="达标交易了(如：300000)" style="width: 200px;" class="filter-item" />
+        <el-input v-show="ParamsType==='2'" v-model="addData.minVolume" placeholder="达标交易量(如：300000)" style="width: 200px;" class="filter-item" />
         <!-- <el-link v-show="ParamsType==='2'" type="danger" :underline="false">*交易量达标系统自动退还</el-link> -->
 
         <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" @click="handleAdd">
@@ -186,6 +186,14 @@
           <el-link type="danger" :underline="false">当前{{ ParamsTypePlaceHolder[ParamsType] }}参数： <span>{{ editData.money }}</span>
           <!-- <span v-if="ParamsType==2">{{ editData.activeGold }}</span>
             <span v-if="ParamsType==3">{{ editData.num }}</span></el-link> -->
+          </el-link></el-col>
+      </el-row>
+      <el-row v-if="ParamsType==='2'" :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">达标交易量：</el-col>
+        <el-col :span="16">
+          <el-input v-model="editData.newminVolume" style="width: 150px;height:30px" :placeholder="`请输入达标交易量`" />
+          <el-link type="danger" :underline="false">当前达标交易量参数： <span>{{ editData.minVolume }}</span>
+
           </el-link></el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -365,6 +373,7 @@ export default {
         id: data.id,
         roleId: data.roleId,
         money: data.newData * 1,
+        minVolume: this.ParamsType === '2' ? data.newminVolume : undefined,
         type: data.type
       }
       this.save(postData)

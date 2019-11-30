@@ -16,7 +16,7 @@
           </el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8">
             <div class="card-item borderR">
-              <div class="cart-i-t">保证金（已退保：34517690.00）</div>
+              <div class="cart-i-t">保证金</div>
               <div class="cart-i-v">{{ modals.deposit||'-' }}</div>
             </div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8">
@@ -83,7 +83,7 @@
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
-        @change='dateChange'
+        @change="dateChange"
       />
 
     </div>
@@ -268,7 +268,7 @@ export default {
         deposit: 43,
         activeGold: 423
       },
-      dateBucket:7,
+      dateBucket: 7,
       editData: {}
 
     }
@@ -317,9 +317,9 @@ export default {
       meta.current = 1
       this.getList(meta, data)
     },
-    getList(meta,data) {
-      finance_central_flow(meta,data).then(res=>{
-        if(res.code===0){
+    getList(meta, data) {
+      finance_central_flow(meta, data).then(res => {
+        if (res.code === 0) {
           this.list = res.data.records
           this.meta.current = res.data.current
           this.paginationMeta.total = res.data.total
@@ -328,16 +328,16 @@ export default {
       })
     },
     dateBucketChange(e) {
-      console.log("e",e)
-      const start=this.$moment().subtract(e, 'days')
-      const end=this.$moment(new Date())
-      
-      this.fliterQuery.date=[start,end];
+      console.log('e', e)
+      const start = this.$moment().subtract(e, 'days')
+      const end = this.$moment(new Date())
+
+      this.fliterQuery.date = [start, end]
       this.handleFilter()
     },
     dateChange(e) {
-      console.log('datachange',e)
-      this.dateBucket=undefined;
+      console.log('datachange', e)
+      this.dateBucket = undefined
       this.handleFilter()
     },
     clickAduit() {

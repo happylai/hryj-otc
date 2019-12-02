@@ -12,8 +12,9 @@
         <el-option v-for="item in AccountStatus" :key="item.id" :label="item.label" :value="item.name" />
       </el-select>
 
-      <el-date-picker class="filter-item" 
+      <el-date-picker
         v-model="fliterQuery.date"
+        class="filter-item"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
@@ -438,7 +439,8 @@ export default {
         console.log('valid', valid)
         if (valid) {
           this.loading = true
-          const data = this.regForm
+          const data = { ...this.regForm }
+          data.rebate = data.rebate / 100
           console.log('reg from data', data)
 
           agent_save(data).then(res => {

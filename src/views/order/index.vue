@@ -16,14 +16,14 @@
         <el-select v-model="fliterQuery.status" placeholder="订单状态" clearable style="width: 140px" class="filter-item">
           <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
-        <el-date-picker
+        <el-date-picker class="filter-item" 
           v-model="fliterQuery.creatDate"
           type="daterange"
           range-separator="至"
           start-placeholder="订单完创建开始日期"
           end-placeholder="结束日期"
         />
-        <el-date-picker
+        <el-date-picker class="filter-item" 
           v-model="fliterQuery.complateDate"
           type="daterange"
           range-separator="至"

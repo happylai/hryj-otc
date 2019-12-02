@@ -8,7 +8,7 @@
       <div class="filter-container" style="margin-bottom: 10px;">
         <el-input v-model="fliterQuery.query" placeholder="用户ID/姓名" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
-        <el-date-picker
+        <el-date-picker class="filter-item" 
           v-model="fliterQuery.date"
           type="daterange"
           range-separator="至"

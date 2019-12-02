@@ -17,7 +17,7 @@
       <el-select v-model="fliterQuery.status" placeholder="状态" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in AdvStatus" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
-      <el-date-picker
+      <el-date-picker class="filter-item" 
         v-model="fliterQuery.date"
         type="daterange"
         range-separator="至"

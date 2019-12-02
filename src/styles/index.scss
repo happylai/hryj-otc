@@ -145,3 +145,13 @@ div:focus {
   // margin:0 auto;
   margin-left: 1;
 }
+
+.filter-item{
+  margin:2px 0;
+}
+
+@media (max-width: 375px) {
+  .app-main .tab-container {
+      margin: 15px !important;
+  }
+}

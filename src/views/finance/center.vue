@@ -78,12 +78,13 @@
         <el-radio-button :label="30">最近30天</el-radio-button>
       </el-radio-group>
       <el-date-picker
-        v-model="fliterQuery.date"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        @change="dateChange"
+v-model="fliterQuery.date" 
+        class="filter-item"
+                      type="daterange"
+                      range-separator="至"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期"
+                      @change="dateChange"
       />
 
     </div>

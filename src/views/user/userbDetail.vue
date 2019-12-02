@@ -118,7 +118,7 @@
         <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.name" />
       </el-select>
 
-      <el-date-picker
+      <el-date-picker class="filter-item" 
         v-model="fliterQuery.date"
         type="daterange"
         auto-complete="off"

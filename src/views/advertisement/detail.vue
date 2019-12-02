@@ -39,11 +39,12 @@
       </el-select>
 
       <el-date-picker
-        v-model="fliterQuery.date"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
+v-model="fliterQuery.date" 
+        class="filter-item"
+                      type="daterange"
+                      range-separator="至"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期"
       />
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
@@ -101,7 +102,7 @@
 
       <el-table-column align="center" label="订单状态" minwidth="300">
         <template slot-scope="scope">
-          <el-link  :underline="false" :type="scope.row.status|orderStatusTagName">{{ scope.row.status|orderStatus }}</el-link>
+          <el-link :underline="false" :type="scope.row.status|orderStatusTagName">{{ scope.row.status|orderStatus }}</el-link>
         </template>
       </el-table-column>
 

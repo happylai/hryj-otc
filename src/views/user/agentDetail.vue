@@ -52,7 +52,7 @@
     <div class="filter-container" style="margin-bottom: 10px;">
       <el-input v-model="fliterQuery.query" placeholder="UUID/姓名" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
-      <el-date-picker
+      <el-date-picker class="filter-item" 
         v-model="fliterQuery.date"
         type="daterange"
         name="datepicker"
@@ -104,7 +104,7 @@
     <div class="filter-container" style="margin-bottom: 10px;">
       <el-input v-model="fliterQuery2.query" placeholder="UUID/姓名" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
-      <el-date-picker
+      <el-date-picker class="filter-item" 
         v-model="fliterQuery2.date"
         type="daterange"
         name="datepicker"

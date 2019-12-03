@@ -74,7 +74,7 @@ export const asyncRoutes = [{
   meta: {
     title: '订单管理',
     icon: 'orderList',
-    authName: ['order_list','order_withdraw','order_appeal',]
+    authName: ['order_list', 'order_withdraw', 'order_appeal']
   },
   children: [{
     path: 'index',
@@ -119,7 +119,7 @@ export const asyncRoutes = [{
     hidden: true,
     meta: {
       title: '申述详情',
-      activeTabName: 'order_appeal',
+      activeMenu: '/order/appeal',
       icon: '',
       authName: ['order_appeal']
 
@@ -135,7 +135,7 @@ export const asyncRoutes = [{
   meta: {
     title: '用户管理',
     icon: 'user',
-    authName: ['user_instation','user_store','user_anget','user_role_apply']
+    authName: ['user_instation', 'user_store', 'user_anget', 'user_role_apply']
 
     // roles: ['ROLE_USER']
   },
@@ -160,7 +160,6 @@ export const asyncRoutes = [{
         icon: '',
         authName: ['user_store']
 
-
       }
     },
 
@@ -183,10 +182,10 @@ export const asyncRoutes = [{
       meta: {
         title: '详情',
         icon: '',
-        activeTabName: 'user_anget',
+        activeMenu: '/user/user_anget',
 
         authName: ['user_anget']
-        
+
       }
     },
     {
@@ -197,7 +196,7 @@ export const asyncRoutes = [{
         title: '角色申请',
         icon: '',
         authName: ['user_role_apply']
-        
+
       },
       children: [
         {
@@ -219,9 +218,9 @@ export const asyncRoutes = [{
           meta: {
             title: '详情',
             icon: '',
-            activeTabName: 'user_role_apply',
+            activeMenu: '/user/role',
             authName: ['user_role_apply']
-            
+
           }
         }
       ]
@@ -235,7 +234,7 @@ export const asyncRoutes = [{
         title: '详情',
         icon: '',
         type: 1,
-        activeTabName: 'user_instation',
+        activeMenu: '/user/instation',
         authName: ['user_instation']
 
       }
@@ -249,7 +248,7 @@ export const asyncRoutes = [{
         title: '详情',
         icon: '',
         type: 2,
-        activeTabName: 'user_store',
+        activeMenu: '/user/store',
         authName: ['user_store']
 
       }
@@ -288,7 +287,7 @@ export const asyncRoutes = [{
     meta: {
       title: '详情',
       icon: '',
-      activeTabName: 'advertising_list',
+      activeMenu: '/advertising',
       authName: ['advertising_list']
 
     }
@@ -302,7 +301,7 @@ export const asyncRoutes = [{
   meta: {
     title: '财务管理',
     icon: 'finance',
-    authName: ['finance_center','finance_user']
+    authName: ['finance_center', 'finance_user']
 
   },
   children: [{
@@ -359,7 +358,7 @@ export const asyncRoutes = [{
       meta: {
         title: '留言板',
         icon: '',
-        activeTabName: 'message_list',
+        activeMenu: '/message',
         authName: ['message_list']
 
       }
@@ -406,7 +405,7 @@ export const asyncRoutes = [{
   meta: {
     title: '参数设置',
     icon: 'params',
-    authName: ['parameter_price','parameter_agent_award','parameter_allowance','parameter_commission','parameter_time','parameter_other']
+    authName: ['parameter_price', 'parameter_agent_award', 'parameter_allowance', 'parameter_commission', 'parameter_time', 'parameter_other']
 
     // roles: ['ROLE_USER']
   },
@@ -441,7 +440,7 @@ export const asyncRoutes = [{
       icon: '',
       type: 1,
       authName: ['parameter_allowance']
-      
+
     }
   },
   {
@@ -465,7 +464,7 @@ export const asyncRoutes = [{
       title: '时间设置',
       icon: '',
       authName: ['parameter_time']
-      
+
     }
   },
   {
@@ -489,7 +488,7 @@ export const asyncRoutes = [{
   meta: {
     title: '系统设置',
     icon: 'setting',
-    authName: ['system_roles_manage','system_permission','system_admin_user']
+    authName: ['system_roles_manage', 'system_permission', 'system_admin_user']
 
   },
   children: [
@@ -501,7 +500,7 @@ export const asyncRoutes = [{
         title: '后台角色管理',
         icon: '',
         authName: ['system_roles_manage']
-        
+
       }
     },
     {
@@ -534,11 +533,11 @@ export const asyncRoutes = [{
   path: '*',
   redirect: '/404',
   hidden: true,
-  meta:{
+  meta: {
     authName: ['all']
 
   }
-  
+
 }
 ]
 

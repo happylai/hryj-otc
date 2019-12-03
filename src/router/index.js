@@ -182,7 +182,7 @@ export const asyncRoutes = [{
       meta: {
         title: '详情',
         icon: '',
-        activeMenu: '/user/user_anget',
+        activeMenu: '/user/agent',
 
         authName: ['user_anget']
 

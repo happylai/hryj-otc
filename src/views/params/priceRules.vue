@@ -14,7 +14,7 @@
               <el-select v-model="price.dealType" placeholder="请选择交易角色" clearable style="width: 140px" class="filter-item" @change="filterChange">
                 <el-option v-for="item in DealType" :key="item.label+'tokenType'" :label="item.label" :value="item.id" />
               </el-select>
-              <el-input v-model="price.exchangeRate" clearable :placeholder="modals?'当期汇率'+modals.exchangeRate:'设置汇率'" style="width: 300px;" class="filter-item" />
+              <el-input v-model="price.exchangeRate" clearable placeholder="设置汇率" style="width: 300px;" class="filter-item" />
               <el-button v-waves :loading="loading" class="filter-item" style="width: 100px;" type="primary" @click="handleSave">
                 保存
               </el-button>
@@ -190,7 +190,8 @@ export default {
       editDataOld: {
         maxPrice: undefined,
         minPrice: undefined
-      }
+      },
+      modals: {}
     }
   },
 
@@ -219,6 +220,7 @@ export default {
           console.log('res', res)
           if (res.code === 0) {
             this.modals = res.data
+            this.price.exchangeRate = res.data.exchangeRate
             this.priceType1Active = res.data.active
             this.priceType2Active = !res.data.active
             this.getList()
@@ -335,7 +337,8 @@ export default {
     filterChange() {
       const p = this.price
       console.log('filter change')
-      if (p.token !== undefined && p.fiat !== undefined && p.dealType !== undefined) {
+      this.price.exchangeRate = undefined
+      if (p.token !== undefined && p.fiat !== (undefined || '') && p.dealType !== (undefined || '')) {
         console.log('filter change')
 
         this.getPriceDetail()

@@ -1,10 +1,11 @@
 <template>
-  <div class="container-tip"><i class="el-icon-warning color-primary" s /> {{ miainTip }}
+  <span />
+  <!-- <div class="container-tip"><i class="el-icon-warning color-primary" s /> {{ miainTip }}
     <div>
       <el-link type="info" :underline="false">{{ secondTip }}</el-link>
       <el-link v-if="showContact" type="primary">Towards <i class="el-icon-chat-dot-round" /></el-link>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script>

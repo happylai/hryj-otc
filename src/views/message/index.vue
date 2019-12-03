@@ -1,15 +1,14 @@
 <template>
   <div class="tab-container">
-    <!-- <el-tag>mounted times ：{{ createdTimes }}</el-tag>
-    <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;" title="Tab with keep-alive" type="success" /> -->
-    <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
+  <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
       <tip />
       <div class="filter-container" style="margin-bottom: 10px;">
         <el-input v-model="fliterQuery.query" placeholder="用户ID/姓名" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
-        <el-date-picker class="filter-item" 
+        <el-date-picker
           v-model="fliterQuery.date"
+          class="filter-item"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
@@ -31,7 +30,7 @@
         <el-table-column align="center" class-name="status-col" label="内容" min-width="140">
           <template slot-scope="scope">
             <span v-if="scope.row.type===0">{{ scope.row.message }}</span>
-            <img v-else v-lazy="scope.row.message" class="chatListImage">
+            <img v-else v-lazy="scope.row.message" :preview="'chat'+scope.row.id" class="chatListImage">
           </template>
         </el-table-column>
         <el-table-column align="center" class-name="status-col" label="时间" min-width="120">

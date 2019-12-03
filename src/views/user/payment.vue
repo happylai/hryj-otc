@@ -1,7 +1,5 @@
 <template>
   <div class="tab-container">
-    <!-- <el-tag>mounted times ：{{ createdTimes }}</el-tag>
-    <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;" title="Tab with keep-alive" type="success" />-->
 
     <el-table :data="allList" border fit highlight-current-row style="width: 100%">
       <el-table-column
@@ -36,7 +34,7 @@
 
       <el-table-column align="center" label="状态" width="95">
         <template slot-scope="scope">
-          <el-tag :type="tagType[scope.row.status]">{{ scope.row.status|payTypeStatus }}</el-tag>
+          <span>{{ scope.row.status|payTypeStatus }}</span>
         </template>
       </el-table-column>
 

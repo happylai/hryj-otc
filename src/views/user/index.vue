@@ -1,7 +1,6 @@
 <template>
   <div class="tab-container">
-    <!-- <el-tag>mounted times ：{{ createdTimes }}</el-tag>
-    <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;" title="Tab with keep-alive" type="success" /> -->
+
     <el-tabs v-model="activeName" style="margin-top:15px;">
       <div class="filter-container" style="margin-bottom: 10px;">
         <el-input v-model="listQuery.keywords" placeholder="订单ID/广告ID/买家/卖家/备注" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />

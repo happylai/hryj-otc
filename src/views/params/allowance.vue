@@ -1,18 +1,16 @@
 <template>
   <div class="tab-container">
-    <!-- <el-tag>mounted times ：{{ createdTimes }}</el-tag>
-    <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;" title="Tab with keep-alive" type="success" /> -->
-    <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
+  <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
       <el-tab-pane v-for="item in tabMapOptions" v-if="activeType<4" :key="item.key" :label="item.label" :name="item.key" />
       <el-tab-pane v-for="item in tabMapOptions1" v-if="activeType>=4" :key="item.key" :label="item.label" :name="item.key" />
     </el-tabs>
     <!-- <tab-pane :loading="loading" :data="list" @edit="handlEdit" /> -->
     <div v-if="activeType!=='3'" class="filter-container" style="margin-bottom: 10px;">
       <el-select v-if="activeType!=='5'&&activeType!=='3'&&activeType!=='4'" v-model="addData.roleId" placeholder="选择角色" clearable style="width: 160px" class="filter-item">
-        <el-option v-for="item in userRolesConst" :disabled="!addUserType[activeType].includes(item.id)" :key="item.id" :label="item.zhName" :value="item.id" />
+        <el-option v-for="item in userRolesConst" :key="item.id" :disabled="!addUserType[activeType].includes(item.id)" :label="item.zhName" :value="item.id" />
       </el-select>
       <el-select v-if="activeType!=='3'" v-model="addData.payType" placeholder="支付方式" clearable style="width: 160px" class="filter-item">
-        <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
+        <el-option v-for="item in PayTypeUstd" :key="item.id" :disabled="item.id===4&&activeType!=='5'" :label="item.label" :value="item.id" />
       </el-select>
       <el-select v-if="activeType==='0'||activeType==='1'" v-model="addData.counterParty" placeholder="交易方" clearable style="width: 160px" class="filter-item">
         <el-option v-for="item in CounterParty" :key="item.id" :label="item.label" :value="item.id" />
@@ -49,7 +47,7 @@
 
       <el-table-column v-if="activeType!=='3'" align="center" label="支付方式" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.payType|paymentStatus }}</span>
+          <span>{{ scope.row.payType|payTypeUstdName }}</span>
         </template>
       </el-table-column>
 
@@ -99,7 +97,7 @@
     <el-dialog :visible.sync="dialogVisible" :title="tabMapOptionsName[activeType].label" style="min-width: 800px;">
       <el-row v-if="activeType!=='3'&&activeType!=='4'&&activeType!=='5'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">当前角色：</el-col>
-        <el-col :span="16">{{ userRolesConstName(editData.roleId,userRolesConst)  }}</el-col>
+        <el-col :span="16">{{ userRolesConstName(editData.roleId,userRolesConst) }}</el-col>
       </el-row>
       <el-row v-if="activeType=='0'||activeType=='1'||activeType=='2'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">支付方式：</el-col>
@@ -164,7 +162,7 @@ import tabPane from './components/TabPane'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
-import { UserType, TimeParamsType, PayType, CounterParty } from '@/utils/enumeration'
+import { UserType, TimeParamsType, PayType, PayTypeUstd, CounterParty } from '@/utils/enumeration'
 import { subsidies, subsidy_save } from '@/api/params'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 export default {
@@ -173,6 +171,7 @@ export default {
   directives: { waves },
   data() {
     return {
+      PayTypeUstd,
       userRolesConstName,
       UserType,
       PayType,
@@ -201,13 +200,10 @@ export default {
         { label: '出金手续费', key: '5' }
       ],
       placeHolder: ['单笔补贴最高限额', '每天补贴最高限额', '总补贴最高限额', '补贴最高限额', '最高提成限额', '最高提成限额'],
-      addUserType:{
-        0:[5,6,7,8],
-        1:[5,6,7,8],
-        2:[5,6,7,8],
-
-
-
+      addUserType: {
+        0: [5, 6, 7, 8],
+        1: [5, 6, 7, 8],
+        2: [5, 6, 7, 8]
 
       },
       activeType: '0',
@@ -309,7 +305,7 @@ export default {
     handleAdd() {
       const data = this.addData
       console.log('data', data)
-      if (!data.roleId && (this.activeType !== '5' || this.activeType !== '3'|| this.activeType !== '4')) {
+      if (!data.roleId && (this.activeType !== '5' && this.activeType !== '3' && this.activeType !== '4')) {
         this.$message.error('请选择角色')
       } else if (((data.payType === '' || data.payType === undefined) && this.activeType !== '3')) {
         this.$message.error('请选择支付方式')
@@ -346,7 +342,7 @@ export default {
     },
     handleSave() {
       const data = this.editData
-      console.log("handleSave",data)
+      console.log('handleSave', data)
       const postData = {
         id: data.id,
         roleId: data.roleId,

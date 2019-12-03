@@ -83,7 +83,7 @@
 
       <el-table-column align="center" label="认证状态" width="95">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.kycLevel?'success':'danger'">{{ scope.row.kycLevel?'已认证':'未认证' }}</el-tag>
+          <span>{{ scope.row.kycLevel?'已认证':'未认证' }}</span>
         </template>
       </el-table-column>
 
@@ -109,7 +109,7 @@
 
       <el-table-column align="center" label="账号状态" width="95">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.active?'success':'danger'">{{ scope.row.active?'正常':'冻结' }}</el-tag>
+          <span>{{ scope.row.active?'正常':'冻结' }}</span>
         </template>
       </el-table-column>
 

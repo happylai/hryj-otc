@@ -11,7 +11,7 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>真实姓名：{{ modals.realName }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>代理奖励：{{ modals.rebate }}%</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>推广人数：{{ modals.childNum }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>当前状态：<el-tag :type="modals.active?'success':'danger'">{{ modals.active?'正常':'冻结' }}</el-tag></div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>当前状态：<span>{{ modals.active?'正常':'冻结' }}</span></div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>手机号：{{ modals.mobileContact }}</div></el-col>

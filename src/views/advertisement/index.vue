@@ -17,8 +17,9 @@
       <el-select v-model="fliterQuery.status" placeholder="状态" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in AdvStatus" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
-      <el-date-picker class="filter-item" 
+      <el-date-picker
         v-model="fliterQuery.date"
+        class="filter-item"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
@@ -75,7 +76,7 @@
 
       <el-table-column align="center" label="类型" width="90">
         <template slot-scope="scope">
-          <el-link :type="scope.row.type? 'danger':'success'" :underline="false">{{ scope.row.type|advType }}</el-link>
+          <span>{{ scope.row.type|advType }}</span>
         </template>
       </el-table-column>
 
@@ -93,7 +94,7 @@
 
       <el-table-column align="center" label="状态" width="95">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status|advStatusTagName">{{ scope.row.status|advStatus }}</el-tag>
+          <span>{{ scope.row.status|advStatus }}</span>
         </template>
       </el-table-column>
 

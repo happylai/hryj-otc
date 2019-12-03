@@ -12,7 +12,7 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>用户名：{{ modals.nickName }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>当前角色：{{ userRolesConstName(modals.roleId,userRolesConst) }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>
-            当前状态： <el-tag :type="modals.active?'success':'danger'">{{ modals.active?'正常':'冻结' }}</el-tag></div></el-col>
+            当前状态： <span>{{ modals.active?'正常':'冻结' }}</span></div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>认证方式：{{ modals.authType|authTypeName }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
@@ -133,13 +133,13 @@
       </el-select>
 
       <el-date-picker
-v-model="fliterQuery.date" 
+        v-model="fliterQuery.date"
         class="filter-item"
-                      type="daterange"
-                      name="datepicker"
-                      range-separator="至"
-                      start-placeholder="开始日期"
-                      end-placeholder="结束日期"
+        type="daterange"
+        name="datepicker"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
       />
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
@@ -224,7 +224,7 @@ v-model="fliterQuery.date"
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">认证状态：：</el-col>
-        <el-col :span="16"><el-tag :type="editData.kycLevel?'success':'danger'">{{ editData.kycLevel?'已认证':'未认证' }}</el-tag></el-col>
+        <el-col :span="16"><span>{{ editData.kycLevel?'已认证':'未认证' }}</span></el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">手机号：</el-col>
@@ -236,10 +236,10 @@ v-model="fliterQuery.date"
         <el-col :span="8" class="textAlingR">身份证号：</el-col>
         <el-col :span="8">{{ editData.idNumber }}</el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageFront" v-lazy="editData.identityImageFront" class="idImage" alt="身份证正面">
+          <img v-if="editData.identityImageFront" v-lazy="editData.identityImageFront" :preview="'idcard'" class="idImage" @click="dialogVisible=false" alt="身份证正面">
         </el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageBack" v-lazy="editData.identityImageBack" class="idImage" alt="身份证反面">
+          <img v-if="editData.identityImageBack" v-lazy="editData.identityImageBack" :preview="'idcard'" class="idImage" @click="dialogVisible=false" alt="身份证反面">
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">

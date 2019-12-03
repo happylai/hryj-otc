@@ -11,8 +11,9 @@
             <div>
               <div class="massage-time">{{ item.createTime|timesArrayFormat }}</div>
               <div class="chat-text">
-                <span v-if="item.type===0">{{ item.message }}</span>
-                <img v-else v-lazy="item.message" class="chatImage">
+                <img v-if="item.type===1" v-lazy="item.message" :preview="'chat'" class="chatImage">
+
+                <span v-else>{{ item.message }}</span>
               </div>
 
             </div>
@@ -98,7 +99,8 @@ export default {
       list: [
 
       ],
-      chat: undefined
+      chat: undefined,
+      id: undefined
     }
   },
   computed: {

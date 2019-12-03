@@ -3,6 +3,7 @@ import has from 'has-value'
 export { parseTime, formatTime } from '@/utils'
 import {
   PayType,
+  PayTypeUstd,
   OrderStatus,
   PayTypeStatus,
   Auths,
@@ -151,6 +152,25 @@ export function paymentStatus(num = 0) {
  */
 export function payTypeName(num) {
   return num === null ? '-' : PayType[num].label
+}
+
+/**
+ * OrderStatusTagName
+ * @param {number} num
+ */
+export function payTypeUstdName(id) {
+  if (id === 'null') {
+    return '-'
+  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+    const data = PayTypeUstd.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      return data[0].label
+    } else {
+      return '-'
+    }
+  } else {
+    return '-'
+  }
 }
 
 /**

@@ -55,7 +55,7 @@
 
       <el-table-column align="center" label="认证方式" width="120">
         <template slot-scope="scope">
-           <el-tag :type="scope.row.authType>0?'success':'info'">{{ scope.row.authType|authTypeName }}</el-tag>
+           <span>{{ scope.row.authType|authTypeName }}</span>
         </template>
       </el-table-column>
 

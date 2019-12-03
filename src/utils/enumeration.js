@@ -20,6 +20,34 @@ export const PayType = [{
 }
 ]
 
+export const PayTypeUstd = [{
+  name: 'ALI_PAY',
+  id: 0,
+  label: '支付宝'
+},
+{
+  name: 'WEI_XIN',
+  id: 1,
+  label: '微信支付'
+},
+{
+  nama: 'BANK',
+  id: 2,
+  label: '银行卡'
+},
+{
+  name: 'CLOUD_PAY',
+  id: 3,
+  label: '云闪付'
+},
+{
+  name: 'USDT',
+  id: 4,
+  label: 'USDT'
+}
+
+]
+
 export const OrderStatus = [{
   name: 'UN_PAYED',
   id: 0,

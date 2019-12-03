@@ -119,6 +119,7 @@ export const asyncRoutes = [{
     hidden: true,
     meta: {
       title: '申述详情',
+      activeTabName: 'order_appeal',
       icon: '',
       authName: ['order_appeal']
 
@@ -182,6 +183,8 @@ export const asyncRoutes = [{
       meta: {
         title: '详情',
         icon: '',
+        activeTabName: 'user_anget',
+
         authName: ['user_anget']
         
       }
@@ -216,7 +219,7 @@ export const asyncRoutes = [{
           meta: {
             title: '详情',
             icon: '',
-            activeMenu: '/role',
+            activeTabName: 'user_role_apply',
             authName: ['user_role_apply']
             
           }
@@ -232,6 +235,7 @@ export const asyncRoutes = [{
         title: '详情',
         icon: '',
         type: 1,
+        activeTabName: 'user_instation',
         authName: ['user_instation']
 
       }
@@ -245,6 +249,7 @@ export const asyncRoutes = [{
         title: '详情',
         icon: '',
         type: 2,
+        activeTabName: 'user_store',
         authName: ['user_store']
 
       }
@@ -283,6 +288,7 @@ export const asyncRoutes = [{
     meta: {
       title: '详情',
       icon: '',
+      activeTabName: 'advertising_list',
       authName: ['advertising_list']
 
     }
@@ -353,6 +359,7 @@ export const asyncRoutes = [{
       meta: {
         title: '留言板',
         icon: '',
+        activeTabName: 'message_list',
         authName: ['message_list']
 
       }

@@ -1,8 +1,6 @@
 <template>
   <div class="tab-container">
-    <!-- <el-tag>mounted times ：{{ createdTimes }}</el-tag>
-    <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;" title="Tab with keep-alive" type="success" /> -->
-    <el-tabs v-model="TimeParamsType" style="margin-top:15px;" @tab-click="handleTabClick">
+  <el-tabs v-model="TimeParamsType" style="margin-top:15px;" @tab-click="handleTabClick">
       <div class="filter-container" style="margin-bottom: 10px;">
         <el-input v-model="addData.time" :placeholder="TimeParamsTypePlaceHolder[TimeParamsType]+'(分钟)'" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
         <el-select v-model="addData.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">

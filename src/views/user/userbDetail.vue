@@ -12,7 +12,7 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>真实姓名：{{ modals.realName }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>所属代理商：{{ modals.parentAgent||'无' }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>
-            当前状态：<el-tag :type="editData.active?'success':'danger'">{{ editData.active?'正常':'冻结' }}</el-tag></div></el-col>
+            当前状态：<span>{{ editData.active?'正常':'冻结' }}</span></div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>手机号：{{ modals.mobileContact }}</div></el-col>
@@ -59,7 +59,7 @@
       <el-table-column label="收款码" align="center">
         <template slot-scope="scope">
           <span v-if=" scope.row.payType===2||scope.row.qrCode===null">无</span>
-          <img v-else v-lazy="scope.row.qrCode||''" class="paymentImage" alt="收款码">
+          <img v-else v-lazy="scope.row.qrCode||''" :preview="'qrcode'" class="paymentImage" alt="收款码">
         </template>
       </el-table-column>
 
@@ -118,8 +118,9 @@
         <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.name" />
       </el-select>
 
-      <el-date-picker class="filter-item" 
+      <el-date-picker
         v-model="fliterQuery.date"
+        class="filter-item"
         type="daterange"
         auto-complete="off"
         range-separator="至"
@@ -182,7 +183,7 @@
 
       <el-table-column align="center" label="订单状态" minwidth="300">
         <template slot-scope="scope">
-          <el-link  :underline="false" :type="scope.row.status|orderStatusTagName">{{ scope.row.status|orderStatus }}</el-link>
+          <el-link :underline="false" :type="scope.row.status|orderStatusTagName">{{ scope.row.status|orderStatus }}</el-link>
         </template>
       </el-table-column>
 
@@ -289,7 +290,7 @@
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR" />
         <el-col v-if="editPayment.qrCode" :span="16">
-          <img v-lazy="editPayment.qrCode" alt="收款码" class="payTypeImage">
+          <img v-lazy="editPayment.qrCode" :preview="'qrcode'" alt="收款码" class="payTypeImage" @click="paymentDialogVisible=false">
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">

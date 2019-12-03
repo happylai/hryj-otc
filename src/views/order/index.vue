@@ -1,8 +1,6 @@
 <template>
   <div class="tab-container">
-    <!-- <el-tag>mounted times ：{{ createdTimes }}</el-tag>
-    <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;" title="Tab with keep-alive" type="success" /> -->
-    <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
+   <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
       <tip />
       <div class="filter-container" style="margin-bottom: 10px;">
@@ -17,20 +15,20 @@
           <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
         <el-date-picker
-v-model="fliterQuery.creatDate" 
+          v-model="fliterQuery.creatDate"
           class="filter-item"
-                        type="daterange"
-                        range-separator="至"
-                        start-placeholder="订单完创建开始日期"
-                        end-placeholder="结束日期"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="订单完创建开始日期"
+          end-placeholder="结束日期"
         />
         <el-date-picker
-v-model="fliterQuery.complateDate" 
+          v-model="fliterQuery.complateDate"
           class="filter-item"
-                        type="daterange"
-                        range-separator="至"
-                        start-placeholder="交易完成开始日期"
-                        end-placeholder="结束日期"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="交易完成开始日期"
+          end-placeholder="结束日期"
         />
         <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
           搜索
@@ -170,18 +168,18 @@ v-model="fliterQuery.complateDate"
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">订单状态：</el-col>
-        <el-col :span="16">{{ editData.orderStatus }}</el-col>
+        <el-col :span="16">{{ editData.orderStatus|orderStatus }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">付款状态：</el-col>
         <el-col :span="16">
-          <el-tag :type="editData.isPay?'success':'danger'">{{ editData.isPay?'已付款':'未付款' }}</el-tag>
+          <span>{{ editData.isPay?'已付款':'未付款' }}</span>
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">收款状态：</el-col>
         <el-col :span="16">
-          <el-tag :type="editData.isConfirm?'success':'danger'">{{ editData.isConfirm?'已收款':'未收款' }}</el-tag>
+          <span>{{ editData.isConfirm?'已收款':'未收款' }}</span>
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">

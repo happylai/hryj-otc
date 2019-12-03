@@ -69,7 +69,7 @@
 
       <el-table-column align="center" label="账号状态" width="80px">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.active?'success':'danger'">{{ scope.row.active?'正常':'冻结' }}</el-tag>
+          <span>{{ scope.row.active?'正常':'冻结' }}</span>
           <!-- <span>{{ scope.row.active?'正常':'冻结' }}</span> -->
         </template>
       </el-table-column>

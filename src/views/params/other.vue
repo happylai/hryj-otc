@@ -1,8 +1,6 @@
 <template>
   <div class="tab-container">
-    <!-- <el-tag>mounted times ：{{ createdTimes }}</el-tag>
-    <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;" title="Tab with keep-alive" type="success" /> -->
-    <el-tabs v-model="ParamsType" style="margin-top:15px;" @tab-click="handleTabClick">
+     <el-tabs v-model="ParamsType" style="margin-top:15px;" @tab-click="handleTabClick">
       <div class="filter-container" style="margin-bottom: 10px;">
         <!-- <el-select v-if="ParamsType!=='4'&&ParamsType!=='2'" v-model="addData.roleId" :placeholder="'选择'+roleName[ParamsType]" clearable style="width: 140px" class="filter-item">
           <el-option v-for="item in UserType" :key="item.id" :disabled="ParamsType==1&&(item.id===1||item.id===4)" :label="item.label" :value="item.id" />
@@ -75,7 +73,7 @@
     </el-row>
 
     <el-table v-else v-loading="loading" :data="list" border fit highlight-current-row style="width: 800px">
-      <el-table-column v-if="ParamsType!=='4'" align="center" :label="roleName[ParamsType]" width="100" element-loading-text="请给我点时间！">
+      <el-table-column v-if="ParamsType!=='4'&&ParamsType!=='2'" align="center" :label="roleName[ParamsType]" width="100" element-loading-text="请给我点时间！">
         <template slot-scope="scope">
           <span>{{ userRolesConstName(scope.row.roleId,userRolesConst) }}</span>
         </template>
@@ -175,7 +173,7 @@
     </el-dialog>
 
     <el-dialog :visible.sync="dialogVisible" :title="ParamsTypePlaceHolder[ParamsType]+'设置'">
-      <el-row :gutter="20" class="userRow">
+      <el-row v-if="ParamsType!=='2'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">{{ ParamsType===1?'升级角色':'当前角色' }}：</el-col>
         <el-col :span="16">{{ userRolesConstName(editData.roleId,userRolesConst) }}</el-col>
       </el-row>

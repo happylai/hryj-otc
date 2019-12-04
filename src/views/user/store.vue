@@ -1,12 +1,5 @@
 <template>
   <div class="tab-container">
-    <div class="container-tip"><i class="el-icon-warning color-primary" s /> 处理异常订单正确姿势：1.查看订单详情；2.核实收付款是否完成；3.核查交易提成是否收取；4.核查系统补贴、返利是否发放。
-      <div>
-        <el-link type="info" :underline="false">温馨提示：若遇其他非上述情况请及时联系管理员：</el-link>
-        <el-link type="primary">Towards <i class="el-icon-chat-dot-round" /></el-link>
-      </div>
-    </div>
-
     <div class="filter-container" style="margin-bottom: 10px;">
 
       <el-input v-model="fliterQuery.query" placeholder="用户ID/代理ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />

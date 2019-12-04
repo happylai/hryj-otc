@@ -259,7 +259,7 @@
     <el-dialog :visible.sync="paymentDialogVisible" title="编辑手续费" width="40%">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">支付方式：</el-col>
-        <el-col :span="16">{{ editPayment.payType|paymentStatus }}</el-col>
+        <el-col :span="16">{{ editPayment.payType|payTypeName }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">账号：</el-col>

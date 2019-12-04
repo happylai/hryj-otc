@@ -3,6 +3,7 @@ import has from 'has-value'
 export { parseTime, formatTime } from '@/utils'
 import {
   PayType,
+  PayTypeExtent,
   PayTypeUstd,
   OrderStatus,
   PayTypeStatus,
@@ -142,16 +143,38 @@ export function uppercaseFirst(string) {
  * PaymentStatus
  * @param {number} num
  */
-export function paymentStatus(num = 0) {
-  return num === null ? '-' : PayType[num].label
+export function paymentStatus(id = '') {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = PayType.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
 }
 
+// /**
+//  * PaymentStatus
+//  * @param {number} num
+//  */
+// export function payTypeName(num) {
+//   return num === null ? '-' : PayType[num].label
+// }
+
 /**
- * PaymentStatus
+ * OrderStatusTagName
  * @param {number} num
  */
-export function payTypeName(num) {
-  return num === null ? '-' : PayType[num].label
+export function payTypeName(id) {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = PayTypeExtent.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
 }
 
 /**
@@ -161,9 +184,9 @@ export function payTypeName(num) {
 export function payTypeUstdName(id) {
   if (id === 'null') {
     return '-'
-  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+  } else if (has({ foo: id }, 'foo')) {
     const data = PayTypeUstd.filter((item) => { if (item.id === id) { return item } })
-    if (has({ foo: { bar: data }}, 'foo.bar')) {
+    if (has({ foo: data }, 'foo')) {
       return data[0].label
     } else {
       return '-'
@@ -180,9 +203,9 @@ export function payTypeUstdName(id) {
 export function orderStatusTagName(id) {
   if (id === 'null') {
     return '-'
-  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+  } else if (has({ foo: id }, 'foo')) {
     const data = OrderStatus.filter((item) => { if (item.id === id) { return item } })
-    if (has({ foo: { bar: data }}, 'foo.bar')) {
+    if (has({ foo: data }, 'foo')) {
       return data[0].tagType
     } else {
       return '-'
@@ -199,9 +222,9 @@ export function orderStatusTagName(id) {
 export function orderStatus(id) {
   if (id === 'null') {
     return '-'
-  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+  } else if (has({ foo: id }, 'foo')) {
     const data = OrderStatus.filter((item) => { if (item.id === id) { return item } })
-    if (has({ foo: { bar: data }}, 'foo.bar')) {
+    if (has({ foo: data }, 'foo')) {
       return data[0].label
     } else {
       return '-'
@@ -261,7 +284,7 @@ export function roleName(num) {
 export function userTypeName(id) {
   if (id === 'null') {
     return '-'
-  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+  } else if (has({ foo: id }, 'foo')) {
     return UserTypeName[id].label
   } else {
     return '-'
@@ -275,7 +298,7 @@ export function userTypeName(id) {
 export async function groupsConstName(id, arr) {
   if (id) {
     const data = arr.filter((item) => { if (item.id === id) { return item } })
-    if (has({ foo: { bar: data }}, 'foo.bar')) {
+    if (has({ foo: data }, 'foo')) {
       return data[0].groupName
     } else {
       return '-'
@@ -332,9 +355,9 @@ export function advStatus(num = null) {
 export function advStatusTagName(id = null) {
   if (id === 'null') {
     return '-'
-  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+  } else if (has({ foo: id }, 'foo')) {
     const data = AdvStatus.filter((item) => { if (item.id === id) { return item } })
-    if (has({ foo: { bar: data }}, 'foo.bar')) {
+    if (has({ foo: data }, 'foo')) {
       return data[0].tagType
     } else {
       return '-'
@@ -353,9 +376,9 @@ export function authTypeName(id = null) {
   // return num === null ? '-' : AuthType[num].label
   if (id === 'null') {
     return '-'
-  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+  } else if (has({ foo: id }, 'foo')) {
     const data = AuthType.filter((item) => { if (item.id === id) { return item } })
-    if (has({ foo: { bar: data }}, 'foo.bar')) {
+    if (has({ foo: data }, 'foo')) {
       return data[0].label
     } else {
       return '-'
@@ -372,9 +395,9 @@ export function authTypeName(id = null) {
 export function orderAuditStatus(id) {
   if (id === 'null') {
     return '-'
-  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+  } else if (has({ foo: id }, 'foo')) {
     const data = OrderAuditStatus.filter((item) => { if (item.id === id) { return item } })
-    if (has({ foo: { bar: data }}, 'foo.bar')) {
+    if (has({ foo: data }, 'foo')) {
       return data[0].label
     } else {
       return '-'
@@ -391,9 +414,9 @@ export function orderAuditStatus(id) {
 export function appealeType(id) {
   if (id === 'null') {
     return '-'
-  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+  } else if (has({ foo: id }, 'foo')) {
     const data = AppealeType.filter((item) => { if (item.id === id) { return item } })
-    if (has({ foo: { bar: data }}, 'foo.bar')) {
+    if (has({ foo: data }, 'foo')) {
       return data[0].label
     } else {
       return '-'

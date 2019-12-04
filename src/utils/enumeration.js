@@ -20,6 +20,43 @@ export const PayType = [{
 }
 ]
 
+export const PayTypeExtent = [{
+  name: 'ALI_PAY',
+  id: 0,
+  label: '支付宝'
+},
+{
+  name: 'WEI_XIN',
+  id: 1,
+  label: '微信支付'
+},
+{
+  nama: 'BANK',
+  id: 2,
+  label: '银行卡'
+},
+{
+  name: 'CLOUD_PAY',
+  id: 3,
+  label: '云闪付'
+},
+{
+  name: 'HB',
+  id: 10,
+  label: '火币'
+},
+{
+  name: 'BA',
+  id: 11,
+  label: '币安'
+},
+{
+  name: 'OK',
+  id: 12,
+  label: 'OKEx'
+}
+]
+
 export const PayTypeUstd = [{
   name: 'ALI_PAY',
   id: 0,

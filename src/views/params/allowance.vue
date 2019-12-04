@@ -1,6 +1,6 @@
 <template>
   <div class="tab-container">
-  <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
+    <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
       <el-tab-pane v-for="item in tabMapOptions" v-if="activeType<4" :key="item.key" :label="item.label" :name="item.key" />
       <el-tab-pane v-for="item in tabMapOptions1" v-if="activeType>=4" :key="item.key" :label="item.label" :name="item.key" />
     </el-tabs>
@@ -101,7 +101,7 @@
       </el-row>
       <el-row v-if="activeType=='0'||activeType=='1'||activeType=='2'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">支付方式：</el-col>
-        <el-col :span="16">{{ editData.payType|paymentStatus }}</el-col>
+        <el-col :span="16">{{ editData.payType|payTypeName }}</el-col>
       </el-row>
       <el-row v-if="activeType=='0'||activeType=='1'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">交易方：</el-col>

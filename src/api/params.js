@@ -233,3 +233,22 @@ export function agent_award(data) {
     params: data
   })
 }
+
+// 获取安卓app版本列表
+export function app_versions(data) {
+  return request({
+    url: `/admin/dictionary/app_versions`,
+    method: 'get',
+    params: data
+  })
+}
+
+// 新增安卓app版本(只有新增，没有编辑)
+export function app_version_save(data) {
+  return request({
+    url: `/admin/dictionary/app_version_save`,
+    method: 'post',
+    data: data
+  })
+}
+

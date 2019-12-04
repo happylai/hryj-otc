@@ -44,7 +44,7 @@
 
     <el-table-column align="center" label="支付方式" width="90">
       <template slot-scope="scope">
-        <span>{{ scope.row.payType|paymentStatus }}</span>
+        <span>{{ scope.row.payType|payTypeName }}</span>
       </template>
     </el-table-column>
 

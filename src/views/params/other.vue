@@ -1,16 +1,31 @@
 <template>
   <div class="tab-container">
-     <el-tabs v-model="ParamsType" style="margin-top:15px;" @tab-click="handleTabClick">
+    <el-tabs v-model="ParamsType" style="margin-top:15px;" @tab-click="handleTabClick">
       <div class="filter-container" style="margin-bottom: 10px;">
         <!-- <el-select v-if="ParamsType!=='4'&&ParamsType!=='2'" v-model="addData.roleId" :placeholder="'选择'+roleName[ParamsType]" clearable style="width: 140px" class="filter-item">
           <el-option v-for="item in UserType" :key="item.id" :disabled="ParamsType==1&&(item.id===1||item.id===4)" :label="item.label" :value="item.id" />
         </el-select> -->
-        <el-select v-if="ParamsType!=='4'&&ParamsType!=='2'" v-model="addData.roleId" :placeholder="'选择'+roleName[ParamsType]" clearable style="width: 140px" class="filter-item">
-          <el-option v-for="item in userRolesConst" :key="item.id" :disabled="!addUserType[ParamsType].includes(item.id)" :label="item.zhName" :value="item.id" />
+        <el-select v-if="ParamsType!=='4'&&ParamsType!=='2'&&ParamsType!=='5'" v-model="addData.roleId" :placeholder="'选择'+roleName[ParamsType]" clearable style="width: 140px" class="filter-item">
+          <el-option
+            v-for="item in
+              [{
+                zhName: '信任大宗',
+                id: -1
+              },...userRolesConst]
+            "
+            :key="item.id"
+            :disabled="!addUserType[ParamsType].includes(item.id)"
+            :label="item.zhName"
+            :value="item.id"
+          />
         </el-select>
         <el-input v-model="addData.addNewData" :placeholder="ParamsTypePlaceHolder[ParamsType]" style="width: 200px;" class="filter-item" />
 
         <el-input v-show="ParamsType==='2'" v-model="addData.minVolume" placeholder="达标交易量(如：300000)" style="width: 200px;" class="filter-item" />
+
+        <el-input v-show="ParamsType==='5'" v-model="addData.downUrl" placeholder="下载链接" style="width: 200px;" class="filter-item" />
+        <el-input v-show="ParamsType==='5'" v-model="addData.versionDesc" type="textarea" :rows="3" placeholder="版本描述" style="width: 320px;" class="filter-item" />
+
         <!-- <el-link v-show="ParamsType==='2'" type="danger" :underline="false">*交易量达标系统自动退还</el-link> -->
 
         <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" @click="handleAdd">
@@ -73,41 +88,47 @@
     </el-row>
 
     <el-table v-else v-loading="loading" :data="list" border fit highlight-current-row style="width: 800px">
-      <el-table-column v-if="ParamsType!=='4'&&ParamsType!=='2'" align="center" :label="roleName[ParamsType]" width="100" element-loading-text="请给我点时间！">
+      <el-table-column v-if="ParamsType!=='4'&&ParamsType!=='2'&&ParamsType!=='5'" align="center" :label="roleName[ParamsType]" width="100" element-loading-text="请给我点时间！">
         <template slot-scope="scope">
           <span>{{ userRolesConstName(scope.row.roleId,userRolesConst) }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column v-if="ParamsType==='4'" min-width="180px" align="center" label="分组人数">
-        <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="ParamsType==='4'" prop="createTime" min-width="180px" align="center" label="分组人数" />
 
-      <el-table-column v-if="ParamsType!=='4'" min-width="180px" align="center" :label="ParamsTypePlaceHolder[ParamsType]">
+      <el-table-column v-if="ParamsType!=='4'&&ParamsType!=='5'" prop="money" min-width="180px" align="center" :label="ParamsTypePlaceHolder[ParamsType]">
         <template slot-scope="scope">
           <span>{{ scope.row.money }}</span>
-
         </template>
       </el-table-column>
 
-      <el-table-column v-if="ParamsType==='2'" min-width="180px" align="center" label="退还条件(交易量达标)">
+      <el-table-column v-if="ParamsType==='2'" min-width="180px" :prop="minVolume" align="center" label="退还条件(交易量达标)">
         <template slot-scope="scope">
           <span>{{ scope.row.minVolume }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="ParamsType==='4'" width="180px" align="center" label="分组名称">
+
+      <!-- <el-table-column v-if="ParamsType==='4'" width="180px" align="center" label="分组名称">
         <template slot-scope="scope">
           <span>{{ scope.row.groupName }}</span>
         </template>
-      </el-table-column>
-      <el-table-column v-if="ParamsType==='4'" width="180px" align="center" label="创建时间">
+      </el-table-column> -->
+      <el-table-column v-if="ParamsType==='5'" prop="androidVersion" min-width="120px" align="center" label="App版本">
         <template slot-scope="scope">
-          <span>{{ scope.row.userNum }}</span>
+          <span>{{ scope.row.androidVersion }}</span>
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" align="center" label="操作" width="110">
+      <el-table-column v-if="ParamsType==='5'" prop="downUrl" min-width="180px" align="center" label="下载链接">
+        <template slot-scope="scope">
+          <span>{{ scope.row.downUrl }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="ParamsType==='5'" prop="versionDesc" min-width="180px" align="center" label="描述">
+        <template slot-scope="scope">
+          <span>{{ scope.row.versionDesc }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="ParamsType!=='5'" class-name="status-col" align="center" label="操作" width="110">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="handlEdit(scope.row)">编辑</el-button>
         </template>
@@ -182,7 +203,7 @@
         <el-col :span="16">
           <el-input v-model="editData.newData" style="width: 150px;height:30px" :placeholder="`请输入${ParamsTypePlaceHolder[ParamsType]}参数(如:15)`" />
           <el-link type="danger" :underline="false">当前{{ ParamsTypePlaceHolder[ParamsType] }}参数： <span>{{ editData.money }}</span>
-          <!-- <span v-if="ParamsType==2">{{ editData.activeGold }}</span>
+            <!-- <span v-if="ParamsType==2">{{ editData.activeGold }}</span>
             <span v-if="ParamsType==3">{{ editData.num }}</span></el-link> -->
           </el-link></el-col>
       </el-row>
@@ -199,7 +220,7 @@
         <el-button @click="dialogVisible = false">取消</el-button>
       </span>
     </el-dialog>
-  </div>
+    </el-table></div>
 </template>
 
 <script>
@@ -207,7 +228,7 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { TokenType, FiatType, DealType } from '@/utils/enumeration'
-import { deposits, deposit_save, active_golds, active_gold_save, cancel_nums, cancel_num_save, groups, group_save, groups_scopes, get_group_scopes_add, scopes_add } from '@/api/params'
+import { deposits, deposit_save, active_golds, active_gold_save, cancel_nums, cancel_num_save, groups, group_save, groups_scopes, get_group_scopes_add, scopes_add, app_version_save, app_versions } from '@/api/params'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 export default {
   name: 'Tab',
@@ -223,7 +244,8 @@ export default {
         { label: '保证金', key: '1', name: 'deposit' },
         { label: '激活金', key: '2', mame: 'activeGold' },
         { label: '每日可取消单数', key: '3', name: 'num' },
-        { label: '分组设置', key: '4', name: 'num' }
+        { label: '分组设置', key: '4', name: 'num' },
+        { label: '系统版本', key: '5', name: 'version' }
 
       ],
       addUserType: {
@@ -234,7 +256,9 @@ export default {
         1: '保证金',
         2: '激活金',
         3: '每日可取消单数',
-        4: '分组名称'
+        4: '分组名称',
+        5: 'APP系统版本'
+
       },
       roleName: ['', '升级角色', '角色', '角色', '角色'],
       currentGroup: { groupName: undefined },
@@ -251,7 +275,10 @@ export default {
       },
       addData: {
         roleId: '',
-        addNewData: ''
+        addNewData: '',
+        androidVersion: undefined,
+        versionDesc: undefined,
+        downUrl: undefined
       },
       list: [{
 
@@ -320,7 +347,7 @@ export default {
     },
     getList() {
       this.loading = true
-      const apiList = ['', deposits, active_golds, cancel_nums, groups]
+      const apiList = ['', deposits, active_golds, cancel_nums, groups, app_versions]
       apiList[this.ParamsType]().then(res => {
         console.log('res', res)
         this.loading = false
@@ -366,7 +393,7 @@ export default {
       })
     },
     handleSave() {
-      const data = this.editData
+      var data = this.editData
       const postData = {
         id: data.id,
         roleId: data.roleId,
@@ -386,10 +413,14 @@ export default {
           groupName: this.addData.addNewData
         }
         this.save(data)
-      } else if (!this.addData.roleId && this.ParamsType !== '2') {
+      } else if (!this.addData.roleId && this.ParamsType !== '2' && this.ParamsType !== '5') {
         this.$message.error('请选择角色')
+      } else if (this.ParamsType === '5' && !this.addData.downUrl) {
+        this.$message.error('请填写下载URl')
+      } else if (this.ParamsType === '5' && !this.addData.versionDesc) {
+        this.$message.error('请填写版本描述')
       } else {
-        const data = {
+        var data = {
           roleId: this.addData.roleId,
           type: this.ParamsType,
           money: this.addData.addNewData
@@ -399,12 +430,19 @@ export default {
             data.minVolume = this.addData.minVolume
           }
         }
+        if (this.ParamsType === '5') {
+          data = {
+            androidVersion: this.addData.addNewData,
+            downUrl: this.addData.downUrl,
+            versionDesc: this.addData.versionDesc
+          }
+        }
         console.log('data', data)
         this.save(data)
       }
     },
     save(postData) {
-      const apiList = ['', deposit_save, active_gold_save, cancel_num_save, group_save]
+      const apiList = ['', deposit_save, active_gold_save, cancel_num_save, group_save, app_version_save]
       apiList[this.ParamsType](postData).then(res => {
         console.log('res', res)
         this.loading = false

@@ -124,7 +124,7 @@
     <el-dialog :visible.sync="dialogVisible" title="支付方式审核" width="40%">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">支付方式：</el-col>
-        <el-col :span="16">{{ auditData.payType|paymentStatus }}</el-col>
+        <el-col :span="16">{{ auditData.payType|payTypeName }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">账号：</el-col>

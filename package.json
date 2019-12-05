@@ -8,6 +8,8 @@
     "dev": "vue-cli-service serve",
     "build:prod": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging",
+    "docker:build": "npm run build:prod && docker build -t 313479788104.dkr.ecr.ap-southeast-1.amazonaws.com/pegga/admin-front:0.0.1 .",
+    "docker:push": "docker push 313479788104.dkr.ecr.ap-southeast-1.amazonaws.com/pegga/admin-front:0.0.1",
     "preview": "node build/index.js --preview",
     "lint": "eslint --ext .js,.vue src",
     "test:unit": "jest --clearCache && vue-cli-service test:unit",

@@ -280,7 +280,7 @@
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">体现手续费：</el-col>
+        <el-col :span="8" class="textAlingR">提现手续费：</el-col>
         <el-col :span="16">
           <el-input v-model="editPayment.royalty" style="width: 240px" type="text" placeholder="请输入手续费比例(%)" suffix="%" tabindex="2" auto-complete="off">
             <template slot="append">%</template>

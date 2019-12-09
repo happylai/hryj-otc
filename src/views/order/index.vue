@@ -1,6 +1,6 @@
 <template>
   <div class="tab-container">
-   <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
+    <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
       <tip />
       <div class="filter-container" style="margin-bottom: 10px;">
@@ -242,8 +242,8 @@ export default {
   data() {
     return {
       tabMapOptions: [
-        { label: '交易所用户订单', key: '1' },
-        { label: '站点用户订单', key: '2' }
+        { label: '站内订单', key: '1' },
+        { label: '商户订单', key: '2' }
       ],
       CounterParty,
       OrderStatus,
@@ -320,7 +320,7 @@ export default {
       console.log('paginationChange', e)
       this.meta.size = e.limit
       this.meta.current = e.page
-      this.getList()
+      this.handleFilter(false)
     },
     getList(meta, data) {
       this.listLoading = true
@@ -335,7 +335,7 @@ export default {
         }
       })
     },
-    handleFilter() {
+    handleFilter(resetPage = true) {
       const fliterQuery = this.fliterQuery
       console.log('fliterQuery', this.fliterQuery)
       const data = {
@@ -355,7 +355,8 @@ export default {
         data.confirmEnd = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
       }
       const meta = this.meta
-      meta.current = 1
+      resetPage ? meta.current = 1 : null
+
       this.getList(meta, data)
     },
     clickDetail(data) {

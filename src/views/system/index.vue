@@ -40,7 +40,7 @@
 
 <script>
 import tabPane from './components/TabPane'
-import { mapState, mapGetters, mapActions } from 'vuex' //先要引入
+import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import Pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { OrderStatus, PayType } from '@/utils/enumeration'
@@ -52,8 +52,8 @@ export default {
   data() {
     return {
       tabMapOptions: [
-        { label: '交易所用户订单', key: 'all' },
-        { label: '站点用户订单', key: 'site' }
+        { label: '站内订单', key: 'all' },
+        { label: '商户订单', key: 'site' }
       ],
       activeName: 'all',
       createdTimes: 0,

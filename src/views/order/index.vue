@@ -4,7 +4,7 @@
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
       <tip />
       <div class="filter-container" style="margin-bottom: 10px;">
-        <el-input v-model="fliterQuery.query" placeholder="订单ID/广告ID/首付款昵称/卖家/卖家" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-input v-model="fliterQuery.query" placeholder="订单ID/广告ID/收付款昵称/卖家/卖家" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
         <el-select v-model="fliterQuery.payType" placeholder="支付方式" clearable style="width: 140px" class="filter-item">
           <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>

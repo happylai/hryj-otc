@@ -78,13 +78,13 @@
         <el-radio-button :label="30">最近30天</el-radio-button>
       </el-radio-group>
       <el-date-picker
-v-model="fliterQuery.date" 
+        v-model="fliterQuery.date"
         class="filter-item"
-                      type="daterange"
-                      range-separator="至"
-                      start-placeholder="开始日期"
-                      end-placeholder="结束日期"
-                      @change="dateChange"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        @change="dateChange"
       />
 
     </div>
@@ -205,7 +205,7 @@ v-model="fliterQuery.date"
         <el-col :span="16">{{ editData.createTime }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">首付款方式：</el-col>
+        <el-col :span="8" class="textAlingR">收付款方式：</el-col>
         <el-col :span="16">{{ editData.createTime }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">

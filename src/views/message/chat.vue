@@ -132,6 +132,7 @@ export default {
         console.log('res', res)
         if (res.code === 0) {
           this.list = res.data.reverse()
+          this.$previewRefresh()
         }
       })
     },

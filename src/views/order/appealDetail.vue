@@ -271,6 +271,7 @@ export default {
           }
           this.modals = data
         }
+        this.$previewRefresh()
         console.log('res')
       })
     },

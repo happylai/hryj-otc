@@ -7,7 +7,7 @@
       style="margin-bottom: 10px;"
     >
 
-      <el-input v-model="fliterQuery.query" placeholder="用户名ID/姓名/手机号" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="fliterQuery.query" placeholder="用户名ID/姓名/手机号/邮箱" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="fliterQuery.roleId" placeholder="选择角色" clearable style="width: 150px" class="filter-item">
         <el-option v-for="item in userRolesConst" :key="item.id" :label="item.zhName" :value="item.id" />
       </el-select>
@@ -25,8 +25,9 @@
         <el-option v-for="item in AccountStatus" :key="item.id" :label="item.label" :value="item.name" />
       </el-select>
 
-      <el-date-picker class="filter-item" 
+      <el-date-picker
         v-model="fliterQuery.date"
+        class="filter-item"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
@@ -94,7 +95,6 @@
         </template>
       </el-table-column>
 
-
       <el-table-column align="center" label="所在分组" width="95">
         <template slot-scope="scope">
           <span>{{ groupsConstName(scope.row.pricingGroupId,groupsConst) }}</span>
@@ -115,7 +115,7 @@
 
       <el-table-column align="center" class-name="status-col" label="操作" width="180">
         <template slot-scope="scope">
-          <el-button type="danger" disabled="scope.row.frozenDeal" size="small" @click="handleFreeze(scope.row.id)">交易冻结</el-button>
+          <el-button type="danger" :disabled="scope.row.frozenDeal" size="small" @click="handleFreeze(scope.row.id)">交易冻结</el-button>
           <el-button type="primary" size="small" @click="goDetail(scope.row.id)">查看</el-button>
         </template>
       </el-table-column>

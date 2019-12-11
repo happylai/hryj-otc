@@ -1,6 +1,6 @@
 <template>
   <div class="tab-container">
-  <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
+    <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
       <tip />
       <div class="filter-container" style="margin-bottom: 10px;">
@@ -131,6 +131,7 @@ export default {
           this.meta.current = res.data.current
           this.paginationMeta.total = res.data.total
           this.paginationMeta.pages = res.data.pages
+          this.$previewRefresh()
         }
       })
     },

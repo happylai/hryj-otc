@@ -236,10 +236,10 @@
         <el-col :span="8" class="textAlingR">身份证号：</el-col>
         <el-col :span="8">{{ editData.idNumber }}</el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageFront" v-lazy="editData.identityImageFront" :preview="'idcard'" class="idImage" @click="dialogVisible=false" alt="身份证正面">
+          <img v-if="editData.identityImageFront" v-lazy="editData.identityImageFront" :preview="'idcard'" class="idImage" alt="身份证正面" @click="dialogVisible=false">
         </el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageBack" v-lazy="editData.identityImageBack" :preview="'idcard'" class="idImage" @click="dialogVisible=false" alt="身份证反面">
+          <img v-if="editData.identityImageBack" v-lazy="editData.identityImageBack" :preview="'idcard'" class="idImage" alt="身份证反面" @click="dialogVisible=false">
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
@@ -471,6 +471,7 @@ export default {
         if (res.code === 0) {
           this.peyTypeList = res.data.records
         }
+        this.$previewRefresh()
       }).catch(() => {
         this.payTypeLoading = false
       })

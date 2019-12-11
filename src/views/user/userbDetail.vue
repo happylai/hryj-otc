@@ -392,6 +392,7 @@ export default {
       pay_types({ userId: id || this.id }).then(res => {
         if (res.code === 0) {
           this.peyTypeList = res.data.records
+          this.$previewRefresh()
         }
       })
     },

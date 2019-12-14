@@ -71,6 +71,12 @@
           </template>
         </el-table-column>
 
+        <el-table-column align="center" label="收付款昵称" min-width="140">
+          <template slot-scope="scope">
+            <span>{{ scope.row.payTypeNick }}</span>
+          </template>
+        </el-table-column>
+
         <el-table-column align="center" width="80px" label="交易额">
           <template slot-scope="scope">
             <span>{{ scope.row.amount }}</span>

@@ -77,7 +77,7 @@
 
           <el-table-column min-width="180px" align="center" label="交易角色">
             <template slot-scope="scope">
-              <span>{{ scope.row.dealType }}</span>
+              <span>{{ scope.row.dealType|counterParty }}</span>
             </template>
           </el-table-column>
         </el-table>

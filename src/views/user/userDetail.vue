@@ -27,6 +27,13 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="4"><div>收付款方式：{{ modals.payTypes|payTypeNames }}</div></el-col>
           <!-- <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div >所在分组：{{ modals.pricingGroupId|groupName }}</div></el-col> -->
         </el-row>
+        <el-row :gutter="10" class="card-row">
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>微信：{{ modals.weixinContact }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>QQ：{{ modals.qqContact }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>支付宝：{{ modals.aliContact }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="4"><div>Telegram：{{ modals.telegramContact }}</div></el-col>
+          <!-- <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div >所在分组：{{ modals.pricingGroupId|groupName }}</div></el-col> -->
+        </el-row>
       </div>
     </el-card>
 
@@ -70,11 +77,23 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="交易提成" width="80">
+      <el-table-column label="接单区域" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.range }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="120px" label="银行名称(仅银行卡)" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.bank }} {{ scope.row.bankBranch }}</span>
+        </template>
+      </el-table-column>
+
+      <!-- <el-table-column align="center" label="交易提成" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.royalty }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
     </el-table>
 
@@ -151,7 +170,7 @@
         v-loading="loading"
         align="center"
         label="订单ID"
-        width="65"
+        min-width="180"
         element-loading-text="请给我点时间！"
       >
         <template slot-scope="scope">

@@ -115,7 +115,8 @@
 
       <el-table-column align="center" class-name="status-col" label="操作" width="180">
         <template slot-scope="scope">
-          <el-button type="danger" :disabled="scope.row.frozenDeal" size="small" @click="handleFreeze(scope.row.id)">交易冻结</el-button>
+          <el-button v-if="scope.row.frozenDeal" type="success" size="small" @click="handleUnFreeze(scope.row.id)">交易解冻</el-button>
+          <el-button v-else type="danger" size="small" @click="handleFreeze(scope.row.id)">交易冻结</el-button>
           <el-button type="primary" size="small" @click="goDetail(scope.row.id)">查看</el-button>
         </template>
       </el-table-column>
@@ -127,7 +128,7 @@
         <el-col :span="16">{{ auditData.payType|payTypeName }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">账号：</el-col>
+        <el-col :span="8" class="textAlingR">{{ auditData.payType===2?'银行卡卡号':'账号' }}</el-col>
         <el-col :span="16">
           {{ auditData.account }}
         </el-col>
@@ -144,10 +145,46 @@
           {{ auditData.realName||'-' }}
         </el-col>
       </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR" />
+      <el-row v-if="auditData.payType===0" :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">UUID：</el-col>
         <el-col :span="16">
-          <img v-lazy="auditData.qrCode" class="payTypeImage">
+          {{ auditData.uuid||'-' }}
+        </el-col>
+      </el-row>
+      <el-row v-if="auditData.payType===0" :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">收款区域：</el-col>
+        <el-col :span="16">
+          {{ auditData.range||'-' }}
+        </el-col>
+      </el-row>
+      <el-row v-if="auditData.payType===2" :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">银行名称：</el-col>
+        <el-col :span="16">
+          {{ auditData.bank||'-' }}
+        </el-col>
+      </el-row>
+      <el-row v-if="auditData.payType===2" :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">开户行地址：</el-col>
+        <el-col :span="16">
+          {{ auditData.bankBranch||'-' }}
+        </el-col>
+      </el-row>
+      <el-row v-if="auditData.payType===2" :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">每日限额：</el-col>
+        <el-col :span="16">
+          {{ auditData.dailyAmount||'-' }}
+        </el-col>
+      </el-row>
+      <el-row v-if="auditData.payType===0||auditData.payType===1" :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">收款码：</el-col>
+        <el-col :span="16">
+          <!-- <img v-lazy="auditData.qrCode" class="payTypeImage"> -->
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="auditData.qrCode"
+            lazy
+            :preview-src-list="[auditData.qrCode]"
+          />
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -166,7 +203,7 @@ import tip from '@/components/Tip'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, emptySelect, PayType, AccountStatus } from '@/utils/enumeration'
-import { users_web, pay_type_audit, pay_type_info, freeze_deal } from '@/api/usermanage'
+import { users_web, pay_type_audit, pay_type_info, freeze_deal, unfreeze_deal } from '@/api/usermanage'
 
 export default {
   name: 'UserInstation',
@@ -343,9 +380,28 @@ export default {
           }
         })
       })
+    },
+    handleUnFreeze(id) {
+      this.$confirm('是否解冻用户交易?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        unfreeze_deal({ userId: id }).then(res => {
+          if (res.code === 0) {
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+            this.getList()
+          } else {
+            this.$message.error(res.message || '操作失败')
+          }
+        })
+      })
     }
-
   }
+
 }
 </script>
 

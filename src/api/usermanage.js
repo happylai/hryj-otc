@@ -163,6 +163,18 @@ export function royalty_save(data) {
   })
 }
 
+// 用户交易冻结解冻
+export function unfreeze_deal(data) {
+  return request({
+    url: `/admin/user/unfreeze_deal`,
+    method: 'post',
+    data: qs.stringify(data),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
 // 用户交易冻结
 export function freeze_deal(data) {
   return request({

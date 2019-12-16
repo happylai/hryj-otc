@@ -18,8 +18,8 @@
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>真实姓名：{{ modals.realName }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>手机号：{{ modals.mobileContact }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>身份证：{{ modals.idNumber }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>邮箱：{{ modals.emailContact }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="7" :xl="7"><div class="card-info-text">身份证：{{ modals.idNumber }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="7" :xl="7"><div class="card-info-text">邮箱：{{ modals.emailContact }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>申诉数：{{ modals.appealNum }}</div></el-col>
@@ -60,7 +60,8 @@
 
       <el-table-column width="180px" align="center" label="收付款昵称">
         <template slot-scope="scope">
-          <span>{{ scope.row.nick }}</span>
+          <span v-if="scope.row.payType===0||scope.row.payType===1">{{ scope.row.nick }}</span>
+          <span v-else>无</span>
         </template>
       </el-table-column>
 
@@ -77,15 +78,31 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="接单区域" align="center">
+      <el-table-column min-width="120px" label="UUID" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.range }}</span>
+          <span v-if="scope.row.payType===0">{{ scope.row.uuid }}</span>
+          <span>无</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="120px" label="银行名称(仅银行卡)" align="center">
+      <el-table-column label="接单区域" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.bank }} {{ scope.row.bankBranch }}</span>
+          <span v-if="scope.row.payType===0||scope.row.payType===1">{{ scope.row.range }}</span>
+          <span v-else>无</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="120px" label="银行名称" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.payType===2">{{ scope.row.bank }} {{ scope.row.bankBranch }}</span>
+          <span v-else>无</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="120px" label="每日交易限额" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.payType===2">{{ scope.row.dailyAmount }} </span>
+          <span v-else>无</span>
         </template>
       </el-table-column>
 
@@ -659,6 +676,9 @@ export default {
 </script>
 
 <style scoped>
+.card-info-text{
+  margin-right: 10px;
+}
 .tab-container {
   margin: 30px;
 }

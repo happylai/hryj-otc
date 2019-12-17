@@ -151,7 +151,7 @@
           {{ auditData.uuid||'-' }}
         </el-col>
       </el-row>
-      <el-row v-if="auditData.payType===0" :gutter="20" class="userRow">
+      <el-row v-if="auditData.payType===0||auditData.payType===1" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">收款区域：</el-col>
         <el-col :span="16">
           {{ auditData.range||'-' }}
@@ -184,7 +184,11 @@
             :src="auditData.qrCode"
             lazy
             :preview-src-list="[auditData.qrCode]"
-          />
+          >
+            <div slot="placeholder" class="image-slot">
+              <i class="el-icon-loading" />
+            </div>
+          </el-image>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -317,6 +321,7 @@ export default {
       pay_type_info({ userId: id }).then(res => {
         if (res.code === 0) {
           this.auditData = res.data
+          this.$previewRefresh()
         }
       })
     },

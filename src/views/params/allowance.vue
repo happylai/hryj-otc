@@ -24,7 +24,7 @@
         end-placeholder="结束时间"
         placeholder="选择补贴时间段"
       />
-      <el-input v-if="activeType!=='3'" v-model="addData.ratio" :placeholder="ratioPlaceHolder[activeType]" style="width: 180px;" class="filter-item" />
+      <el-input v-if="activeType!=='3'&&activeType!=='2'" v-model="addData.ratio" :placeholder="ratioPlaceHolder[activeType]" style="width: 180px;" class="filter-item" />
       <el-input v-if="activeType!=='3'&&activeType==='2'" v-model="addData.achieveAmount" placeholder="达量补贴达标标准" style="width: 180px;" class="filter-item" />
       <el-input v-if="activeType==='0'||activeType==='3'" v-model="addData.levelDiffer" :placeholder="activeType==='0'?'层级差':'激活金'" style="width: 180px;" class="filter-item" />
       <el-input v-model="addData.subsidyMax" :placeholder="placeHolder[activeType]" style="width: 180px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -57,7 +57,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="ratioPlaceHolder[activeType]">
+      <el-table-column v-if="activeType!=='2'" align="center" :label="ratioPlaceHolder[activeType]">
         <template slot-scope="scope">
           <span>{{ scope.row.ratio }}</span>
         </template>
@@ -313,7 +313,7 @@ export default {
         this.$message.error('请选择时间段')
       } else if ((this.activeType === '0' || this.activeType === '1') && (data.counterParty === '' || data.counterParty === undefined)) {
         this.$message.error('请选择交易方')
-      } else if (!data.ratio) {
+      } else if (!data.ratio&&this.activeType !== '2') {
         this.$message.error(this.ratioPlaceHolder[this.activeType])
       } else if (this.activeType === '2' && (data.achieveAmount === '' || data.achieveAmount === undefined)) {
         this.$message.error('请填写达量标准')

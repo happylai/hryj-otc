@@ -440,7 +440,6 @@ export default {
         if (valid) {
           this.loading = true
           const data = { ...this.regForm }
-          data.rebate = data.rebate / 100
           console.log('reg from data', data)
 
           agent_save(data).then(res => {

@@ -15,12 +15,12 @@
             <el-option v-for="item in AppealeResult" :key="item.id" :label="item.label" :value="item.id" />
           </el-select> -->
           <el-date-picker
-v-model="fliterQuery.creatDate" 
+            v-model="fliterQuery.creatDate"
             class="filter-item"
-                          type="daterange"
-                          range-separator="至"
-                          start-placeholder="开始日期"
-                          end-placeholder="结束日期"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
           />
 
           <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
@@ -113,12 +113,12 @@ v-model="fliterQuery.creatDate"
             <el-option v-for="item in AppealeResult" :key="item.id" :label="item.label" :value="item.id" />
           </el-select> -->
           <el-date-picker
-v-model="fliterQuery.creatDate" 
+            v-model="fliterQuery.creatDate"
             class="filter-item"
-                          type="daterange"
-                          range-separator="至"
-                          start-placeholder="开始日期"
-                          end-placeholder="结束日期"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
           />
 
           <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
@@ -323,7 +323,8 @@ export default {
     handleAudit(data) {
       const postData = {
         adminId: this.adminId,
-        id: data.id
+        id: data.id,
+        resultReason: '无'
       }
       this.$confirm('申述是否成功', '提示', {
         confirmButtonText: '申述方胜',

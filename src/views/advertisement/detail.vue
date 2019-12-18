@@ -35,16 +35,16 @@
         <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
       <el-select v-model="fliterQuery.status" placeholder="订单状态" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.name" />
+        <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
 
       <el-date-picker
-v-model="fliterQuery.date" 
+        v-model="fliterQuery.date"
         class="filter-item"
-                      type="daterange"
-                      range-separator="至"
-                      start-placeholder="开始日期"
-                      end-placeholder="结束日期"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
       />
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索

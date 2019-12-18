@@ -81,7 +81,10 @@
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
     <el-dialog :visible.sync="dialogVisible" title="添加用户">
-      <el-form ref="regForm" :model="regForm" :rules="loginRules" class="login-form" label-width="80px" auto-complete="on" label-position="right">
+      <el-form ref="regForm" :model="regForm" :rules="loginRules" class="login-form" label-width="120px" auto-complete="on" label-position="right">
+        <el-form-item label="邀请人UUID" class="addUserItem" prop="parent">
+          <el-input ref="parent" v-model="regForm.parent" autocomplete="off" placeholder="请输入邀请人uuid" name="uuid" type="text" tabindex="1" auto-complete="on" />
+        </el-form-item>
         <el-form-item label="邮箱" class="addUserItem" prop="emailContact">
           <el-input ref="emailContact" v-model="regForm.emailContact" autocomplete="off" placeholder="请输入邮箱" name="emailContact" type="text" tabindex="1" auto-complete="on" />
         </el-form-item>
@@ -161,6 +164,7 @@ export default {
         pages: 1
       },
       regForm: {
+        parent:undefined,
         emailContact: undefined,
         password: undefined,
         active: true

@@ -165,7 +165,7 @@
         <el-option v-for="item in CounterParty" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
       <el-select v-model="fliterQuery.status" placeholder="订单状态" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.name" />
+        <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
 
       <el-date-picker
@@ -295,14 +295,14 @@
           <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.roleId,userRolesConst) }}</el-link>
         </el-col>
       </el-row>
-      <el-row v-else-if="type===2" :gutter="20" class="userRow">
+      <el-row v-else :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户角色：</el-col>
         <el-col :span="16">
           <el-select v-model="newData.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in userRolesConst" :key="item.id" :label="item.zhName" :value="item.id" />
           </el-select>
 
-          <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.currentRoleId,userRolesConst) }}</el-link>
+          <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.roleId,userRolesConst) }}</el-link>
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">

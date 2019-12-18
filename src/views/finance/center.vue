@@ -63,7 +63,7 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="card-item ">
               <div class="cart-i-t">邀请奖励</div>
-              <div class="cart-i-v">{{ modals.rebateSubsidy }}</div>
+              <div class="cart-i-v">{{ modals.shareSubsidy }}</div>
             </div>
           </el-col>
         </el-row>

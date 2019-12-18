@@ -22,7 +22,6 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>邮箱：{{ modals.emailContact }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>返佣比：{{ modals.rebate }}%</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>申诉数：{{ modals.appealNum }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>被申诉数：{{ modals.appealedNum }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>收付款方式：{{ modals.payTypes|payTypeNames }}</div></el-col>
@@ -79,11 +78,12 @@
         <el-option v-for="item in CounterParty" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
       <el-select v-model="fliterQuery.status" placeholder="订单状态" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.name" />
+        <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
 
-      <el-date-picker class="filter-item" 
+      <el-date-picker
         v-model="fliterQuery.date"
+        class="filter-item"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"

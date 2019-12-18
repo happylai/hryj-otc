@@ -66,7 +66,7 @@ const mutations = {
 
 const actions = {
   login({
-    commit
+    commit, dispatch
   }, userInfo) {
     const {
       username,
@@ -91,10 +91,11 @@ const actions = {
         commit('SET_AUTH', authorities)
 
         setToken(headers['x-auth-token'])
-        await get_system_const().then(res => {
-          console.log(res)
-          commit('SET_SYSTEM_CONST', res.data)
-        })
+        // await get_system_const().then(res => {
+        //   console.log(res)
+        //   commit('SET_SYSTEM_CONST', res.data)
+        // })
+        await dispatch('getSystemConfig')
         console.log('data', data)
         resolve()
       }).catch(err => {
@@ -121,6 +122,16 @@ const actions = {
       // commit('SET_GROUPNAME',groupName)
       console.log('setRoles', role)
       resolve(data)
+    })
+  },
+
+  async getSystemConfig({ commit, state }) {
+    return new Promise(async(resolve, reject) => {
+      await get_system_const().then(res => {
+        console.log(res)
+        commit('SET_SYSTEM_CONST', res.data)
+        resolve(res.data)
+      })
     })
   },
 

@@ -107,7 +107,7 @@
         <el-col :span="8" class="textAlingR">交易方：</el-col>
         <el-col :span="16">{{ editData.counterParty|counterParty }}</el-col>
       </el-row>
-      <el-row :gutter="20" class="userRow inputRow">
+      <el-row v-if="activeType!=='2'" :gutter="20" class="userRow inputRow">
         <el-col :span="8" class="textAlingR">{{ ratioPlaceHolder[activeType] }}：</el-col>
         <el-col :span="16">
           <el-input v-model="editData.newratio" style="width: 200px;height:30px" :placeholder="'请输入'+ratioPlaceHolder[activeType]+'(如:1.9)'" />
@@ -199,7 +199,7 @@ export default {
         { label: '入金手续费', key: '4' },
         { label: '出金手续费', key: '5' }
       ],
-      placeHolder: ['单笔补贴最高限额', '每天补贴最高限额', '总补贴最高限额', '补贴最高限额', '最高提成限额', '最高提成限额'],
+      placeHolder: ['单笔补贴最高限额', '每天补贴最高限额', '总补贴额', '补贴最高限额', '最高提成限额', '最高提成限额'],
       addUserType: {
         0: [5, 6, 7, 8],
         1: [5, 6, 7, 8],
@@ -313,7 +313,7 @@ export default {
         this.$message.error('请选择时间段')
       } else if ((this.activeType === '0' || this.activeType === '1') && (data.counterParty === '' || data.counterParty === undefined)) {
         this.$message.error('请选择交易方')
-      } else if (!data.ratio&&this.activeType !== '2') {
+      } else if (!data.ratio && this.activeType !== '2') {
         this.$message.error(this.ratioPlaceHolder[this.activeType])
       } else if (this.activeType === '2' && (data.achieveAmount === '' || data.achieveAmount === undefined)) {
         this.$message.error('请填写达量标准')

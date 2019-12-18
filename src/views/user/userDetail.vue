@@ -81,7 +81,7 @@
       <el-table-column min-width="120px" label="UUID" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.payType===0">{{ scope.row.uuid }}</span>
-          <span>无</span>
+          <span v-else>无</span>
         </template>
       </el-table-column>
 
@@ -299,7 +299,7 @@
         <el-col :span="8" class="textAlingR">用户角色：</el-col>
         <el-col :span="16">
           <el-select v-model="newData.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
-            <el-option v-for="item in userRolesConst" :key="item.id" :label="item.zhName" :value="item.id" />
+            <el-option v-for="item in userRolesConst" :key="item.id" :disabled="item.id===9||item.id===10" :label="item.zhName" :value="item.id" />
           </el-select>
 
           <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.roleId,userRolesConst) }}</el-link>
@@ -568,6 +568,7 @@ export default {
         active: this.newData.active,
         id: this.id,
         rebate: this.newData.rebate,
+        roleId: this.newData.roleId,
         frozenPayTypes: frozenPayTypes,
         usedPayTypes: this.newData.payTypes,
         password: this.newPassword ? this.newPassword : undefined

@@ -288,6 +288,14 @@
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">入金手续费：</el-col>
+        <el-col :span="16">
+          <el-input v-model="editPayment.entryFee" style="width: 240px" type="text" placeholder="请输入手续费比例(%)" suffix="%" tabindex="2" auto-complete="off">
+            <template slot="append">%</template>
+          </el-input>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR" />
         <el-col v-if="editPayment.qrCode" :span="16">
           <img v-lazy="editPayment.qrCode" :preview="'qrcode'" alt="收款码" class="payTypeImage" @click="paymentDialogVisible=false">
@@ -472,6 +480,7 @@ export default {
         'id': this.editPayment.id,
         'payType': this.editPayment.payType,
         'royalty': this.editPayment.royalty,
+        'entryFee': this.editPayment.entryFee,
         'userId': this.id
       }
       this.saveRoyalty(data)
@@ -543,5 +552,8 @@ export default {
 .userRow {
   min-height: 20px;
   margin: 10px 0;
+}
+.payTypeImage{
+  width: 100px
 }
 </style>

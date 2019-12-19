@@ -4,7 +4,7 @@
       <div slot="header" class="clearfix">
         <span class="card-title">基础信息</span>
         <el-button style="float: right; " type="primary" size="small" @click="clickAduit">编辑</el-button>
-        <el-button style="float: right; margin-right:10px " type="primary" size="small" @click="clickApply">交易补贴</el-button>
+        <el-button v-if="modals.roleId>=5" style="float: right; margin-right:10px " type="primary" size="small" @click="clickApply">交易补贴</el-button>
       </div>
       <div class="text item">
         <el-row :gutter="10" class="card-row">

@@ -39,9 +39,8 @@
 
     </div>
 
-    <el-table v-loading="loading" stripe :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="listLoading" stripe :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
-        v-loading="loading"
         align="center"
         label="用户ID"
         width="180"
@@ -192,7 +191,7 @@
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAudit(true)">通过</el-button>
+        <el-button :loading="saveLoading" :disabled="saveLoading" type="primary" @click="handleAudit(true)">通过</el-button>
         <el-button type="info" @click="handleAudit(false)">不通过</el-button>
       </span>
     </el-dialog>
@@ -251,7 +250,8 @@ export default {
         total: 10,
         pages: 1
       },
-      auditData: {}
+      auditData: {},
+      listLoading: false
     }
   },
 
@@ -280,6 +280,8 @@ export default {
     getList(meta, data) {
       this.listLoading = true
       users_web(meta || this.meta, data).then(res => {
+        this.listLoading = false
+
         console.log('res', res)
         if (res.code === 0) {
           this.list = res.data.records
@@ -326,8 +328,9 @@ export default {
       })
     },
     auditPayType(data) {
+      this.saveLoading = true
       pay_type_audit(data).then(res => {
-        this.loading = false
+        this.saveLoading = false
         this.dialogVisible = false
         if (res.code === 0) {
           this.$message({

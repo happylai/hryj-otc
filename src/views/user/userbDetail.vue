@@ -69,6 +69,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column align="center" label="入金手续费" width="80">
+        <template slot-scope="scope">
+          <span>{{ scope.row.entryFee }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" class-name="status-col" label="操作" width="110">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="clickEditPayment(scope.row)">编辑</el-button>

@@ -192,8 +192,9 @@ export default {
       this.getList()
     },
     getList(meta, data) {
-      this.listLoading = true
+      this.loading = true
       advertises(meta || this.meta, data || { origin: this.activeType }).then(res => {
+        this.loading = false
         console.log('res', res)
         if (res.code === 0) {
           this.list = res.data.records

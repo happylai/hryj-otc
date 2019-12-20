@@ -89,13 +89,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="奖励" width="90">
-          <template slot-scope="scope">
-            <span>{{ scope.row.award }}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column align="center" label="手续费" width="80">
+        <el-table-column v-if="activeType==='2'" align="center" label="手续费" width="80">
           <template slot-scope="scope">
             <span>{{ scope.row.fee }}</span>
           </template>
@@ -249,7 +243,7 @@ export default {
     return {
       tabMapOptions: [
         { label: '站内订单', key: '1' },
-        { label: '商户订单', key: '2' }
+        { label: 'To B订单', key: '2' }
       ],
       CounterParty,
       OrderStatus,
@@ -329,10 +323,10 @@ export default {
       this.handleFilter(false)
     },
     getList(meta, data) {
-      this.listLoading = true
-      this.listLoading = true
+      this.loading = true
       order_list(meta || this.meta, data || { isMatch: this.activeType === '2' }).then(res => {
         console.log('res', res)
+        this.loading = false
         if (res.code === 0) {
           this.list = res.data.records
           this.meta.current = res.data.current

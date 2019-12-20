@@ -2,11 +2,11 @@
   <div class="tab-container">
     <tip :miain-tip="miainTip" :second-tip="secondTip" :show-contact="false" />
 
-    <div
-      class="filter-container"
-      style="margin-bottom: 10px;"
-    >
+    <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
+      <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
+    </el-tabs>
 
+    <div class="filter-container" style="margin-bottom: 10px;">
       <el-input v-model="fliterQuery.query" placeholder="广告ID / 创建人" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="fliterQuery.type" placeholder="广告类型" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in AdvType" :key="item.id" :label="item.label" :value="item.id" />
@@ -131,6 +131,12 @@ export default {
       PayType,
       miainTip: '广告下架：1.查看广告详情；2.核查是否有未完成交易。',
       secondTip: '温馨提示：若遇其他非上述情况请及时联系管理员。',
+      tabMapOptions: [
+        { label: '站内广告', key: '0' },
+        { label: 'To B广告', key: '1' }
+      ],
+      activeType: '0',
+
       fliterQuery: {
         page: 1,
         size: 20,
@@ -163,7 +169,22 @@ export default {
     this.getList()
   },
   methods: {
-
+    handleTabClick(tab, event) {
+      console.log('tab', tab)
+      this.meta.current = 1
+      this.activeType = tab.name
+      const fliterQuery = {
+        page: 1,
+        size: 10,
+        payType: undefined,
+        query: undefined,
+        status: undefined,
+        creatDate: undefined,
+        complateDate: undefined
+      }
+      this.fliterQuery = fliterQuery
+      this.getList()
+    },
     paginationChange(e) {
       console.log('paginationChange', e)
       this.meta.size = e.limit
@@ -172,7 +193,7 @@ export default {
     },
     getList(meta, data) {
       this.listLoading = true
-      advertises(meta || this.meta, data).then(res => {
+      advertises(meta || this.meta, data || { origin: this.activeType }).then(res => {
         console.log('res', res)
         if (res.code === 0) {
           this.list = res.data.records
@@ -189,7 +210,8 @@ export default {
         type: fliterQuery.type,
         payType: fliterQuery.payType,
         query: fliterQuery.query,
-        status: fliterQuery.status
+        status: fliterQuery.status,
+        origin: this.activeType
       }
       if (fliterQuery.date) {
         data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')

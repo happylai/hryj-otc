@@ -75,6 +75,12 @@
             </template>
           </el-table-column>
 
+          <el-table-column min-width="180px" align="center" label="交易方">
+            <template slot-scope="scope">
+              <span>{{ scope.row.origin|PriceTreadName }}</span>
+            </template>
+          </el-table-column>
+
           <el-table-column min-width="180px" align="center" label="交易角色">
             <template slot-scope="scope">
               <span>{{ scope.row.dealType|counterParty }}</span>
@@ -149,6 +155,9 @@
             <el-select v-model="currentGroupQuery.token" placeholder="请选择币种" clearable style="width: 140px" class="filter-item" @change="filterChange">
               <el-option v-for="item in TokenType" :key="item.label+'tokenType'" :label="item.label" :value="item.label" />
             </el-select>
+            <el-select v-model="currentGroupQuery.origin" placeholder="请选择交易方" clearable style="width: 140px" class="filter-item" @change="filterChange">
+              <el-option v-for="item in PriceTread" :key="item.label+'tread'" :label="item.label" :value="item.id" />
+            </el-select>
             <el-select v-model="currentGroupQuery.fiat" placeholder="请选择法币" clearable style="width: 140px" class="filter-item" @change="filterChange">
               <el-option v-for="item in FiatType" :key="item.label+'tokenType'" :label="item.label" :value="item.label" />
             </el-select>
@@ -169,7 +178,11 @@
                 <span>{{ scope.row.token }}</span>
               </template>
             </el-table-column>
-
+            <el-table-column min-width="100px" align="center" label="交易方">
+              <template slot-scope="scope">
+                <span>{{ scope.row.origin|PriceTreadName }}</span>
+              </template>
+            </el-table-column>
             <el-table-column v-if="ParamsType==='4'" min-width="180px" align="center" label="接单范围">
               <template slot-scope="scope">
                 <span>{{ scope.row.minPrice }}~{{ scope.row.maxPrice }}</span>
@@ -227,7 +240,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
-import { TokenType, FiatType, DealType } from '@/utils/enumeration'
+import { TokenType, FiatType, DealType, PriceTread } from '@/utils/enumeration'
 import { deposits, deposit_save, active_golds, active_gold_save, cancel_nums, cancel_num_save, groups, group_save, groups_scopes, get_group_scopes_add, scopes_add, app_version_save, app_versions } from '@/api/params'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 export default {
@@ -240,6 +253,7 @@ export default {
       TokenType,
       FiatType,
       DealType,
+      PriceTread,
       tabMapOptions: [
         { label: '保证金', key: '1', name: 'deposit' },
         { label: '激活金', key: '2', mame: 'activeGold' },
@@ -291,9 +305,10 @@ export default {
 
       },
       currentGroupQuery: {
-        token: 'BTC',
+        token: 'PQC',
         dealType: 0,
-        fiat: 'CNY'
+        fiat: 'CNY',
+        origin: 0
       },
       current_group_scopes_add: [],
       current_group_scopes_add_Selection: []

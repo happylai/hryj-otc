@@ -182,6 +182,16 @@ export const Roles = [{
 }
 ]
 
+export const PriceTread = [{
+  id: 0,
+  label: 'To C'
+},
+{
+  id: 1,
+  label: 'To B'
+}
+]
+
 export const UserType = [
   //   {
   //   id: 0,

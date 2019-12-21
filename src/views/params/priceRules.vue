@@ -5,11 +5,11 @@
         <div>
           <el-row :gutter="20" class="userRow">
             <el-col :span="20">
-              <el-select v-model="price.origin" placeholder="请选择交易方" clearable style="width: 140px" class="filter-item" @change="filterChange">
-                <el-option v-for="item in tradeType" :key="item.label+'tread'" :label="item.label" :value="item.id" />
-              </el-select>
               <el-select v-model="price.token" placeholder="请选择币种" clearable style="width: 140px" class="filter-item" @change="filterChange">
                 <el-option v-for="item in TokenType" :key="item.label+'tokenType'" :label="item.label" :value="item.label" />
+              </el-select>
+              <el-select v-model="price.origin" placeholder="请选择交易方" clearable style="width: 140px" class="filter-item" @change="filterChange">
+                <el-option v-for="item in tradeType" :key="item.label+'tread'" :label="item.label" :value="item.id" />
               </el-select>
               <el-select v-model="price.fiat" placeholder="请选择法币" clearable style="width: 140px" class="filter-item" @change="filterChange">
                 <el-option v-for="item in FiatType" :key="item.label+'tokenType'" :label="item.label" :value="item.label" />
@@ -49,7 +49,7 @@
 
           <el-table-column min-width="180px" align="center" label="交易方">
             <template slot-scope="scope">
-              <span>{{ scope.row.origin }}</span>
+              <span>{{ scope.row.origin|PriceTreadName }}</span>
             </template>
           </el-table-column>
           <el-table-column min-width="180px" align="center" label="汇率">

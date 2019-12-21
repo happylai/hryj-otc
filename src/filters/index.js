@@ -17,7 +17,8 @@ import {
   AdvType,
   AuthType,
   OrderAuditStatus,
-  AppealeType
+  AppealeType,
+  PriceTread
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -170,6 +171,21 @@ export function payTypeName(id) {
   let res = '-'
   if (has({ foo: id }, 'foo')) {
     const data = PayTypeExtent.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+
+/**
+ * PriceTreadName
+ * @param {number} num
+ */
+export function PriceTreadName(id) {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = PriceTread.filter((item) => { if (item.id === id) { return item } })
     if (has({ foo: data }, 'foo')) {
       res = data[0].label
     }

@@ -386,6 +386,7 @@ export default {
       if (this.ParamsType !== '4') {
         this.editData = data
         this.dialogVisible = true
+        this.getList()
       } else {
         this.editData = data
         this.groupDialogVisible = true

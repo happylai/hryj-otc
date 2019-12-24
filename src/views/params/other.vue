@@ -164,7 +164,7 @@
             <el-select v-model="currentGroupQuery.dealType" placeholder="请选择交易角色" clearable style="width: 140px" class="filter-item" @change="filterChange">
               <el-option v-for="item in DealType" :key="item.label+'tokenType'" :label="item.label" :value="item.id" />
             </el-select>
-            <el-button type="primary" size="small" style="margin-left: 40px" @click="filterChange(scope.row)">搜索</el-button>
+            <el-button type="primary" size="small" style="margin-left: 40px" @click="filterChange()">搜索</el-button>
           </el-col>
 
           <el-table v-loading="loading" class="marginT20" :data="current_group_scopes_add" border fit highlight-current-row @selection-change="handleCurrent_group_scopes_add">

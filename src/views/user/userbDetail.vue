@@ -4,7 +4,7 @@
       <div slot="header" class="clearfix">
         <span class="card-title">基础信息</span>
         <el-button style="float: right; " type="primary" size="small" @click="clickAduit">编辑</el-button>
-        <el-button style="float: right; margin-right:10px " type="primary" size="small" @click="dialogVisibleApply=true">入金手续费</el-button>
+        <el-button style="float: right; margin-right:10px " type="primary" size="small" @click="dialogVisibleApply=true">出入金手续费</el-button>
       </div>
       <div class="text item">
         <el-row :gutter="10" class="card-row">

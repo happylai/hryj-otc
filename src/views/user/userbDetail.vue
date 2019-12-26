@@ -306,32 +306,48 @@
       <el-row :gutter="10" class="supplyRow">
         <el-col :span="4" class="textAlingR supplyType">入金</el-col>
         <el-col :span="5">
-          <el-input v-model="modals.buyAli" placeholder="支付宝" />
+          <el-input v-model="modals.buyAli" placeholder="支付宝">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="modals.buyWeixin" placeholder="微信" />
+          <el-input v-model="modals.buyWeixin" placeholder="微信">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="modals.buyBank" placeholder="银行卡" />
+          <el-input v-model="modals.buyBank" placeholder="银行卡">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="modals.buyCloud" placeholder="云闪付" />
+          <el-input v-model="modals.buyCloud" placeholder="云闪付">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
       </el-row>
       <el-row :gutter="10" class="supplyRow">
         <el-col :span="4" class="textAlingR supplyType">
           出金</el-col>
         <el-col :span="5">
-          <el-input v-model="modals.sellAli" placeholder="支付宝" />
+          <el-input v-model="modals.sellAli" placeholder="支付宝">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="modals.sellWeixin" placeholder="微信" />
+          <el-input v-model="modals.sellWeixin" placeholder="微信">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="modals.sellBank" placeholder="银行卡" />
+          <el-input v-model="modals.sellBank" placeholder="银行卡">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="modals.sellCloud" placeholder="云闪付" />
+          <el-input v-model="modals.sellCloud" placeholder="云闪付">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">

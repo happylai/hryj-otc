@@ -117,6 +117,7 @@
     <el-card class="box-card marginT40">
       <div slot="header" class="clearfix">
         <span class="card-title">用户资产（当前用户资产/冻结资产/保证金）</span>
+        <el-button style="float: right; " type="primary" size="small" @click="editAssets">修复资产</el-button>
         <!-- <el-button style="float: right; padding: 3px 0" type="text">审核</el-button> -->
       </div>
       <div class="text item">
@@ -382,6 +383,50 @@
         <el-button @click="dialogVisibleApply=false">取消</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog :visible.sync="showEditAssets" title="修改资产" width="650px">
+      <el-tabs v-model="assetsEditTab" type="border-card">
+        <el-tab-pane label="增加资产" name="0">
+          <div class="text_red" style="margin-bottom:20px">说明：增加资产操作是将扣款账户中的资产减少，并划转增加到当前账户中请谨慎操作！</div>
+          <el-form ref="assetsAddForm" :model="assetsAdd" :rules="rules" label-width="180px" class="demo-ruleForm">
+            <el-form-item label="扣款账号" prop="uuid">
+              <el-input v-model="assetsAdd.uuid" placeholder="输入扣款账号UID" />
+            </el-form-item>
+
+            <el-form-item label="划转金额" prop="amount">
+              <el-input v-model="assetsAdd.amount" placeholder="输入划转金额" />
+            </el-form-item>
+
+            <el-form-item label="输入划转原因" prop="remark">
+              <el-input v-model="assetsAdd.remark" placeholder="输入划转原因和发生纠纷双方的订单号" type="textarea" />
+            </el-form-item>
+
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="减少资产" name="1">
+          <div class="text_red" style="margin-bottom:20px">说明：减少资产操作是将当前账号的资产减少，并划转增加到转入账号上请谨慎操作！</div>
+
+          <el-form ref="assetsDesForm" :model="assetsDes" :rules="rules" label-width="180px" class="demo-ruleForm">
+            <el-form-item label="转入账号" prop="uuid">
+              <el-input v-model="assetsDes.uuid" placeholder="输入转入账号UID" />
+            </el-form-item>
+
+            <el-form-item label="划转金额" prop="amount">
+              <el-input v-model="assetsDes.amount" placeholder="输入划转金额" />
+            </el-form-item>
+
+            <el-form-item label="输入划转原因" prop="remark">
+              <el-input v-model="assetsDes.remark" placeholder="输入划转原因和发生纠纷双方的订单号" type="textarea" />
+            </el-form-item>
+
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
+      <span slot="footer" class="dialog-footer">
+        <el-button v-loading="saveLoading" :disabled="saveLoading" type="primary" @click=" handleEditAssets() ">确认划转</el-button>
+        <el-button @click="showEditAssets=false">取消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -393,7 +438,7 @@ import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/util
 
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect, OrderStatus, CounterParty, PayType } from '@/utils/enumeration'
-import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, get_deal_subsidy, deal_subsidy } from '@/api/usermanage'
+import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, get_deal_subsidy, deal_subsidy, system_transfer } from '@/api/usermanage'
 import { order_details } from '@/api/order'
 
 export default {
@@ -463,8 +508,18 @@ export default {
       supplyLoading: false,
       detailLoading: false,
       payTypeLoading: false,
-      orderLoading: false
+      orderLoading: false,
+      showEditAssets: false,
+      assetsAdd: {},
+      assetsDes: {
+      },
+      rules: {
 
+        uuid: [{ required: true, message: '请输入', trigger: 'blur' }],
+        amount: [{ required: true, message: '请输入', trigger: 'blur' }],
+        remark: [{ required: true, message: '请输入', trigger: 'blur' }]
+      },
+      assetsEditTab: '0'
     }
   },
   computed: {
@@ -670,6 +725,36 @@ export default {
           this.get_subsidy()
         }
       })
+    },
+    editAssets() {
+      this.showEditAssets = true
+    },
+    handleEditAssets() {
+      const formName = ['assetsAddForm', 'assetsDesForm'][this.assetsEditTab]
+      const data = [this.assetsAdd, this.assetsDes][this.assetsEditTab]
+      this.$refs[formName].validate((valid) => {
+        console.log('valid', valid)
+        this.saveLoading = true
+        system_transfer({
+          ...data,
+          transfer: this.assetsEditTab,
+          userId: this.id
+        }).then(res => {
+          this.saveLoading = false
+
+          if (res.code === 0) {
+            this.$message({
+              type: 'success',
+              message: '划转成功'
+            })
+          } else {
+            this.$message.error(res.message || '划转失败')
+          }
+        })
+      }).catch(err => {
+        this.saveLoading = false
+        this.$message.error(err.message || '划转失败')
+      })
     }
 
   }
@@ -735,5 +820,7 @@ export default {
   font-size: 16px;
   font-weight: bold;
 }
-
+.text_red{
+  color: #f56c6c
+}
 </style>

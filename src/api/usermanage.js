@@ -260,3 +260,12 @@ export function deal_subsidy(data) {
     data
   })
 }
+
+// 用户系统转账
+export function system_transfer(data) {
+  return request({
+    url: `/admin/user/user_web/system_transfer`,
+    method: 'post',
+    data
+  })
+}

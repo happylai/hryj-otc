@@ -423,7 +423,7 @@
         </el-tab-pane>
       </el-tabs>
       <span slot="footer" class="dialog-footer">
-        <el-button v-loading="saveLoading" :disabled="saveLoading" type="primary" @click=" handleEditAssets() ">确认划转</el-button>
+        <el-button :loading="saveLoading" :disabled="saveLoading" type="primary" @click=" handleEditAssets() ">确认划转</el-button>
         <el-button @click="showEditAssets=false">取消</el-button>
       </span>
     </el-dialog>
@@ -734,6 +734,9 @@ export default {
       const data = [this.assetsAdd, this.assetsDes][this.assetsEditTab]
       this.$refs[formName].validate((valid) => {
         console.log('valid', valid)
+        if (!valid) {
+          return false
+        }
         this.saveLoading = true
         system_transfer({
           ...data,
@@ -750,10 +753,10 @@ export default {
           } else {
             this.$message.error(res.message || '划转失败')
           }
+        }).catch(err => {
+          this.saveLoading = false
+          this.$message.error(err.message || '划转失败')
         })
-      }).catch(err => {
-        this.saveLoading = false
-        this.$message.error(err.message || '划转失败')
       })
     }
 

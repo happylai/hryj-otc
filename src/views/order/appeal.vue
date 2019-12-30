@@ -5,10 +5,10 @@
         <tip />
         <div class="filter-container" style="margin-bottom: 10px;">
           <el-input v-model="fliterQuery.query" placeholder="订单ID/发起人" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-          <el-select v-model="fliterQuery.type" placeholder="申述类型" clearable style="width: 140px" class="filter-item">
+          <el-select v-model="fliterQuery.type" placeholder="申诉类型" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeType" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
-          <!-- <el-select v-model="fliterQuery.status" placeholder="申述状态" clearable style="width: 140px" class="filter-item">
+          <!-- <el-select v-model="fliterQuery.status" placeholder="申诉状态" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeStatus" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
           <el-select v-model="fliterQuery.result" placeholder="处理结果" clearable style="width: 140px" class="filter-item">
@@ -103,10 +103,10 @@
         <tip />
         <div class="filter-container" style="margin-bottom: 10px;">
           <el-input v-model="fliterQuery.query" placeholder="订单ID/发起人" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-          <el-select v-model="fliterQuery.type" placeholder="申述类型" clearable style="width: 140px" class="filter-item">
+          <el-select v-model="fliterQuery.type" placeholder="申诉类型" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeType" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
-          <!-- <el-select v-model="fliterQuery.status" placeholder="申述状态" clearable style="width: 140px" class="filter-item">
+          <!-- <el-select v-model="fliterQuery.status" placeholder="申诉状态" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeStatus" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
           <el-select v-model="fliterQuery.result" placeholder="处理结果" clearable style="width: 140px" class="filter-item">
@@ -199,8 +199,8 @@ export default {
   data() {
     return {
       tabMapOptions: [
-        { label: '普通申述', key: '1' },
-        { label: '补单申述', key: '2' }
+        { label: '普通申诉', key: '1' },
+        { label: '补单申诉', key: '2' }
       ],
       AppealeResult,
       AppealeStatus,
@@ -326,9 +326,9 @@ export default {
         id: data.id,
         resultReason: '无'
       }
-      this.$confirm('申述是否成功', '提示', {
-        confirmButtonText: '申述方胜',
-        cancelButtonText: '申述方败',
+      this.$confirm('申诉是否成功', '提示', {
+        confirmButtonText: '申诉方胜',
+        cancelButtonText: '申诉方败',
         distinguishCancelAndClose: true,
         type: 'warning'
       }).then((val) => {

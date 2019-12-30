@@ -106,7 +106,7 @@ export const asyncRoutes = [{
     // redirect: '/order/appeal/list',
 
     meta: {
-      title: '订单申述',
+      title: '订单申诉',
       icon: '',
       authName: ['order_appeal']
 
@@ -118,7 +118,7 @@ export const asyncRoutes = [{
     component: () => import('@/views/order/appealDetail'),
     hidden: true,
     meta: {
-      title: '申述详情',
+      title: '申诉详情',
       activeMenu: '/order/appeal',
       icon: '',
       authName: ['order_appeal']

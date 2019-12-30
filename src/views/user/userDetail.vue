@@ -289,14 +289,14 @@
           <el-input v-model="newPassword" style="width: 240px" name="changepassword" type="text" placeholder="请输入密码" tabindex="2" />
         </el-col>
       </el-row>
-      <el-row v-if="type==='1'" :gutter="20" class="userRow">
+      <!-- <el-row v-if="type==='1'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">角色升级：</el-col>
         <el-col :span="16">
           <el-link type="success" :underline="false">超级 {{ userRolesConstName(editData.currentRoleId,userRolesConst) }}</el-link>
           <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.roleId,userRolesConst) }}</el-link>
         </el-col>
-      </el-row>
-      <el-row v-else :gutter="20" class="userRow">
+      </el-row> -->
+      <!-- <el-row v-else :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户角色：</el-col>
         <el-col :span="16">
           <el-select v-model="newData.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
@@ -305,7 +305,7 @@
 
           <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.roleId,userRolesConst) }}</el-link>
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">所在分组：</el-col>
         <el-col :span="16">
@@ -325,7 +325,7 @@
           />{{ newData.active?'正常':'冻结' }}
           <el-link type="danger" :underline="false">当前状态： {{ editData.active?'正常':'冻结' }}</el-link></el-col>
       </el-row>
-      <el-row :gutter="20" class="userRow">
+      <el-checkbox-group :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">收付款方式：</el-col>
         <el-col :span="16">
           <el-checkbox-group v-model="newData.payTypes">
@@ -333,7 +333,7 @@
           </el-checkbox-group>
           <el-link type="danger" :underline="false">当前收付款方式：{{ editData.payTypes|payTypeNames }}</el-link>
         </el-col>
-      </el-row>
+      </el-checkbox-group>
 
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click=" handleAudit() ">保存</el-button>
@@ -347,7 +347,7 @@
         <el-col :span="5">银行卡</el-col>
         <el-col :span="5">云闪付</el-col>
       </el-row>
-      <el-row v-if="showBuy" :gutter="10" class="supplyRow">
+      <el-row :gutter="10" class="supplyRow">
         <el-col :span="4" class="textAlingR supplyType">买</el-col>
         <el-col :span="5">
           <el-input v-model="subsidyBuy[0].rebate" placeholder="支付宝补贴" />
@@ -362,7 +362,7 @@
           <el-input v-model="subsidyBuy[3].rebate" placeholder="云闪付补贴" />
         </el-col>
       </el-row>
-      <el-row v-if="showSell" :gutter="10" class="supplyRow">
+      <el-row :gutter="10" class="supplyRow">
         <el-col :span="4" class="textAlingR supplyType">
           卖</el-col>
         <el-col :span="5">

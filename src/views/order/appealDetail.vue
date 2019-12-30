@@ -36,7 +36,7 @@
       </el-button>
     </div>
     <div v-if="activeType==='1'">
-      <h4>申述类型： {{ modals.type|appealeType }}</h4>
+      <h4>申诉类型： {{ modals.type|appealeType }}</h4>
       <div class="filter-container" style="margin-bottom: 10px;">
         <el-row :gutter="10" class="card-row">
           <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
@@ -82,7 +82,7 @@
                     <el-col :span="6" class="textAlingR">图片证据：</el-col>
                     <el-col :span="18">
                       <div v-if="modals.sourceProof" class="images-container">
-                        <img v-for="(item,index) in modals.sourceProofArr" :key="index+'sourceProof'" v-lazy="item" class="proofImage" :preview="'sourceProof'" alt="被申述人证据">
+                        <img v-for="(item,index) in modals.sourceProofArr" :key="index+'sourceProof'" v-lazy="item" class="proofImage" :preview="'sourceProof'" alt="被申诉人证据">
                       </div>
                       <span v-else>无</span>
                     </el-col>
@@ -135,7 +135,7 @@
                     <el-col :span="6" class="textAlingR">图片内容：</el-col>
                     <el-col :span="18">
                       <div v-if="modals.targetProof" class="images-container">
-                        <img v-for="(item,index) in modals.targetProofArr" :key="index+'targetProof'" v-lazy="item" class="proofImage" :preview="'targetProof'" alt="被申述人证据">
+                        <img v-for="(item,index) in modals.targetProofArr" :key="index+'targetProof'" v-lazy="item" class="proofImage" :preview="'targetProof'" alt="被申诉人证据">
                       </div>
                       <span v-else>无</span>
                     </el-col>
@@ -150,7 +150,7 @@
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span class="card-title">申述处理</span>
+          <span class="card-title">申诉处理</span>
         </div>
         <div class="text item">
           <el-input
@@ -290,7 +290,7 @@ export default {
       if (data) {
         this.appealAudit(postData)
       } else {
-        this.$confirm('确认申述人失败', '提示', {
+        this.$confirm('确认申诉人失败', '提示', {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
           type: 'danger'

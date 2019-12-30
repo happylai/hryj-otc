@@ -692,18 +692,16 @@ export default {
           // this.addApply(data)
         }
       }
-      if (this.showBuy) {
-        const buy = this.subsidyBuy
-        for (const i in buy) {
-          if (buy[i].rebate) {
-            const data = {
-              'partyEnum': '0',
-              'payType': i,
-              'id': buy[i].id || undefined,
-              'rebate': buy[i].rebate
-            }
-            subsidies.push(data)
+      const buy = this.subsidyBuy
+      for (const i in buy) {
+        if (buy[i].rebate) {
+          const data = {
+            'partyEnum': '0',
+            'payType': i,
+            'id': buy[i].id || undefined,
+            'rebate': buy[i].rebate
           }
+          subsidies.push(data)
         }
       }
       const postData = {

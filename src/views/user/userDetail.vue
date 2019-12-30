@@ -117,7 +117,7 @@
     <el-card class="box-card marginT40">
       <div slot="header" class="clearfix">
         <span class="card-title">用户资产（当前用户资产/冻结资产/保证金）</span>
-        <el-button style="float: right; " type="primary" size="small" @click="editAssets">修复资产</el-button>
+        <el-button style="float: right; " type="primary" size="small" @click="editAssets">修改资产</el-button>
         <!-- <el-button style="float: right; padding: 3px 0" type="text">审核</el-button> -->
       </div>
       <div class="text item">

@@ -750,6 +750,7 @@ export default {
               type: 'success',
               message: '划转成功'
             })
+            this.detail()
           } else {
             this.$message.error(res.message || '划转失败')
           }

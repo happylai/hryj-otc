@@ -12,6 +12,7 @@ export function getList(params) {
 
 // 交易明细列表
 export function order_details(meta, data) {
+  console.log("order_details meta",meta)
   return request({
     url: `/admin/order/order_details`,
     method: 'get',

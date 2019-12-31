@@ -245,7 +245,7 @@
       </el-table-column>
 
     </el-table>
-    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="paginationMeta.pages" :limit.sync="meta.size" @pagination="paginationChange" />
+    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
     <el-dialog v-loading="orderLoading" :visible.sync="dialogVisible" title="基础信息修改">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户ID：</el-col>

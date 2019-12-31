@@ -184,7 +184,7 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">支付方式：</el-col>
-        <el-col :span="16">{{ editData.mobileContact|payTypeNames }}</el-col>
+        <el-col :span="16">{{ editData.payType|payTypeNames }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">交易金额：</el-col>
@@ -195,8 +195,12 @@
         <el-col :span="16">{{ editData.legalAmount }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">手续费：</el-col>
+        <el-col :span="16">{{ editData.fee }}</el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">交易补贴：</el-col>
-        <el-col :span="16">{{ editData.orderSubsidy }}</el-col>
+        <el-col :span="16">{{ editData.dealSubsidy }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">夜间补贴：</el-col>
@@ -206,19 +210,6 @@
         <el-col :span="8" class="textAlingR">达量补贴：</el-col>
         <el-col :span="16">{{ editData.amountSubsidy }}</el-col>
       </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">订单补贴：</el-col>
-        <el-col :span="16">无</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">下级返佣：</el-col>
-        <el-col :span="16">无</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">放币时间：</el-col>
-        <el-col :span="16">无</el-col>
-      </el-row>
-
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisible=false">确定</el-button>
         <el-button type="info" @click="dialogVisible=false">取消</el-button>

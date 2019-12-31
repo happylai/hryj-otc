@@ -540,3 +540,54 @@ export const AppealeType = [
     label: '其他'
   }
 ]
+
+export const LogsModels = [
+  {
+    id: 0,
+    label: '订单中心 '
+  },
+  {
+    id: 1,
+    label: '广告管理'
+  },
+  {
+    id: 2,
+    label: '用户管理 '
+  },
+  {
+    id: 3,
+    label: '参数管理'
+  },
+  {
+    id: 4,
+    label: '后台管理 '
+  },
+  {
+    id: 5,
+    label: '留言板'
+  }
+]
+
+export const LogsTypes = [
+  {
+    id: 0,
+    label: '保存数据 '
+  },
+  {
+    id: 1,
+    label: '删除数据'
+  },
+  {
+    id: 2,
+    label: '审核数据 '
+  },
+  {
+    id: 3,
+    label: '冻结账号'
+  },
+  {
+    id: 4,
+    label: '其他操作 '
+  }
+]
+

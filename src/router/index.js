@@ -524,6 +524,17 @@ export const asyncRoutes = [{
         authName: ['system_admin_user']
 
       }
+    },
+    {
+      path: 'logs',
+      name: 'system_admin_logs',
+      component: () => import('@/views/system/logs'),
+      meta: {
+        title: '操作日志',
+        icon: '',
+        authName: ['system_admin_user']
+
+      }
     }
   ]
 },

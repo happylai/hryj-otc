@@ -18,7 +18,9 @@ import {
   AuthType,
   OrderAuditStatus,
   AppealeType,
-  PriceTread
+  PriceTread,
+  LogsModels,
+  LogsTypes
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -442,3 +444,24 @@ export function appealeType(id) {
   }
 }
 
+export function LogsModelsName(id) {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = LogsModels.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+
+export function LogsTypesName(id) {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = LogsTypes.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}

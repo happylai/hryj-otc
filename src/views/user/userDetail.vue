@@ -150,6 +150,8 @@
       </div>
     </el-card>
 
+    <subordinate />
+
     <div class="section-title-container marginT40">
       <span class="section-title">交易明细</span><span class="container-tip">  已经完成订单：总数<el-link type="primary">{{ modals.totalOrders }} </el-link>  | toB售币订单：<el-link type="primary">{{ modals.toBOrders }} </el-link></span>
 
@@ -246,6 +248,7 @@
 
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
+
     <el-dialog v-loading="orderLoading" :visible.sync="dialogVisible" title="基础信息修改">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户ID：</el-col>
@@ -435,7 +438,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
-
+import subordinate from './subordinate'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect, OrderStatus, CounterParty, PayType } from '@/utils/enumeration'
 import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, get_deal_subsidy, deal_subsidy, system_transfer } from '@/api/usermanage'
@@ -443,7 +446,7 @@ import { order_details } from '@/api/order'
 
 export default {
   name: 'Tab',
-  components: { pagination },
+  components: { pagination, subordinate },
   directives: { waves },
   data() {
     return {
@@ -519,7 +522,9 @@ export default {
         amount: [{ required: true, message: '请输入', trigger: 'blur' }],
         remark: [{ required: true, message: '请输入', trigger: 'blur' }]
       },
-      assetsEditTab: '0'
+      assetsEditTab: '0',
+      saveLoading: false
+
     }
   },
   computed: {

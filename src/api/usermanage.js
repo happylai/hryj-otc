@@ -230,6 +230,18 @@ export function agent_children(meta, data) {
   })
 }
 
+// 交易所用户查询下级列表
+export function user_web_children(meta, data) {
+  return request({
+    url: `/admin/user/user_web_children`,
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta
+    }
+  })
+}
+
 // 代理商收益明细列表查询
 export function agent_earnings(meta, data) {
   return request({

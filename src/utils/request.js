@@ -66,7 +66,6 @@ service.interceptors.response.use(
           })
         })
         return Promise.reject(new Error('登录失效'))
-
       } else {
         Message({
           message: res.message || 'Error',
@@ -74,7 +73,6 @@ service.interceptors.response.use(
           duration: 5 * 1000
         })
         return Promise.reject(new Error(res.message || 'Error'))
-
       }
     } else {
       return res

@@ -226,6 +226,17 @@ export const asyncRoutes = [{
       ]
     },
     {
+      path: 'level',
+      name: 'user_level',
+      component: () => import('@/views/user/level'),
+      meta: {
+        title: '邀请关系',
+        icon: '',
+        authName: ['user_level']
+
+      }
+    },
+    {
       path: 'instation/:id',
       hidden: true,
       name: 'user_instation_detail',

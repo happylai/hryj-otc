@@ -47,6 +47,8 @@
           </template>
         </el-table-column>
 
+        <el-table-column min-width="120px" align="center" label="商家订单号" :prop="merchantOrderNo" />
+
         <el-table-column width="80px" align="center" label="类型">
           <template slot-scope="scope">
             <span>{{ scope.row.type|advType }}</span>
@@ -104,6 +106,12 @@
         <el-table-column align="center" label="交易时间" min-width="150">
           <template slot-scope="scope">
             <span>{{ scope.row.createTime }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="备注" min-width="150">
+          <template slot-scope="scope">
+            <span>{{ scope.row.memo }}</span>
           </template>
         </el-table-column>
 

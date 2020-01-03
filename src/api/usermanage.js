@@ -230,15 +230,20 @@ export function agent_children(meta, data) {
   })
 }
 
-// 交易所用户查询下级列表
-export function user_web_children(meta, data) {
+// 邀请下级列表
+export function user_web_children(id) {
   return request({
-    url: `/admin/user/user_web_children`,
+    url: `/admin/user/user_web_children/${id}`,
+    method: 'get'
+  })
+}
+
+// 邀请下级初始化
+export function user_web_init(data) {
+  return request({
+    url: `/admin/user/user_web_children/init`,
     method: 'get',
-    params: data,
-    headers: {
-      ...meta
-    }
+    params: data
   })
 }
 

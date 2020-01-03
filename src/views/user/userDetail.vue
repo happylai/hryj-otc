@@ -150,8 +150,6 @@
       </div>
     </el-card>
 
-    <subordinate />
-
     <div class="section-title-container marginT40">
       <span class="section-title">交易明细</span><span class="container-tip">  已经完成订单：总数<el-link type="primary">{{ modals.totalOrders }} </el-link>  | toB售币订单：<el-link type="primary">{{ modals.toBOrders }} </el-link></span>
 
@@ -353,32 +351,48 @@
       <el-row :gutter="10" class="supplyRow">
         <el-col :span="4" class="textAlingR supplyType">买</el-col>
         <el-col :span="5">
-          <el-input v-model="subsidyBuy[0].rebate" placeholder="支付宝补贴" />
+          <el-input v-model="subsidyBuy[0].rebate" v-float type="number" min="0" max="100" placeholder="支付宝补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="subsidyBuy[1].rebate" placeholder="微信补贴" />
+          <el-input v-model="subsidyBuy[1].rebate" v-float type="number" min="0" max="100" placeholder="微信补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="subsidyBuy[2].rebate" placeholder="银行卡补贴" />
+          <el-input v-model="subsidyBuy[2].rebate" v-float type="number" min="0" max="100" placeholder="银行卡补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="subsidyBuy[3].rebate" placeholder="云闪付补贴" />
+          <el-input v-model="subsidyBuy[3].rebate" v-float type="number" min="0" max="100" placeholder="云闪付补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
       </el-row>
       <el-row :gutter="10" class="supplyRow">
         <el-col :span="4" class="textAlingR supplyType">
           卖</el-col>
         <el-col :span="5">
-          <el-input v-model="subsidySell[0].rebate" placeholder="支付宝补贴" />
+          <el-input v-model="subsidySell[0].rebate" v-float type="number" min="0" max="100" placeholder="支付宝补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="subsidySell[1].rebate" placeholder="微信补贴" />
+          <el-input v-model="subsidySell[1].rebate" v-float type="number" min="0" max="100" placeholder="微信补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="subsidySell[2].rebate" placeholder="银行卡补贴" />
+          <el-input v-model="subsidySell[2].rebate" v-float type="number" min="0" max="100" placeholder="银行卡补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="subsidySell[3].rebate" placeholder="云闪付补贴" />
+          <el-input v-model="subsidySell[3].rebate" v-float type="number" min="0" max="100" placeholder="云闪付补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -438,16 +452,15 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
-import subordinate from './subordinate'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect, OrderStatus, CounterParty, PayType } from '@/utils/enumeration'
 import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, get_deal_subsidy, deal_subsidy, system_transfer } from '@/api/usermanage'
 import { order_details } from '@/api/order'
-
+import float from '@/directive/float' // float Number directive
 export default {
   name: 'Tab',
-  components: { pagination, subordinate },
-  directives: { waves },
+  components: { pagination },
+  directives: { waves, float },
   data() {
     return {
       groupsConstName,

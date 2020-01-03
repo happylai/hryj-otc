@@ -75,13 +75,13 @@
       </div>
       <div class="text item">
         <el-row :gutter="10">
-          <el-col span="12">
+          <el-col :span="12">
             <div class="card-item borderR">
               <div class="cart-i-t">可用资产 </div>
               <div class="cart-i-v">{{ modals.balance }}</div>
             </div>
           </el-col>
-          <el-col span="12">
+          <el-col :span="12">
             <div class="card-item ">
               <div class="cart-i-t">冻结资产(不可用) </div>
               <div class="cart-i-v">{{ modals.frozenBalance }}</div>
@@ -308,22 +308,22 @@
       <el-row :gutter="10" class="supplyRow">
         <el-col :span="4" class="textAlingR supplyType">入金</el-col>
         <el-col :span="5">
-          <el-input v-model="modals.buyAli" placeholder="支付宝">
+          <el-input v-model="modals.buyAli" v-float type="number" min="0" max="100" placeholder="支付宝">
             <template slot="append">%</template>
           </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="modals.buyWeixin" placeholder="微信">
+          <el-input v-model="modals.buyWeixin" v-float type="number" min="0" max="100" placeholder="微信">
             <template slot="append">%</template>
           </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="modals.buyBank" placeholder="银行卡">
+          <el-input v-model="modals.buyBank" v-float type="number" min="0" max="100" placeholder="银行卡">
             <template slot="append">%</template>
           </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="modals.buyCloud" placeholder="云闪付">
+          <el-input v-model="modals.buyCloud" v-float type="number" min="0" max="100" placeholder="云闪付">
             <template slot="append">%</template>
           </el-input>
         </el-col>
@@ -332,22 +332,22 @@
         <el-col :span="4" class="textAlingR supplyType">
           出金</el-col>
         <el-col :span="5">
-          <el-input v-model="modals.sellAli" placeholder="支付宝">
+          <el-input v-model="modals.sellAli" v-float type="number" min="0" max="100" placeholder="支付宝">
             <template slot="append">%</template>
           </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="modals.sellWeixin" placeholder="微信">
+          <el-input v-model="modals.sellWeixin" v-float type="number" min="0" max="100" placeholder="微信">
             <template slot="append">%</template>
           </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="modals.sellBank" placeholder="银行卡">
+          <el-input v-model="modals.sellBank" v-float type="number" min="0" max="100" placeholder="银行卡">
             <template slot="append">%</template>
           </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="modals.sellCloud" placeholder="云闪付">
+          <el-input v-model="modals.sellCloud" v-float type="number" min="0" max="100" placeholder="云闪付">
             <template slot="append">%</template>
           </el-input>
         </el-col>
@@ -412,11 +412,12 @@ import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect, OrderStatus, CounterParty, PayType } from '@/utils/enumeration'
 import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, royalty_save, system_transfer } from '@/api/usermanage'
 import { order_details } from '@/api/order'
+import float from '@/directive/float' // float Number directive
 
 export default {
   name: 'Tab',
   components: { pagination },
-  directives: { waves },
+  directives: { waves, float },
   data() {
     return {
       UserType,
@@ -717,5 +718,8 @@ export default {
   line-height: 40px;
   font-size: 16px;
   font-weight: bold;
+}
+.supplyRow{
+  margin:10px 0;
 }
 </style>

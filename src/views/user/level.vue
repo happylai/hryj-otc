@@ -15,6 +15,7 @@
       row-key="userId"
       border
       lazy
+      default-expand-all
       :load="load"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >

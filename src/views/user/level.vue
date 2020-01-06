@@ -1,9 +1,9 @@
 <template>
   <div class="tab-container">
     <div class="filter-container" style="margin-bottom: 10px;">
-      <el-input v-model="fliterQuery.phone" placeholder="手机号搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="fliterQuery.email" placeholder="邮箱搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="fliterQuery.uid" placeholder="uuid搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="fliterQuery.phone" placeholder="手机号搜索" clearable style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="fliterQuery.email" placeholder="邮箱搜索" clearable style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="fliterQuery.uid" placeholder="uuid搜索" clearable style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -15,7 +15,6 @@
       row-key="userId"
       border
       lazy
-      default-expand-all
       :load="load"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >

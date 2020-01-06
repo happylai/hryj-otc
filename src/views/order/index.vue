@@ -47,7 +47,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column min-width="120px" align="center" label="商家订单号" :prop="merchantOrderNo" />
+        <el-table-column min-width="120px" align="center" label="商家订单号">
+          <template slot-scope="scope">
+            <span>{{ scope.row.merchantOrderNo }}</span>
+          </template>
+        </el-table-column>
 
         <el-table-column width="80px" align="center" label="类型">
           <template slot-scope="scope">
@@ -192,7 +196,7 @@
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">支付方式：</el-col>
-        <el-col :span="16">{{ editData.payType|payTypeNames }}</el-col>
+        <el-col :span="16">{{ editData.payType|payTypeName }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">交易金额：</el-col>

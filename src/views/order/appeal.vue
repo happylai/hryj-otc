@@ -8,6 +8,9 @@
           <el-select v-model="fliterQuery.type" placeholder="申诉类型" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeType" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
+          <el-select v-model="fliterQuery.PriceTread" placeholder="订单类型" clearable style="width: 140px" class="filter-item">
+            <el-option v-for="item in PriceTread" :key="item.id" :label="item.label" :value="item.id" />
+          </el-select>
           <!-- <el-select v-model="fliterQuery.status" placeholder="申诉状态" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeStatus" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
@@ -31,7 +34,7 @@
           <el-table-column
 
             align="center"
-            label="消息ID"
+            label="申诉ID"
             min-width="120"
             element-loading-text="请给我点时间！"
           >
@@ -46,6 +49,12 @@
             </template>
           </el-table-column>
 
+          <el-table-column min-width="120" align="center" label="订单类型">
+            <template slot-scope="scope">
+              <span>{{ scope.row.PriceTread|PriceTreadName }}</span>
+            </template>
+          </el-table-column>
+
           <el-table-column min-width="120" align="center" label="订单ID">
             <template slot-scope="scope">
               <span>{{ scope.row.orderUuid }}</span>
@@ -55,7 +64,7 @@
           <el-table-column align="center" label="发起人证据" min-width="120">
             <template slot-scope="scope">
               <img v-if="scope.row.sourceProof" v-lazy="scope.row.sourceProof" class="appealImage" :preview="scope.row.id+'apple0'">
-              <span v-else="!scope.row.paymentUrlOne">无</span>
+              <span v-els>无</span>
             </template>
           </el-table-column>
 
@@ -67,13 +76,21 @@
 
           <el-table-column align="center" label="发起人" min-width="120">
             <template slot-scope="scope">
-              <span>{{ scope.row.sourceUuid }}</span>
+              <span>
+                <el-link :underline="false" type="primary" un>
+                  <i class="el-icon-info" @click="showUserDetail(scope.row.sourceId,scope.row.sourceType)" />
+                </el-link>
+                {{ scope.row.sourceUuid }}</span>
             </template>
           </el-table-column>
 
           <el-table-column align="center" label="被申诉人" min-width="120">
             <template slot-scope="scope">
-              <span>{{ scope.row.targetUuid }}</span>
+              <span>
+                <el-link :underline="false" type="primary">
+                  <i class="el-icon-info" @click="showUserDetail(scope.row.targetId,scope.row.targetType)" />
+                </el-link>
+                {{ scope.row.targetUuid }}</span>
             </template>
           </el-table-column>
 
@@ -91,7 +108,9 @@
 
           <el-table-column align="center" class-name="status-col" label="操作" min-width="220">
             <template slot-scope="scope">
-              <el-button type="primary" size="small" @click="handleAudit(scope.row)">操作</el-button>
+              <el-button type="primary" size="small" @click="handleAudit(scope.row)">强制完成</el-button>
+              <el-button type="primary" size="small" @click="handleAudit(scope.row)">强制取消</el-button>
+              <el-button type="primary" size="small" @click="handleAudit(scope.row)">驳回</el-button>
               <el-button type="primary" size="small" @click="clickDetail(scope.row)">详情</el-button>
             </template>
           </el-table-column>
@@ -106,12 +125,7 @@
           <el-select v-model="fliterQuery.type" placeholder="申诉类型" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeType" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
-          <!-- <el-select v-model="fliterQuery.status" placeholder="申诉状态" clearable style="width: 140px" class="filter-item">
-            <el-option v-for="item in AppealeStatus" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
-          <el-select v-model="fliterQuery.result" placeholder="处理结果" clearable style="width: 140px" class="filter-item">
-            <el-option v-for="item in AppealeResult" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select> -->
+
           <el-date-picker
             v-model="fliterQuery.creatDate"
             class="filter-item"
@@ -161,12 +175,6 @@
             </template>
           </el-table-column>
 
-          <el-table-column align="center" label="处理时间" min-width="120">
-            <template slot-scope="scope">
-              <span>{{ scope.row.lastExecuteTime }}</span>
-            </template>
-          </el-table-column>
-
           <el-table-column align="center" class-name="status-col" label="操作" min-width="220">
             <template slot-scope="scope">
               <el-button type="primary" size="small" @click="handleReplace(scope.row.id)">补单</el-button>
@@ -181,6 +189,7 @@
 
       </el-tab-pane>
     </el-tabs>
+    <userInfoDig :dialog-visible="showUserInfo" :user-id="showUserIfonId" :user-type="showUserIfonType" />
   </div>
 </template>
 
@@ -191,10 +200,12 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import { order_appeals_list, order_appeal_detail, order_appeal_audit, order_reorders, order_redo } from '@/api/order'
 import waves from '@/directive/waves' // waves directive
-import { AppealeType, AppealeStatus, AppealeResult } from '@/utils/enumeration'
+import { AppealeType, AppealeStatus, AppealeResult, PriceTread } from '@/utils/enumeration'
+import userInfoDig from './components/UserInfoDig'
+
 export default {
   name: 'Tab',
-  components: { tabPane, pagination, tip },
+  components: { tabPane, pagination, tip, userInfoDig },
   directives: { waves },
   data() {
     return {
@@ -205,6 +216,7 @@ export default {
       AppealeResult,
       AppealeStatus,
       AppealeType,
+      PriceTread,
       activeType: '1',
       isMatch: false,
       createdTimes: 0,
@@ -229,7 +241,10 @@ export default {
       },
       dialogVisible: false,
       editData: {},
-      multipleSelection: []
+      multipleSelection: [],
+      showUserInfo: false,
+      showUserIfonId: undefined,
+      showUserIfonType: 0
     }
   },
   watch: {
@@ -237,12 +252,7 @@ export default {
       this.$router.push(`${this.$route.path}?tab=${val}`)
     }
   },
-  computed: {
-    ...mapState({
-      adminId: state => state.user.principal.adminId
 
-    })
-  },
   created() {
     // init the default selected tab
     const tab = this.$route.query.tab
@@ -405,6 +415,11 @@ export default {
       const postIds = newData.join(',')
       console.log('postIDs', postIds)
       this.handleReplace(postIds)
+    },
+    showUserDetail(id, type) {
+      this.showUserIfonId = id
+      this.showUserIfonType = type
+      this.showUserInfo = true
     }
   }
 

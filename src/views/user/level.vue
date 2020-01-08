@@ -10,15 +10,23 @@
     </div>
 
     <el-table
+      ref="table"
       :data="list"
       style="width: 100%"
       row-key="userId"
       border
       lazy
+      row-class-name="setCurrent"
       :load="load"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
 
+      <el-table-column
+        align="center"
+        min-width="180"
+        type="expand"
+        element-loading-text="请给我点时间！"
+      />
       <el-table-column
         align="center"
         label="注册账号"
@@ -64,7 +72,9 @@ export default {
         uid: undefined
       },
       loading: false,
-      list: []
+      list: [
+      ],
+      searchUserId: undefined
 
     }
   },
@@ -80,6 +90,9 @@ export default {
       console.log('tree', tree)
       const data = await this.getList(tree.userId)
       console.log('loaddata', data)
+      if (data.userId === this.searchUserId) {
+        data.isSearch = true
+      }
       resolve(data)
     },
 
@@ -102,9 +115,29 @@ export default {
         this.loading = false
         console.log('res', res)
         if (res.code === 0) {
+          this.setCurrentSearch(res.data)
           this.list = res.data
         }
       })
+    },
+    setCurrentSearch(data) {
+      console.log('setCurrentSearch')
+      const _this = this
+      data.map(item => {
+        console.log('item', item)
+        if (item.isSearch) {
+          _this.searchUserId = item.userId
+          console.log('current', item.userId)
+        } else if (item.hasChildren && item.children) {
+          this.setCurrentSearch(item.children)
+        }
+      })
+    },
+    setCurrent(row) {
+      console.log('row', row)
+      if (row.userId === this.searchUserId) {
+        return 'current'
+      }
     },
 
     goDetail(id) {
@@ -142,6 +175,9 @@ export default {
   padding-right: 5px;
   font-size: 16px;
   cursor: pointer
+}
+.current{
+  background-color: aqua
 }
 
 </style>

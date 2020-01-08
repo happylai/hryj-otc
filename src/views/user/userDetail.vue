@@ -326,7 +326,7 @@
           />{{ newData.active?'正常':'冻结' }}
           <el-link type="danger" :underline="false">当前状态： {{ editData.active?'正常':'冻结' }}</el-link></el-col>
       </el-row>
-      <el-checkbox-group :gutter="20" class="userRow">
+      <!-- <el-checkbox-group :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">收付款方式：</el-col>
         <el-col :span="16">
           <el-checkbox-group v-model="newData.payTypes">
@@ -334,7 +334,7 @@
           </el-checkbox-group>
           <el-link type="danger" :underline="false">当前收付款方式：{{ editData.payTypes|payTypeNames }}</el-link>
         </el-col>
-      </el-checkbox-group>
+      </el-checkbox-group> -->
 
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click=" handleAudit() ">保存</el-button>

@@ -47,7 +47,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column min-width="120px" align="center" label="商家订单号">
+        <el-table-column min-width="120px" align="center" label="第三方订单号">
           <template slot-scope="scope">
             <span>{{ scope.row.merchantOrderNo }}</span>
           </template>
@@ -101,9 +101,21 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="创建时间" min-width="150">
+        <el-table-column align="center" label="交易时间" min-width="150">
           <template slot-scope="scope">
             <span>{{ scope.row.createTime }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="取消时间" min-width="150">
+          <template slot-scope="scope">
+            <span>{{ scope.row.payCancelTime }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="完成时间" min-width="150">
+          <template slot-scope="scope">
+            <span>{{ scope.row.receiveConfirmTime }}</span>
           </template>
         </el-table-column>
 
@@ -113,12 +125,17 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="备注" min-width="150">
+        <el-table-column align="center" label="打款备注" min-width="150">
           <template slot-scope="scope">
             <span>{{ scope.row.memo }}</span>
           </template>
         </el-table-column>
-
+        <el-table-column align="center" label="二维码" min-width="120">
+          <template slot-scope="scope">
+            <img v-if="scope.row.qrCode" v-lazy="[scope.row.qrCode]" class="appealImage" :preview="scope.row.id+'qrCode'">
+            <span v-else>无</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="状态" width="95">
           <template slot-scope="scope">
             <el-link :underline="false" :type="scope.row.orderStatus|orderStatusTagName">{{ scope.row.orderStatus|orderStatus }}</el-link>
@@ -127,6 +144,8 @@
 
         <el-table-column align="center" class-name="status-col" label="操作" width="110">
           <template slot-scope="scope">
+            <el-button type="danger" size="small" @click="orderAction(scope.row.id,false)">强制取消</el-button>
+            <el-button type="success" size="small" @click="orderAction(scope.row.id,true)">强制完成</el-button>
             <el-button type="primary" size="small" @click="clickDetail(scope.row)">详情</el-button>
           </template>
         </el-table-column>
@@ -235,7 +254,7 @@ import tabPane from './components/TabPane'
 import tip from '@/components/Tip'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
-import { order_list, order_detail } from '@/api/order'
+import { order_list, order_detail, order_cancel, order_confirm } from '@/api/order'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, PayType, OrderStatus, CounterParty } from '@/utils/enumeration'
 export default {
@@ -371,6 +390,19 @@ export default {
         if (res.code === 0) {
           this.editData = res.data
         }
+      })
+    },
+    orderAction(orderId, ispass) {
+      const api = ispass ? order_confirm : order_cancel
+      api({ orderId: orderId }).then(res => {
+        if (res.code === 0) {
+          this.$message.succese('操作成功')
+          this.handleFilter()
+        } else {
+          this.$message.error(res.message || '操作失败')
+        }
+      }).catch(err => {
+        this.$message.error(err.message || '操作失败')
       })
     }
   }

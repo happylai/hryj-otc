@@ -161,12 +161,15 @@
           />
         </div>
         <div>
-          <el-button v-waves class="filter-item" type="primary" @click="handleAudit(true)">
+          <!-- <el-button v-waves class="filter-item" type="primary" @click="handleAudit(true)">
             申诉人胜
           </el-button>
           <el-button v-waves class="filter-item" style="margin-left: 20px" type="info" @click="handleAudit(false)">
             申诉人败
-          </el-button>
+          </el-button> -->
+          <el-button type="primary" size="small" @click="handleAudit(true)">强制完成</el-button>
+          <el-button type="primary" size="small" style="margin-left: 20px" @click="handleAudit(false)">强制取消</el-button>
+          <el-button type="primary" size="small" style="margin-left: 20px" @click="handleAudit(scope.row)">驳回</el-button>
         </div>
       </el-card>
     </div>

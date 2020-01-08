@@ -62,13 +62,32 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="最小成交额">
+      <el-table-column width="70px" align="center" label="库存">
+        <template slot-scope="scope">
+          <span>{{ scope.row.remainAmount }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="120px" align="left" label="支付方式">
+        <template slot-scope="scope">
+          <el-tooltip v-for="(item,index) in scope.row.payInfos" :key="`pay${index}`" placement="right">
+            <div slot="content">
+              <div>支付地区：{{ item.area }}</div>
+              <div>支付昵称：{{ item.nick }}</div>
+            </div>
+            <div> <el-link :underline="false"><i class="el-icon-info" /> {{ item.payType|payTypeName }} {{ item.account }}</el-link>  </div>
+          </el-tooltip>
+          <!-- <span>{{ scope.row.remainAmount }}</span> -->
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="70px" align="center" label="最小成交额">
         <template slot-scope="scope">
           <span>{{ scope.row.minLimit }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="最大成交额" width="100">
+      <el-table-column align="center" label="最大成交额" min-width="70">
         <template slot-scope="scope">
           <span>{{ scope.row.maxLimit }}</span>
         </template>
@@ -80,11 +99,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="支付方式" min-width="180px">
+      <!-- <el-table-column align="center" label="支付方式" min-width="180px">
         <template slot-scope="scope">
           <span>{{ scope.row.payType|payTypeNames }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column align="center" min-width="180px" label="创建时间">
         <template slot-scope="scope">

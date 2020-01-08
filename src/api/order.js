@@ -12,7 +12,7 @@ export function getList(params) {
 
 // 交易明细列表
 export function order_details(meta, data) {
-  console.log("order_details meta",meta)
+  console.log('order_details meta', meta)
   return request({
     url: `/admin/order/order_details`,
     method: 'get',
@@ -129,6 +129,30 @@ export function order_reorder_detail(data) {
 export function order_redo(data) {
   return request({
     url: `/admin/order/order/order_redo`,
+    method: 'post',
+    data: qs.stringify(data),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
+// 取消订单
+export function order_cancel(data) {
+  return request({
+    url: `/admin/order/cancel`,
+    method: 'post',
+    data: qs.stringify(data),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
+// 完结订单
+export function order_confirm(data) {
+  return request({
+    url: `/admin/order/confirm`,
     method: 'post',
     data: qs.stringify(data),
     headers: {

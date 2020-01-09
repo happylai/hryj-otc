@@ -160,16 +160,17 @@
             placeholder="请输入处理反馈描述，该描述将以推送方式至申诉双方的消息中心。"
           />
         </div>
-        <div>
+        <div style="margin-top:10px">
           <!-- <el-button v-waves class="filter-item" type="primary" @click="handleAudit(true)">
             申诉人胜
           </el-button>
           <el-button v-waves class="filter-item" style="margin-left: 20px" type="info" @click="handleAudit(false)">
             申诉人败
           </el-button> -->
-          <el-button type="primary" size="small" @click="handleAudit(true)">强制完成</el-button>
-          <el-button type="primary" size="small" style="margin-left: 20px" @click="handleAudit(false)">强制取消</el-button>
-          <el-button type="primary" size="small" style="margin-left: 20px" @click="handleAudit(scope.row)">驳回</el-button>
+          <el-button type="primary" size="small" @click="handleAudit(1,undefined,'强制完成')">强制完成</el-button>
+          <el-button type="primary" size="small" style="margin-left: 20px" @click="handleAudit(2,undefined,'强制取消')">强制取消</el-button>
+          <el-button type="primary" size="small" style="margin-left: 20px" @click="handleAudit(3,0,'驳回买家')">驳回买家</el-button>
+          <el-button type="primary" size="small" style="margin-left: 20px" @click="handleAudit(4,1,'驳回卖家')">驳回卖家</el-button>
         </div>
       </el-card>
     </div>
@@ -279,7 +280,7 @@ export default {
       })
     },
 
-    handleAudit(data) {
+    handleAudit(data, rejectParty, text) {
       if (!this.resultReason) {
         this.$message.error('请输入申诉处理描述')
         return false
@@ -288,19 +289,16 @@ export default {
         adminId: this.adminId,
         id: this.id,
         result: data,
-        resultReason: this.resultReason
+        resultReason: this.resultReason,
+        rejectParty: rejectParty
       }
-      if (data) {
+      this.$confirm(`确认${text}`, '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'danger'
+      }).then((val) => {
         this.appealAudit(postData)
-      } else {
-        this.$confirm('确认申诉人失败', '提示', {
-          confirmButtonText: '确认',
-          cancelButtonText: '取消',
-          type: 'danger'
-        }).then((val) => {
-          this.appealAudit(postData)
-        })
-      }
+      })
     },
     appealAudit(data) {
       console.log('data', data)
@@ -394,6 +392,9 @@ export default {
 }
 .proofImage{
   /* max-width: 100%; */
+  max-width: 60px;
+  max-height: 100px;
+  margin-right: 10px;
 
 }
 </style>

@@ -77,21 +77,22 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="收付款昵称" min-width="140">
-          <template slot-scope="scope">
-            <span>{{ scope.row.payTypeNick }}</span>
-          </template>
-        </el-table-column>
-
         <el-table-column align="center" width="80px" label="交易额">
           <template slot-scope="scope">
             <span>{{ scope.row.amount }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="支付方式" width="90">
+        <el-table-column min-width="120px" align="left" label="支付方式">
           <template slot-scope="scope">
-            <span>{{ scope.row.payType|payTypeName }}</span>
+            <el-tooltip placement="right">
+              <div slot="content">
+                <div>支付账号：{{ scope.row.payInfo.account }} </div>
+                <div>支付昵称：{{ scope.row.payInfo.nick }}</div>
+              </div>
+              <div> <el-link :underline="false"><i class="el-icon-info" /> {{ scope.row.payInfo.payType|payTypeName }} </el-link>  </div>
+            </el-tooltip>
+          <!-- <span>{{ scope.row.remainAmount }}</span> -->
           </template>
         </el-table-column>
 
@@ -132,7 +133,9 @@
         </el-table-column>
         <el-table-column align="center" label="二维码" min-width="120">
           <template slot-scope="scope">
-            <img v-if="scope.row.qrCode" v-lazy="[scope.row.qrCode]" class="appealImage" :preview="scope.row.id+'qrCode'">
+            <img v-if="scope.row.qrCode" v-lazy="scope.row.qrCode" class="appealImage" :preview="scope.row.id+'qrCode'">
+            <!-- <img v-else v-lazy="scope.row.qrCode" :preview="'chat'+scope.row.id" class="chatListImage"> -->
+
             <span v-else>无</span>
           </template>
         </el-table-column>
@@ -142,10 +145,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" class-name="status-col" label="操作" width="110">
+        <el-table-column align="center" class-name="status-col" label="操作" min-width="210">
           <template slot-scope="scope">
-            <el-button type="danger" size="small" @click="orderAction(scope.row.id,false)">强制取消</el-button>
+            <!-- <el-button type="danger" size="small" @click="orderAction(scope.row.id,false)">强制取消</el-button>
             <el-button type="success" size="small" @click="orderAction(scope.row.id,true)">强制完成</el-button>
+            <el-button v-if="activeType==='2'" type="success" size="small" @click="orderAction(scope.row.id,true)">强制取消委托</el-button> -->
             <el-button type="primary" size="small" @click="clickDetail(scope.row)">详情</el-button>
           </template>
         </el-table-column>
@@ -412,5 +416,9 @@ export default {
 <style scoped>
   .tab-container {
     margin: 30px;
+  }
+  .appealImage{
+    height: 40px;
+    max-width: 100px;
   }
 </style>

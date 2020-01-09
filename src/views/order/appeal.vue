@@ -108,9 +108,9 @@
 
           <el-table-column align="center" class-name="status-col" label="操作" min-width="220">
             <template slot-scope="scope">
-              <el-button type="primary" size="small" @click="handleAudit(scope.row)">强制完成</el-button>
+              <!-- <el-button type="primary" size="small" @click="handleAudit(scope.row)">强制完成</el-button>
               <el-button type="primary" size="small" @click="handleAudit(scope.row)">强制取消</el-button>
-              <el-button type="primary" size="small" @click="handleAudit(scope.row)">驳回</el-button>
+              <el-button type="primary" size="small" @click="handleAudit(scope.row)">驳回</el-button> -->
               <el-button type="primary" size="small" @click="clickDetail(scope.row)">详情</el-button>
             </template>
           </el-table-column>

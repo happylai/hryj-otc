@@ -410,7 +410,7 @@ export function authTypeName(id = null) {
  * OrderAuditStatus
  * @param {number} num
  */
-export function orderAuditStatus(id) {
+export function OrderAuditStatusName(id) {
   if (id === 'null') {
     return '-'
   } else if (has({ foo: id }, 'foo')) {

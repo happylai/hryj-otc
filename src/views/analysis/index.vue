@@ -1,6 +1,7 @@
 <template>
   <div class="tab-container card-container">
 
+
     <el-card class="box-card marginT20">
       <div slot="header" class="clearfix">
         <span class="card-title">交易额总计（交易所交易资金总额）</span>
@@ -53,23 +54,31 @@
       </div>
     </el-card>
 
+    <h2 class="marginT40">今日统计数据</h2>
+
     <el-card class="box-card marginT20">
       <div slot="header" class="clearfix">
         <span class="card-title">接口调用统计</span>
-        <el-button type="primary" size="small" style="float: right;">详情</el-button>
+        <!-- <el-button type="primary" size="small" style="float: right;">详情</el-button> -->
         </span></div>
       <div class="text item">
         <el-row :gutter="10">
-          <el-col :span="12">
+          <el-col :span="8">
             <div class="card-item borderR">
               <div class="cart-i-t">总调用次数 </div>
-              <div class="cart-i-v"/>
+              <div class="cart-i-v">{{merchant_statics.today.depositApiCount}}</div>
             </div>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
+            <div class="card-item borderR">
+              <div class="cart-i-t">订单匹配失败占比</div>
+              <div class="cart-i-v">{{merchant_statics.today.matchFailPercent}}</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
             <div class="card-item ">
-              <div class="cart-i-t">失败次数</div>
-              <div class="cart-i-v"/>
+              <div class="cart-i-t">未扫码占比</div>
+              <div class="cart-i-v">{{merchant_statics.today.unForwardToPayPercent}}</div>
             </div>
           </el-col>
 
@@ -79,45 +88,57 @@
 
     <el-card class="box-card marginT20">
       <div slot="header" class="clearfix">
-        <span class="card-title">匹配接口统计</span>
-        <el-button type="primary" size="small" style="float: right;">详情</el-button>
+        <span class="card-title">出售订单统计</span>
+        <!-- <el-button type="primary" size="small" style="float: right;">详情</el-button> -->
         </span></div>
       <div class="text item">
         <el-row :gutter="10">
-          <el-col :span="12">
+          <el-col :span="6">
             <div class="card-item borderR">
-              <div class="cart-i-t">总调用次数 </div>
-              <div class="cart-i-v"/>
+              <div class="cart-i-t">订单总数 </div>
+              <div class="cart-i-v">{{merchant_statics.today.matchedOrderTotalCount}}</div>
             </div>
           </el-col>
-          <el-col :span="12">
-            <div class="card-item ">
-              <div class="cart-i-t">失败次数</div>
-              <div class="cart-i-v"/>
+          <el-col :span="6">
+            <div class="card-item borderR">
+              <div class="cart-i-t">订单总金额</div>
+              <div class="cart-i-v">{{merchant_statics.today.matchedOrderTotalLegalAmount}}</div>
             </div>
           </el-col>
-
+          <el-col :span="6">
+            <div class="card-item borderR">
+              <div class="cart-i-t">订单总金额 </div>
+              <div class="cart-i-v">{{merchant_statics.today.matchedOrderTotalLegalAmount}}</div>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="card-item">
+              <div class="cart-i-t">完成订单总金额</div>
+              <div class="cart-i-v">{{merchant_statics.today.matchedAndEndedOrderTotalLegalAmount}}</div>
+            </div>
+          </el-col>
         </el-row>
       </div>
     </el-card>
 
     <el-card class="box-card marginT20">
       <div slot="header" class="clearfix">
-        <span class="card-title">支付接口统计</span>
-        <el-button type="primary" size="small" style="float: right;">详情</el-button>
+        <span class="card-title">成功率统计</span>
+        <!-- <el-button type="primary" size="small" style="float: right;">详情</el-button> -->
         </span></div>
       <div class="text item">
         <el-row :gutter="10">
           <el-col :span="12">
             <div class="card-item borderR">
-              <div class="cart-i-t">总调用次数 </div>
-              <div class="cart-i-v"/>
+              <div class="cart-i-t">系统成功率 </div>
+              <div class="cart-i-v">{{merchant_statics.today.systemSuccessRate}}</div>
             </div>
           </el-col>
           <el-col :span="12">
             <div class="card-item ">
-              <div class="cart-i-t">失败次数</div>
-              <div class="cart-i-v"/>
+              <div class="cart-i-t">站点成功率</div>
+              <div class="cart-i-v">{{merchant_statics.today.merchantSuccessRate}}</div>
+
             </div>
           </el-col>
 
@@ -133,7 +154,7 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect } from '@/utils/enumeration'
-import { data_center } from '@/api/statistic'
+import { data_center,merchant_order_statics } from '@/api/statistic'
 
 export default {
   name: 'Tab',
@@ -174,6 +195,7 @@ export default {
         activeGold: 423
 
       },
+      merchant_statics:{},
       editData: {}
 
     }
@@ -185,6 +207,7 @@ export default {
 
   mounted() {
     this.detail()
+    this.get_merchant_statics()
   },
   methods: {
 
@@ -195,6 +218,13 @@ export default {
           this.modals = res.data
         }
         console.log('res')
+      })
+    },
+    get_merchant_statics() {
+      merchant_order_statics().then(res=>{
+        if (res.code === 0) {
+          this.merchant_statics = res.data
+        }
       })
     },
 

@@ -47,7 +47,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column min-width="120px" align="center" label="第三方订单号">
+        <el-table-column v-if="activeType==='2'" min-width="120px" align="center" label="第三方订单号">
           <template slot-scope="scope">
             <span>{{ scope.row.merchantOrderNo }}</span>
           </template>
@@ -86,7 +86,13 @@
         <el-table-column min-width="120px" align="left" label="支付方式">
           <template slot-scope="scope">
             <el-tooltip placement="right">
-              <div slot="content">
+              <div v-if="scope.row.payInfo.payType===2" slot="content">
+                <div>卡号：{{ scope.row.payInfo.account }} </div>
+                <div>真实姓名：{{ scope.row.payInfo.real }} </div>
+                <div>银行：{{ scope.row.payInfo.bank }} </div>
+                <div>开户行{{ scope.row.payInfo.bankBranch }}</div>
+              </div>
+              <div v-else slot="content">
                 <div>支付账号：{{ scope.row.payInfo.account }} </div>
                 <div>支付昵称：{{ scope.row.payInfo.nick }}</div>
               </div>
@@ -120,12 +126,6 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="交易时间" min-width="150">
-          <template slot-scope="scope">
-            <span>{{ scope.row.createTime }}</span>
-          </template>
-        </el-table-column>
-
         <el-table-column align="center" label="打款备注" min-width="150">
           <template slot-scope="scope">
             <span>{{ scope.row.memo }}</span>
@@ -147,10 +147,10 @@
 
         <el-table-column align="center" class-name="status-col" label="操作" min-width="210">
           <template slot-scope="scope">
-            <!-- <el-button type="danger" size="small" @click="orderAction(scope.row.id,false)">强制取消</el-button>
-            <el-button type="success" size="small" @click="orderAction(scope.row.id,true)">强制完成</el-button>
-            <el-button v-if="activeType==='2'" type="success" size="small" @click="orderAction(scope.row.id,true)">强制取消委托</el-button> -->
-            <el-button type="primary" size="small" @click="clickDetail(scope.row)">详情</el-button>
+            <el-button class="actionBtn" :disabled="scope.row.orderStatus===2||scope.row.orderStatus===5||scope.row.orderStatus===6" type="danger" size="small" @click="orderAction(scope.row.id,0,activeType==='1'?'强制取消':'取消委托')">{{ activeType==='1'?'强制取消':'取消委托' }}</el-button>
+            <el-button class="actionBtn" :disabled="scope.row.orderStatus===2||scope.row.orderStatus===5||scope.row.orderStatus===6" type="success" size="small" @click="orderAction(scope.row.id,1,'强制完成')">强制完成</el-button>
+            <el-button v-if="activeType==='2'&&scope.row.idOut" class="actionBtn" :disabled="scope.row.orderStatus===2||scope.row.orderStatus===5||scope.row.orderStatus===6" type="success" size="small" @click="orderAction(scope.row.id,2,'重新匹配')">重新匹配</el-button>
+            <el-button class="actionBtn" type="primary" size="small" @click="clickDetail(scope.row)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -258,7 +258,7 @@ import tabPane from './components/TabPane'
 import tip from '@/components/Tip'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
-import { order_list, order_detail, order_cancel, order_confirm } from '@/api/order'
+import { order_list, order_detail, order_cancel, order_confirm, pro_odrder_rematch } from '@/api/order'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, PayType, OrderStatus, CounterParty } from '@/utils/enumeration'
 export default {
@@ -396,17 +396,23 @@ export default {
         }
       })
     },
-    orderAction(orderId, ispass) {
-      const api = ispass ? order_confirm : order_cancel
-      api({ orderId: orderId }).then(res => {
-        if (res.code === 0) {
-          this.$message.succese('操作成功')
-          this.handleFilter()
-        } else {
-          this.$message.error(res.message || '操作失败')
-        }
-      }).catch(err => {
-        this.$message.error(err.message || '操作失败')
+    orderAction(orderId, type, tipText) {
+      const apiList = [order_confirm, order_cancel, pro_odrder_rematch]
+      this.$confirm(`是否${tipText}`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then((val) => {
+        apiList[type]({ orderId: orderId }).then(res => {
+          if (res.code === 0) {
+            this.$message.succese('操作成功')
+            this.handleFilter()
+          } else {
+            this.$message.error(res.message || '操作失败')
+          }
+        }).catch(err => {
+          this.$message.error(err.message || '操作失败')
+        })
       })
     }
   }
@@ -420,5 +426,9 @@ export default {
   .appealImage{
     height: 40px;
     max-width: 100px;
+  }
+  .actionBtn{
+    font-size: 10px;
+    margin: 4px;
   }
 </style>

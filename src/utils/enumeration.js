@@ -136,7 +136,12 @@ export const OrderStatus = [{
   id: 8,
   label: '收款超时',
   tagType: 'danger'
-
+},
+{
+  name: 'AUDITING',
+  id: 9,
+  label: '审核中',
+  tagType: 'INFO'
 }
 ]
 
@@ -492,7 +497,7 @@ export const OrderAuditStatus = [
   },
   {
     id: 2,
-    label: '退回重新提交'
+    label: '驳回'
   },
   {
     id: 3,

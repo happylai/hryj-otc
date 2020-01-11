@@ -17,3 +17,16 @@ export function data_center(meta, data) {
   })
 }
 
+// 匹配订单统计数据
+export function merchant_order_statics(meta, data) {
+  console.log('params', data)
+  return request({
+    url: `/admin/statistics/merchant_order_statics`,
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta,
+      'Content-Type': 'application/json'
+    }
+  })
+}

@@ -9,21 +9,24 @@
       <el-select v-model="fliterQuery.status" placeholder="订单状态" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
+      <el-select v-model="fliterQuery.auditStatus" placeholder="审核状态" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in OrderAuditStatus" :key="item.id" :label="item.label" :value="item.id" />
+      </el-select>
       <el-date-picker
-v-model="fliterQuery.creatDate" 
+        v-model="fliterQuery.creatDate"
         class="filter-item"
-                      type="daterange"
-                      range-separator="至"
-                      start-placeholder="订单完创建开始日期"
-                      end-placeholder="结束日期"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="订单完创建开始日期"
+        end-placeholder="结束日期"
       />
       <el-date-picker
-v-model="fliterQuery.complateDate" 
+        v-model="fliterQuery.complateDate"
         class="filter-item"
-                      type="daterange"
-                      range-separator="至"
-                      start-placeholder="交易完成开始日期"
-                      end-placeholder="结束日期"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="交易完成开始日期"
+        end-placeholder="结束日期"
       />
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
@@ -82,9 +85,15 @@ v-model="fliterQuery.complateDate"
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="状态" minwidth="300">
+      <el-table-column align="center" label="订单状态" minwidth="300">
         <template slot-scope="scope">
           <el-link :underline="false" :type="scope.row.orderStatus|orderStatusTagName">{{ scope.row.orderStatus|orderStatus }}</el-link>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="审核状态" minwidth="300">
+        <template slot-scope="scope">
+          <el-link :underline="false" :type="scope.row.auditStatus|OrderAuditStatusName">{{ scope.row.auditStatus|OrderAuditStatusName }}</el-link>
         </template>
       </el-table-column>
 
@@ -138,8 +147,13 @@ v-model="fliterQuery.complateDate"
         <el-col :span="16">{{ editData.sysSubsidy }}</el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">放币时间：</el-col>
-        <el-col :span="16">无字段</el-col>
+        <el-col :span="8" class="textAlingR">二维码：</el-col>
+        <el-col :span="16">
+          <img v-if="editData.paymentUrlOne" v-lazy="editData.paymentUrlOne" class="DetailvoucherImage" :preview="`${id}withdarw011`" @click="dialogVisible=false">
+          <span v-else>无</span>
+          <img v-if="editData.paymentUrlTwo" v-lazy="editData.paymentUrlTwo" class="DetailvoucherImage" :preview="`${id}withdarw011`" @click="dialogVisible=false">
+          <img v-if="editData.paymentUrlThree" v-lazy="editData.paymentUrlThree" class="DetailvoucherImage" :preview="`${id}withdarw011`" @click="dialogVisible=false">
+        </el-col>
       </el-row>
 
       <span slot="footer" class="dialog-footer">
@@ -157,7 +171,7 @@ import pagination from '@/components/Pagination'
 import tip from '@/components/Tip'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 import waves from '@/directive/waves' // waves directive
-import { PayType, OrderStatus } from '@/utils/enumeration'
+import { PayType, OrderStatus, OrderAuditStatus } from '@/utils/enumeration'
 import { order_out_orders, out_order_detail, out_order_audit } from '@/api/order'
 
 export default {
@@ -168,6 +182,7 @@ export default {
     return {
       PayType,
       OrderStatus,
+      OrderAuditStatus,
       imgs: 'http://static.runoob.com/images/demo/demo1.jpg',
       groupsConstName,
       userRolesConstName,
@@ -180,6 +195,7 @@ export default {
         payType: undefined,
         query: undefined,
         status: undefined,
+        auditStatus: undefined,
         creatDate: undefined,
         complateDate: undefined
       },
@@ -240,7 +256,8 @@ export default {
       const data = {
         payType: fliterQuery.payType,
         query: fliterQuery.query,
-        status: fliterQuery.status
+        status: fliterQuery.status,
+        auditStatus: fliterQuery.auditStatus
       }
       if (fliterQuery.creatDate) {
         data.createStart = this.$moment(fliterQuery.creatDate[0]).format('YYYY-MM-DD HH:mm:ss')
@@ -296,7 +313,7 @@ export default {
         this.detailLoading = false
         if (res.code === 0) {
           this.dialogVisible = false
-          this.detail(this.id)
+          this.handleFilter()
           this.$message({
             message: '操作成功',
             type: 'success'
@@ -325,4 +342,5 @@ export default {
   max-width: 34px;
   height:34px;
 }
+.DetailvoucherImage{max-height: 120px;max-width: 120px}
 </style>

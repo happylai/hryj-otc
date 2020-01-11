@@ -33,7 +33,7 @@
         创建预处理
       </el-button>
     </div>
-    <listtable style="width:100%" :data="list" type="2" />
+    <listtable style="width:100%" :data="list" type="2" @del="handleDel" />
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
     <el-dialog :visible.sync="showAdd" title="创建预处理补单">
       <el-form ref="regForm" :model="newOrder" :rules="addRules" class="login-form" label-width="120px" auto-complete="on" label-position="right">
@@ -56,7 +56,7 @@
 import tip from '@/components/Tip'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
-import { pro_order_reorders as listApi, reorder_detail, pre_odrder_save } from '@/api/order'
+import { pro_order_reorders as listApi, reorder_detail, pre_odrder_save, pre_odrder_del } from '@/api/order'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, PayType, OrderStatus, CounterParty } from '@/utils/enumeration'
 import filter from './compontents/filter'
@@ -116,7 +116,8 @@ export default {
       },
       dialogVisible: false,
       editData: {},
-      showAdd: false
+      showAdd: false,
+      delLoading: false
     }
   },
   watch: {
@@ -209,13 +210,27 @@ export default {
       pre_odrder_save(this.newOrder).then(res => {
         if (res.code === 0) {
           this.$message({ message: res.message || '操作成功', type: 'success' })
+          this.showAdd = false
           this.handleFilter()
         } else {
           this.$message.error(res.message || '操作失败')
         }
       }).catch(err => {
-        this.$message({ message: '操作成功', type: 'success' })
-
+        this.$message.error(err.message || '操作失败')
+      })
+    },
+    handleDel(id) {
+      this.delLoading = true
+      pre_odrder_del({ preId: id }).then(res => {
+        this.delLoading = true
+        if (res.code === 0) {
+          this.$message({ message: res.message || '操作成功', type: 'success' })
+          this.handleFilter()
+        } else {
+          this.$message.error(res.message || '操作失败')
+        }
+      }).catch(err => {
+        this.delLoading = true
         this.$message.error(err.message || '操作失败')
       })
     }

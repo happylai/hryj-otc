@@ -79,7 +79,7 @@
 
         </el-row></div>
     </el-card>
-    <el-button style="float: right; margin-right:10px " type="primary" @click="vlidateInput">确认补单</el-button>
+    <el-button v-if="modals.orderStatus!==5" style="float: right; margin-right:10px " type="primary" @click="vlidateInput">确认补单</el-button>
 
   </div>
 </template>

@@ -1,13 +1,13 @@
 
 <template>
   <el-table v-loading="loading" :data="data" border fit highlight-current-row style="width: 100%" @expand-change="tableExpandChange">
-    <el-table-column v-if="type==='1'" type="expand">
+    <el-table-column v-if="type==='2'" type="expand">
       <template slot-scope="scope">
         <div v-loading="orderDetailLoading">
           <h4>支付信息</h4>
           <div><span>支付方式：{{ scope.row.payInfo.payType|payTypeName }} </span><span> 支付账号：{{ scope.row.payInfo.account }}</span><span>真实姓名：{{ scope.row.payInfo.real }}</span></div>
           <h4>补单历史记录</h4>
-          <div><span>原订单编号：{{ scope.row.oldOrder }}</span><span>原B端订单编号：{{ scope.row.merchantOrderNo }}</span><span>原订单状态：{{ scope.row.oldStatus }}</span></div>
+          <div><span>原订单编号：{{ scope.row.oldOrder }}</span><span>原B端订单编号：{{ scope.row.merchantOrderNo }}</span><span>原订单状态：{{ scope.row.oldStatus|orderStatus }}</span></div>
           <el-table
             :data="scope.row.reorderRecords"
             stripe
@@ -103,8 +103,8 @@
 
     <el-table-column class-name="status-col" label="操作" min-width="110">
       <template slot-scope="scope">
-        <el-button v-if="type==='1'" type="primary" size="small" @click="goDetail(scope.row)">处理</el-button>
-        <el-button type="danger" size="small">删除</el-button>
+        <el-button type="primary" size="small" @click="goDetail(scope.row)">{{ type==='1'?'处理':'详情' }}</el-button>
+        <el-button v-if="type==='1'" type="danger" size="small" @click="hancleDel(scope.row.preId)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -112,7 +112,7 @@
 
 <script>
 // import { fetchList } from '@/api/article'
-import { reorder_pres as listApi, pro_order_detail, pre_odrder_save, pre_odrder_confirm } from '@/api/order'
+import { reorder_pres as listApi, pro_order_detail, pre_odrder_save, pre_odrder_confirm, pre_odrder_del } from '@/api/order'
 
 export default {
   filters: {
@@ -170,6 +170,9 @@ export default {
       }).catch(() => {
         this.orderDetailLoading = false
       })
+    },
+    hancleDel(id) {
+      this.$emit('del', id)
     },
     tableExpandChange(expandData, id) {
       console.log('expand data', expandData, id)

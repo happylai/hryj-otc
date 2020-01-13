@@ -270,95 +270,99 @@
       </el-table>
     </el-tabs>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
-    <el-dialog :visible.sync="dialogVisible" title="基础信息审核">
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">订单ID：</el-col>
-        <el-col :span="16">{{ editData.uuid }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">创建时间：</el-col>
-        <el-col :span="16">{{ editData.createTime }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">付款时间：</el-col>
-        <el-col :span="16">{{ editData.payConfirmTime }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">申诉时间：</el-col>
-        <el-col :span="16">{{ editData.appealTime }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">取消时间：</el-col>
-        <el-col :span="16">{{ editData.payCancelTime }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">完成时间：</el-col>
-        <el-col :span="16">{{ editData.receiveConfirmTime }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">所属广告</el-col>
-        <el-col :span="16">{{ editData.advertiseUuid }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">类型：</el-col>
-        <el-col :span="16">{{ editData.mobileContact }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">币种：</el-col>
-        <el-col :span="16">{{ editData.token }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">买家：</el-col>
-        <el-col :span="16">{{ editData.buyer }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">卖家：</el-col>
-        <el-col :span="16">{{ editData.seller }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">订单状态：</el-col>
-        <el-col :span="16">{{ editData.orderStatus|orderStatus }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">付款状态：</el-col>
-        <el-col :span="16">
-          <span>{{ editData.isPay?'已付款':'未付款' }}</span>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">收款状态：</el-col>
-        <el-col :span="16">
-          <span>{{ editData.isConfirm?'已收款':'未收款' }}</span>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">支付方式：</el-col>
-        <el-col :span="16">{{ editData.payType|payTypeName }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">交易金额：</el-col>
-        <el-col :span="16">{{ editData.amount }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">成交额：</el-col>
-        <el-col :span="16">{{ editData.legalAmount }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">手续费：</el-col>
-        <el-col :span="16">{{ editData.fee }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">交易补贴：</el-col>
-        <el-col :span="16">{{ editData.dealSubsidy }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">夜间补贴：</el-col>
-        <el-col :span="16">{{ editData.nightSubsidy }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">达量补贴：</el-col>
-        <el-col :span="16">{{ editData.amountSubsidy }}</el-col>
-      </el-row>
+    <el-dialog :visible.sync="dialogVisible" title="订单详情" width="1000px">
+      <div v-if="activeType==='1'">
+        <el-row :gutter="20" class="">
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 订单ID:{{ editData.orderC.uuid }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 创建时间:{{ editData.orderC.createTime }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 付款时间：{{ editData.orderC.payConfirmTime }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 交易金额：{{ editData.orderC.amount }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 申诉时间：{{ editData.orderC.appealTime }}</div>
+          </el-col>
+
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 取消时间：{{ editData.orderC.payCancelTime }}</div>
+          </el-col>
+
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 完成时间：{{ editData.orderC.receiveConfirmTime }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 所属广告：{{ editData.orderC.advertiseUuid }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 类型：{{ editData.orderC.type|AdvType }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 币种:{{ editData.orderC.token }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 买家:{{ editData.orderC.buyer }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 所属广告:{{ editData.orderC.advertiseUuid }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 支付方式:{{ editData.orderC.payType|payTypeName }}</div>
+          </el-col>
+
+        </el-row>
+      </div>
+      <div v-else>
+        <el-row :gutter="20" class="">
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 订单ID:{{ editData.orderB.id }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 创建时间:{{ editData.orderB.createTime }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 付款时间：{{ editData.orderB.payConfirmTime }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 交易金额：{{ editData.orderB.amount }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 申诉时间：{{ editData.orderB.appealTime }}</div>
+          </el-col>
+
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 取消时间：{{ editData.orderB.payCancelTime }}</div>
+          </el-col>
+
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 完成时间：{{ editData.orderB.receiveConfirmTime }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 所属广告：{{ editData.orderB.advertiseUuid }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 类型：{{ editData.orderB.type|AdvType }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 币种:{{ editData.orderB.token }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 买家:{{ editData.orderB.buyer }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 所属广告:{{ editData.orderB.advertiseUuid }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 支付方式:{{ editData.orderB.payType|payTypeName }}</div>
+          </el-col>
+        </el-row>
+      </div>
+
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisible=false">确定</el-button>
         <el-button type="info" @click="dialogVisible=false">取消</el-button>
@@ -415,7 +419,10 @@ export default {
         pages: 1
       },
       dialogVisible: false,
-      editData: {}
+      editData: {
+        orderB: {},
+        orderC: {}
+      }
     }
   },
   watch: {
@@ -510,7 +517,7 @@ export default {
       })
     },
     orderAction(orderId, type, tipText) {
-      const apiList = [order_confirm, order_cancel, pro_odrder_rematch]
+      const apiList = [order_cancel, order_confirm, pro_odrder_rematch]
       this.$confirm(`是否${tipText}`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -543,5 +550,8 @@ export default {
   .actionBtn{
     font-size: 10px;
     margin: 4px;
+  }
+  .orderInfoItem{
+    margin:8px 4px;
   }
 </style>

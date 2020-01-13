@@ -49,12 +49,6 @@
 
     <el-table-column min-width="120px" align="center" label="原订单号">
       <template slot-scope="scope">
-        <span>{{ scope.row.newOrder }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column min-width="120px" align="center" label="新订单号">
-      <template slot-scope="scope">
         <span>{{ scope.row.oldOrder }}</span>
       </template>
     </el-table-column>
@@ -77,6 +71,12 @@
       </template>
     </el-table-column>
 
+    <el-table-column width="120px" label="原交数量">
+      <template slot-scope="scope">
+        <span>{{ scope.row.amount }}</span>
+      </template>
+    </el-table-column>
+
     <el-table-column align="center" label="原交易总价" min-width="120">
       <template slot-scope="scope">
         <span>{{ scope.row.legalAmount }}</span>
@@ -89,19 +89,13 @@
       </template>
     </el-table-column>
 
-    <el-table-column align="center" label="处理人" min-width="300">
-      <template slot-scope="scope">
-        <span>{{ scope.row.admin }}</span>
-      </template>
-    </el-table-column>
-
     <el-table-column align="center" label="原订单状态" width="95">
       <template slot-scope="scope">
-        <el-link :underline="false" :type="scope.row.oldStatus|orderStatusTagName">{{ scope.row.orderStatus|orderStatus }}</el-link>
+        <el-link :underline="false" :type="scope.row.status|orderStatusTagName">{{ scope.row.orderStatus|orderStatus }}</el-link>
       </template>
     </el-table-column>
 
-    <el-table-column class-name="status-col" label="操作" min-width="110">
+    <el-table-column class-name="status-col" label="操作" min-width="160">
       <template slot-scope="scope">
         <el-button type="primary" size="small" @click="goDetail(scope.row)">{{ type==='1'?'处理':'详情' }}</el-button>
         <el-button :disabled="delLoading" :loading="delLoading" type="danger" size="small" @click="hancleDel(scope.row.preId)">删除</el-button>

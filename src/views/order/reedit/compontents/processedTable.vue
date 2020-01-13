@@ -188,7 +188,7 @@ export default {
         this.actionLoading = false
         if (res.code === 0) {
           this.$message({ message: res.message || '操作成功', type: 'success' })
-          this.refresh()
+          this.$emit('refresh')
         } else {
           this.$message.error(res.message || '操作失败')
         }

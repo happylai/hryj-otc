@@ -460,6 +460,10 @@ export default {
         complateDate: undefined
       }
       this.fliterQuery = fliterQuery
+      this.editData = {
+        orderB: {},
+        orderC: {}
+      }
       this.getList()
     },
     paginationChange(e) {

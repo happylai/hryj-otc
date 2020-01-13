@@ -2,7 +2,8 @@
   <div class="">
     <div class="filter-container" style="margin-bottom: 10px;">
       <el-input v-model="fliterQuery.merchantUid" placeholder="B端UID" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="fliterQuery.query" placeholder="站内订单号" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="fliterQuery.oldOrder" placeholder="原站内订单号" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="fliterQuery.newOrder" placeholder="新内订单号" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="fliterQuery.merchantOrderNo" placeholder="B端订单号" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="fliterQuery.advertiseNo" placeholder="广告ID" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <!-- <el-input v-model="fliterQuery.min" placeholder="交易总价最高" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -87,7 +88,9 @@ export default {
         size: 10,
         payType: undefined,
         query: undefined,
+        oldOrder: undefined,
         status: undefined,
+        newOrder: undefined,
         creatDate: undefined,
         complateDate: undefined
       },

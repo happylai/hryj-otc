@@ -91,7 +91,7 @@
 
     <el-table-column align="center" label="处理时间" min-width="120">
       <template slot-scope="scope">
-        <span>{{ scope.row.createTime }}</span>
+        <span>{{ scope.row.finishTime }}</span>
       </template>
     </el-table-column>
 
@@ -182,7 +182,7 @@ export default {
       this.$emit('del', id)
     },
 
-    handleCallBack() {
+    handleCallBack(id) {
       this.actionLoading = true
       pre_odrder_call_back({ preId: id }).then(res => {
         this.actionLoading = false

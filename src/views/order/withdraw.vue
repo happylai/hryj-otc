@@ -20,14 +20,7 @@
         start-placeholder="订单完创建开始日期"
         end-placeholder="结束日期"
       />
-      <el-date-picker
-        v-model="fliterQuery.complateDate"
-        class="filter-item"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="交易完成开始日期"
-        end-placeholder="结束日期"
-      />
+
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -105,10 +98,25 @@
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="paginationMeta.current" :limit.sync="meta.size" @pagination="paginationChange" />
 
-    <el-dialog v-loading="detailLoading" :visible.sync="dialogVisible" title="基础信息审核">
+    <el-dialog v-loading="detailLoading" :visible.sync="dialogVisible" title="订单详情" width="800px">
+      <h4>订单信息</h4>
       <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">订单ID：</el-col>
-        <el-col :span="16">{{ editData.orderUuid }}</el-col>
+        <el-col :sm="12" :md="6" class="">
+          <div class="orderInfoIt"> 订单ID:</div>
+        </el-col>
+        <el-col :sm="12" :md="6" class="">
+          <div class="orderInfoIt"> 订单ID:</div>
+        </el-col>
+        <el-col :sm="12" :md="6" class="">
+          <div class="orderInfoIt"> 订单ID:</div>
+        </el-col>
+        <el-col :sm="12" :md="6" class="">
+          <div class="orderInfoIt"> 订单ID:</div>
+        </el-col>
+        <el-col :sm="12" :md="6" class="">
+          <div class="orderInfoIt"> 订单ID:</div>
+        </el-col>
+
       </el-row>
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">时间：</el-col>
@@ -196,8 +204,7 @@ export default {
         query: undefined,
         status: undefined,
         auditStatus: undefined,
-        creatDate: undefined,
-        complateDate: undefined
+        creatDate: undefined
       },
       meta: {
         current: 1,
@@ -262,10 +269,6 @@ export default {
       if (fliterQuery.creatDate) {
         data.createStart = this.$moment(fliterQuery.creatDate[0]).format('YYYY-MM-DD HH:mm:ss')
         data.createEnd = this.$moment(fliterQuery.creatDate[1]).format('YYYY-MM-DD') + ' 23:59:59'
-      }
-      if (fliterQuery.complateDate) {
-        data.confirmStart = this.$moment(fliterQuery.complateDate[0]).format('YYYY-MM-DD HH:mm:ss')
-        data.confirmEnd = this.$moment(fliterQuery.complateDate[1]).format('YYYY-MM-DD') + ' 23:59:59'
       }
       const meta = this.meta
       meta.current = 1

@@ -34,7 +34,7 @@
           搜索
         </el-button>
       </div>
-      <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+      <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%;font-size:10px">
         <el-table-column
 
           align="center"
@@ -53,37 +53,37 @@
           </template>
         </el-table-column>
 
-        <el-table-column width="80px" align="center" label="类型">
-          <template slot-scope="scope">
-            <span>{{ scope.row.type|advType }}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column width="80px" align="center" label="币种">
+        <el-table-column width="60px" align="center" label="币种">
           <template slot-scope="scope">
             <span>{{ scope.row.token }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="卖家" min-width="140">
+        <el-table-column width="60px" align="center" label="类型">
+          <template slot-scope="scope">
+            <span>{{ scope.row.type|advType }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="卖家" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.seller }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="买家" min-width="140">
+        <el-table-column align="center" label="买家" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.buyer }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" width="80px" label="交易额">
+        <el-table-column align="center" width="60px" label="交易额">
           <template slot-scope="scope">
             <span>{{ scope.row.amount }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column min-width="120px" align="left" label="支付方式">
+        <el-table-column min-width="80px" align="left" label="支付方式">
           <template slot-scope="scope">
             <el-tooltip placement="right">
               <div v-if="scope.row.payInfo.payType===2" slot="content">
@@ -102,36 +102,36 @@
           </template>
         </el-table-column>
 
-        <el-table-column v-if="activeType==='2'" align="center" label="手续费" width="80">
+        <el-table-column v-if="activeType==='2'" align="center" label="手续费" width="60">
           <template slot-scope="scope">
             <span>{{ scope.row.fee }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="交易时间" min-width="150">
+        <el-table-column align="center" label="交易时间" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.createTime }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="取消时间" min-width="150">
+        <el-table-column align="center" label="取消时间" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.payCancelTime }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="完成时间" min-width="150">
+        <el-table-column align="center" label="完成时间" min-width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.receiveConfirmTime }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="打款备注" min-width="150">
+        <el-table-column align="center" label="打款备注" min-width="120">
           <template slot-scope="scope">
             <span>{{ scope.row.memo }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="二维码" min-width="120">
+        <el-table-column align="center" label="二维码" min-width="80">
           <template slot-scope="scope">
             <img v-if="scope.row.qrCode" v-lazy="scope.row.qrCode" class="appealImage" :preview="scope.row.id+'qrCode'">
             <!-- <img v-else v-lazy="scope.row.qrCode" :preview="'chat'+scope.row.id" class="chatListImage"> -->
@@ -139,7 +139,7 @@
             <span v-else>无</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="状态" width="95">
+        <el-table-column align="center" label="状态" width="60">
           <template slot-scope="scope">
             <el-link :underline="false" :type="scope.row.orderStatus|orderStatusTagName">{{ scope.row.orderStatus|orderStatus }}</el-link>
           </template>
@@ -329,7 +329,6 @@ export default {
     handleTabClick(tab, event) {
       console.log('tab', tab)
       this.meta.current = 1
-      this.activeType = tab.name
       const fliterQuery = {
         page: 1,
         size: 10,
@@ -405,7 +404,7 @@ export default {
       }).then((val) => {
         apiList[type]({ orderId: orderId }).then(res => {
           if (res.code === 0) {
-            this.$message.succese('操作成功')
+            this.$message({ message: res.message || '操作成功', type: 'success' })
             this.handleFilter()
           } else {
             this.$message.error(res.message || '操作失败')

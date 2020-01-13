@@ -47,19 +47,19 @@
       </template>
     </el-table-column>
 
-    <el-table-column min-width="120px" align="center" label="原订单号">
+    <el-table-column min-width="120px" align="center" label="新订单号">
       <template slot-scope="scope">
         <span>{{ scope.row.newOrder }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column min-width="120px" align="center" label="新订单号">
+    <el-table-column min-width="120px" align="center" label="原订单号">
       <template slot-scope="scope">
         <span>{{ scope.row.oldOrder }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column min-width="120px" align="center" label="B端订单号">
+    <el-table-column max-width="120px" align="center" label="原B端订单号">
       <template slot-scope="scope">
         <span>{{ scope.row.merchantOrderNo }}</span>
       </template>
@@ -71,40 +71,46 @@
       </template>
     </el-table-column>
 
-    <el-table-column width="120px" label="原交易单价">
+    <el-table-column width="120px" label="新交易单价">
       <template slot-scope="scope">
         <span>{{ scope.row.price }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column align="center" label="原交易总价" min-width="120">
+    <el-table-column width="120px" label="新交易数量">
+      <template slot-scope="scope">
+        <span>{{ scope.row.amount }}</span>
+      </template>
+    </el-table-column>
+
+    <el-table-column align="center" label="新交易总价" min-width="120">
       <template slot-scope="scope">
         <span>{{ scope.row.legalAmount }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column align="center" label="预处理创建时间" min-width="300">
+    <el-table-column align="center" label="处理时间" min-width="120">
       <template slot-scope="scope">
         <span>{{ scope.row.createTime }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column align="center" label="处理人" min-width="300">
+    <el-table-column align="center" label="处理人" min-width="90">
       <template slot-scope="scope">
         <span>{{ scope.row.admin }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column align="center" label="原订单状态" width="95">
+    <el-table-column align="center" label="状态" width="70">
       <template slot-scope="scope">
-        <el-link :underline="false" :type="scope.row.oldStatus|orderStatusTagName">{{ scope.row.orderStatus|orderStatus }}</el-link>
+        <el-link :underline="false" type="success">已处理</el-link>
       </template>
     </el-table-column>
 
-    <el-table-column class-name="status-col" label="操作" min-width="110">
+    <el-table-column align="center" class-name="status-col" label="操作" min-width="210">
       <template slot-scope="scope">
-        <el-button type="primary" size="small" @click="goDetail(scope.row)">{{ type==='1'?'处理':'详情' }}</el-button>
-        <el-button :disabled="delLoading" :loading="delLoading" type="danger" size="small" @click="hancleDel(scope.row.preId)">删除</el-button>
+        <el-button :loading="actionLoading" :disabled="actionLoading" type="primary" size="small" @click="goDetail(scope.row.preId)">详情</el-button>
+        <el-button :loading="actionLoading" :disabled="actionLoading" type="primary" size="small" @click="handleCallBack(scope.row.preId)">回调</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -112,7 +118,7 @@
 
 <script>
 // import { fetchList } from '@/api/article'
-import { reorder_pres as listApi, pro_order_detail, pre_odrder_save, pre_odrder_confirm, pre_odrder_del } from '@/api/order'
+import { reorder_pres as listApi, pro_order_detail, pre_odrder_save, pre_odrder_confirm, pre_odrder_call_back } from '@/api/order'
 
 export default {
   filters: {
@@ -146,7 +152,7 @@ export default {
       },
       loading: false,
       orderDetailLoading: false,
-      delLoading: false
+      actionLoading: false
     }
   },
   created() {
@@ -172,28 +178,32 @@ export default {
         this.orderDetailLoading = false
       })
     },
-
     hancleDel(id) {
-      this.delLoading = true
-      pre_odrder_del({ preId: id }).then(res => {
-        this.delLoading = true
+      this.$emit('del', id)
+    },
+
+    handleCallBack() {
+      this.actionLoading = true
+      pre_odrder_call_back({ preId: id }).then(res => {
+        this.actionLoading = false
         if (res.code === 0) {
           this.$message({ message: res.message || '操作成功', type: 'success' })
-          this.$emit('refresh')
+          this.refresh()
         } else {
           this.$message.error(res.message || '操作失败')
         }
       }).catch(err => {
-        this.delLoading = true
+        this.actionLoading = true
         this.$message.error(err.message || '操作失败')
       })
     },
+
     tableExpandChange(expandData, id) {
       console.log('expand data', expandData, id)
       this.getOrderDetail(expandData.preId)
     },
-    goDetail(data) {
-      this.$router.push({ path: `reedit/${data.preId}` })
+    goDetail(preId) {
+      this.$router.push({ path: `reedit/${preId}` })
     }
 
   }

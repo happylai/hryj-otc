@@ -1,6 +1,13 @@
 <template>
   <div class="tab-container">
     <el-card v-loading="detailLoading" class="box-card">
+
+      <el-row :gutter="10">
+        <el-col :xs="12" :sm="8"><div class="cardItem">B端UID：{{ modals.merchantUid }}</div></el-col>
+        <el-col :xs="12" :sm="8"><div class="cardItem">处理人：{{ modals.admin||name }}</div></el-col>
+      </el-row>
+    </el-card>
+    <el-card v-loading="detailLoading" class="box-card">
       <div slot="header" class="clearfix">
         <span class="card-title">原订单信息：</span>  </div>
       <div class="text item">
@@ -123,7 +130,8 @@ export default {
     ...mapGetters([
       'groupsConst',
       'userRolesConst',
-      'adminRolesConst'
+      'adminRolesConst',
+      'name'
     ])
   },
 

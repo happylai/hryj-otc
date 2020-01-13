@@ -5,18 +5,9 @@
       <el-input v-model="fliterQuery.query" placeholder="站内订单号" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="fliterQuery.merchantOrderNo" placeholder="B端订单号" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="fliterQuery.advertiseNo" placeholder="广告ID" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="fliterQuery.min" placeholder="交易总价最高" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="fliterQuery.max" placeholder="交易总价最低" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <!-- <el-input v-model="fliterQuery.min" placeholder="交易总价最高" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="fliterQuery.max" placeholder="交易总价最低" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" /> -->
 
-      <el-select v-model="fliterQuery.payType" placeholder="广告ID" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
-      </el-select>
-      <el-select v-model="fliterQuery.type" placeholder="交易类型" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in CounterParty" :key="item.id" :label="item.label" :value="item.id" />
-      </el-select>
-      <el-select v-model="fliterQuery.status" placeholder="订单状态" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.id" />
-      </el-select>
       <el-date-picker
         v-model="fliterQuery.creatDate"
         class="filter-item"
@@ -33,7 +24,7 @@
         创建预处理
       </el-button>
     </div>
-    <listtable style="width:100%" :data="list" type="1" />
+    <listtable style="width:100%" :data="list" type="1" @refresh="handleFilter()" />
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
     <el-dialog :visible.sync="showAdd" title="创建预处理补单">
       <el-form ref="regForm" :model="newOrder" :rules="addRules" class="login-form" label-width="120px" auto-complete="on" label-position="right">
@@ -220,22 +211,8 @@ export default {
 
         this.$message.error(err.message || '操作失败')
       })
-    },
-    handleDel(id) {
-      this.delLoading = true
-      pre_odrder_del({ preId: id }).then(res => {
-        this.delLoading = true
-        if (res.code === 0) {
-          this.$message({ message: res.message || '操作成功', type: 'success' })
-          this.handleFilter()
-        } else {
-          this.$message.error(res.message || '操作失败')
-        }
-      }).catch(err => {
-        this.delLoading = true
-        this.$message.error(err.message || '操作失败')
-      })
     }
+
   }
 }
 </script>

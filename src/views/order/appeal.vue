@@ -64,7 +64,7 @@
           <el-table-column align="center" label="发起人证据" min-width="120">
             <template slot-scope="scope">
               <img v-if="scope.row.sourceProof" v-lazy="scope.row.sourceProof" class="appealImage" :preview="scope.row.id+'apple0'">
-              <span v-els>无</span>
+              <span v-else>无</span>
             </template>
           </el-table-column>
 
@@ -118,7 +118,7 @@
         <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
 
       </el-tab-pane>
-      <el-tab-pane :label="tabMapOptions[1].label" :name="tabMapOptions[1].key">
+      <!-- <el-tab-pane :label="tabMapOptions[1].label" :name="tabMapOptions[1].key">
         <tip />
         <div class="filter-container" style="margin-bottom: 10px;">
           <el-input v-model="fliterQuery.query" placeholder="订单ID/发起人" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -187,7 +187,7 @@
         </div>
         <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
 
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
     <userInfoDig :dialog-visible="showUserInfo" :user-id="showUserIfonId" :user-type="showUserIfonType" />
   </div>

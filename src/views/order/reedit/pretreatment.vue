@@ -83,14 +83,12 @@ export default {
 
       createdTimes: 0,
       fliterQuery: {
-        page: 1,
-        size: 10,
-        payType: undefined,
         query: undefined,
         oldOrder: undefined,
-        status: undefined,
-        creatDate: undefined,
-        complateDate: undefined
+        merchantUid: undefined,
+        merchantOrderNo: undefined,
+        advertiseNo: undefined,
+        creatDate: undefined
       },
       newOrder: {
         orderNo: undefined,
@@ -163,8 +161,8 @@ export default {
         creatDate: undefined
       }
       if (fliterQuery.creatDate) {
-        data.createStart = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
-        data.createEnd = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
+        data.start = this.$moment(fliterQuery.creatDate[0]).format('YYYY-MM-DD HH:mm:ss')
+        data.end = this.$moment(fliterQuery.creatDate[1]).format('YYYY-MM-DD') + ' 23:59:59'
       }
       const meta = this.meta
       resetPage ? meta.current = 1 : null

@@ -84,15 +84,12 @@ export default {
 
       createdTimes: 0,
       fliterQuery: {
-        page: 1,
-        size: 10,
-        payType: undefined,
-        query: undefined,
+        merchantUid: undefined,
         oldOrder: undefined,
-        status: undefined,
         newOrder: undefined,
+        merchantOrderNo: undefined,
         creatDate: undefined,
-        complateDate: undefined
+        advertiseNo: undefined
       },
       newOrder: {
         orderNo: undefined,

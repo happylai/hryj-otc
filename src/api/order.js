@@ -105,6 +105,15 @@ export function out_order_audit(data) {
   })
 }
 
+// 出金审核记录
+export function out_order_reorders(id) {
+  return request({
+    url: `${scope}/out_order/records/${id}`,
+    method: 'get'
+
+  })
+}
+
 // 订单补单列表
 export function order_reorders(meta, data) {
   return request({

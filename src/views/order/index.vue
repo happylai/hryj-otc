@@ -34,7 +34,7 @@
           搜索
         </el-button>
       </div>
-      <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%;font-size:10px">
+      <el-table v-if="activeType==='1'" v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%;font-size:10px">
         <el-table-column
 
           align="center"
@@ -47,7 +47,121 @@
           </template>
         </el-table-column>
 
-        <el-table-column v-if="activeType==='2'" min-width="120px" align="center" label="第三方订单号">
+        <el-table-column width="60px" align="center" label="币种">
+          <template slot-scope="scope">
+            <span>{{ scope.row.token }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column width="60px" align="center" label="类型">
+          <template slot-scope="scope">
+            <span>{{ scope.row.type|advType }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="卖家" min-width="100">
+          <template slot-scope="scope">
+            <span>{{ scope.row.seller }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="买家" min-width="100">
+          <template slot-scope="scope">
+            <span>{{ scope.row.buyer }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" width="60px" label="交易额">
+          <template slot-scope="scope">
+            <span>{{ scope.row.amount }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column min-width="80px" align="left" label="支付方式">
+          <template slot-scope="scope">
+            <el-tooltip placement="right">
+              <div v-if="scope.row.payInfo.payType===2" slot="content">
+                <div>卡号：{{ scope.row.payInfo.account }} </div>
+                <div>真实姓名：{{ scope.row.payInfo.real }} </div>
+                <div>银行：{{ scope.row.payInfo.bank }} </div>
+                <div>开户行{{ scope.row.payInfo.bankBranch }}</div>
+              </div>
+              <div v-else slot="content">
+                <div>支付账号：{{ scope.row.payInfo.account }} </div>
+                <div>支付昵称：{{ scope.row.payInfo.nick }}</div>
+              </div>
+              <div> <el-link :underline="false"><i class="el-icon-info" /> {{ scope.row.payInfo.payType|payTypeName }} </el-link>  </div>
+            </el-tooltip>
+          <!-- <span>{{ scope.row.remainAmount }}</span> -->
+          </template>
+        </el-table-column>
+
+        <el-table-column v-if="activeType==='2'" align="center" label="手续费" width="60">
+          <template slot-scope="scope">
+            <span>{{ scope.row.fee }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="交易时间" min-width="100">
+          <template slot-scope="scope">
+            <span>{{ scope.row.createTime }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="取消时间" min-width="100">
+          <template slot-scope="scope">
+            <span>{{ scope.row.payCancelTime }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="完成时间" min-width="100">
+          <template slot-scope="scope">
+            <span>{{ scope.row.receiveConfirmTime }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="打款备注" min-width="120">
+          <template slot-scope="scope">
+            <span>{{ scope.row.memo }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="二维码" min-width="80">
+          <template slot-scope="scope">
+            <img v-if="scope.row.qrCode" v-lazy="scope.row.qrCode" class="appealImage" :preview="scope.row.id+'qrCode'">
+            <!-- <img v-else v-lazy="scope.row.qrCode" :preview="'chat'+scope.row.id" class="chatListImage"> -->
+
+            <span v-else>无</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="状态" width="60">
+          <template slot-scope="scope">
+            <el-link :underline="false" :type="scope.row.orderStatus|orderStatusTagName">{{ scope.row.orderStatus|orderStatus }}</el-link>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" class-name="status-col" label="操作" min-width="210">
+          <template slot-scope="scope">
+            <el-button class="actionBtn" :disabled="scope.row.orderStatus===2||scope.row.orderStatus===5||scope.row.orderStatus===6" type="danger" size="small" @click="orderAction(scope.row.id,0,activeType==='1'?'强制取消':scope.row.isOut?'取消委托':'强制取消')">{{ activeType==='1'?'强制取消':scope.row.isOut?'取消委托':'强制取消' }}</el-button>
+            <el-button class="actionBtn" :disabled="scope.row.orderStatus===2||scope.row.orderStatus===5||scope.row.orderStatus===6" type="success" size="small" @click="orderAction(scope.row.id,1,'强制完成')">强制完成</el-button>
+            <el-button v-if="activeType==='2'&&scope.row.idOut" class="actionBtn" :disabled="scope.row.orderStatus===2||scope.row.orderStatus===5||scope.row.orderStatus===6" type="success" size="small" @click="orderAction(scope.row.id,2,'重新匹配')">重新匹配</el-button>
+            <el-button class="actionBtn" type="primary" size="small" @click="clickDetail(scope.row)">详情</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-table v-else v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%;font-size:10px">
+        <el-table-column
+
+          align="center"
+          label="订单ID"
+          min-width="140"
+          element-loading-text="请给我点时间！"
+        >
+          <template slot-scope="scope">
+            <span>{{ scope.row.uuid }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column min-width="120px" align="center" label="第三方订单号">
           <template slot-scope="scope">
             <span>{{ scope.row.merchantOrderNo }}</span>
           </template>
@@ -147,7 +261,7 @@
 
         <el-table-column align="center" class-name="status-col" label="操作" min-width="210">
           <template slot-scope="scope">
-            <el-button class="actionBtn" :disabled="scope.row.orderStatus===2||scope.row.orderStatus===5||scope.row.orderStatus===6" type="danger" size="small" @click="orderAction(scope.row.id,0,activeType==='1'?'强制取消':'取消委托')">{{ activeType==='1'?'强制取消':'取消委托' }}</el-button>
+            <el-button class="actionBtn" :disabled="scope.row.orderStatus===2||scope.row.orderStatus===5||scope.row.orderStatus===6" type="danger" size="small" @click="orderAction(scope.row.id,0,activeType==='1'?'强制取消':scope.row.isOut?'取消委托':'强制取消')">{{ activeType==='1'?'强制取消':scope.row.isOut?'取消委托':'强制取消' }}</el-button>
             <el-button class="actionBtn" :disabled="scope.row.orderStatus===2||scope.row.orderStatus===5||scope.row.orderStatus===6" type="success" size="small" @click="orderAction(scope.row.id,1,'强制完成')">强制完成</el-button>
             <el-button v-if="activeType==='2'&&scope.row.idOut" class="actionBtn" :disabled="scope.row.orderStatus===2||scope.row.orderStatus===5||scope.row.orderStatus===6" type="success" size="small" @click="orderAction(scope.row.id,2,'重新匹配')">重新匹配</el-button>
             <el-button class="actionBtn" type="primary" size="small" @click="clickDetail(scope.row)">详情</el-button>

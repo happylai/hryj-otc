@@ -248,9 +248,12 @@ export function pre_odrder_confirm(data) {
 // 确认补单
 export function pro_odrder_rematch(data) {
   return request({
-    url: `${scope}/order/rematch`,
+    url: `${scope}/rematch`,
     method: 'post',
-    data
+    data: qs.stringify(data),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
   })
 }
 

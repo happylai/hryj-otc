@@ -121,7 +121,7 @@ export const asyncRoutes = [{
     meta: {
       title: '补单',
       icon: '',
-      authName: ['order_appeal']
+      authName: ['order_reedit']
 
     }
   },
@@ -134,7 +134,7 @@ export const asyncRoutes = [{
     meta: {
       title: '补单详情',
       icon: '',
-      authName: ['order_appeal']
+      authName: ['order_reedit']
 
     }
   },

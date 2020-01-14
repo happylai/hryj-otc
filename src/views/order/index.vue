@@ -300,7 +300,7 @@
             <div class="orderInfoItem"> 所属广告：{{ editData.orderC.advertiseUuid }}</div>
           </el-col>
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
-            <div class="orderInfoItem"> 类型：{{ editData.orderC.type|AdvType }}</div>
+            <div class="orderInfoItem"> 类型：{{ editData.orderC.type|advType }}</div>
           </el-col>
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
             <div class="orderInfoItem"> 币种:{{ editData.orderC.token }}</div>
@@ -320,40 +320,69 @@
       <div v-else>
         <el-row :gutter="20" class="">
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
-            <div class="orderInfoItem"> 订单ID:{{ editData.orderB.id }}</div>
+            <div class="orderInfoItem"> 订单ID:{{ editData.orderB.uuid }}</div>
           </el-col>
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 卖家:{{ editData.orderB.seller }}</div>
+          </el-col>
+
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 买家:{{ editData.orderB.buyer }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 交易数量：{{ editData.orderB.amount }}</div>
+          </el-col>
+
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 交易单价：{{ editData.orderB.price }}</div>
+          </el-col>
+
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 交易金额：{{ editData.orderB.legalAmount }}</div>
+          </el-col>
+
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 交易补贴：{{ editData.orderB.dealSubsidy }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 夜间补贴：{{ editData.orderB.nightSubsidy }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 手续费：{{ editData.orderB.fee }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 汇率差：{{ editData.orderB.exchangeMistake }}</div>
+          </el-col>
+
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
             <div class="orderInfoItem"> 创建时间:{{ editData.orderB.createTime }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 审核时间：{{ editData.orderB.outAuditTime }}</div>
           </el-col>
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
             <div class="orderInfoItem"> 付款时间：{{ editData.orderB.payConfirmTime }}</div>
           </el-col>
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
-            <div class="orderInfoItem"> 交易金额：{{ editData.orderB.amount }}</div>
+            <div class="orderInfoItem"> 收款时间：{{ editData.orderB.receiveConfirmTime }}</div>
           </el-col>
-          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
-            <div class="orderInfoItem"> 申诉时间：{{ editData.orderB.appealTime }}</div>
-          </el-col>
-
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
             <div class="orderInfoItem"> 取消时间：{{ editData.orderB.payCancelTime }}</div>
           </el-col>
 
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
-            <div class="orderInfoItem"> 完成时间：{{ editData.orderB.receiveConfirmTime }}</div>
+            <div class="orderInfoItem"> 是否申诉：{{ editData.orderB.isAppealed?'是':'否' }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 提现审核人：{{ editData.orderB.isOut?'是':'否' }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 提现审核人：{{ editData.orderB.outAuditAdmin }}</div>
           </el-col>
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
             <div class="orderInfoItem"> 所属广告：{{ editData.orderB.advertiseUuid }}</div>
           </el-col>
-          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
-            <div class="orderInfoItem"> 类型：{{ editData.orderB.type|AdvType }}</div>
-          </el-col>
-          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
-            <div class="orderInfoItem"> 币种:{{ editData.orderB.token }}</div>
-          </el-col>
-          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
-            <div class="orderInfoItem"> 买家:{{ editData.orderB.buyer }}</div>
-          </el-col>
+
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
             <div class="orderInfoItem"> 所属广告:{{ editData.orderB.advertiseUuid }}</div>
           </el-col>
@@ -361,6 +390,47 @@
             <div class="orderInfoItem"> 支付方式:{{ editData.orderB.payType|payTypeName }}</div>
           </el-col>
         </el-row>
+        <div>
+          <h3>支付信息</h3>
+          <div v-if="editData.orderB.payInfo&&editData.orderB.payInfo.account">
+            <el-row :gutter="20" class="">
+              <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+                <div class="orderInfoItem"> 收款账号:{{ editData.orderB.payInfo.account }}</div>
+              </el-col>
+              <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+                <div class="orderInfoItem"> 付款方式：{{ editData.orderB.payInfo.payType|payTypeName }}</div>
+              </el-col>
+              <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+                <div class="orderInfoItem"> 真实姓名：{{ editData.orderB.real }}</div>
+              </el-col>
+              <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+                <div class="orderInfoItem"> 支付昵称:{{ editData.orderB.payInfo.nick }}</div>
+              </el-col>
+              <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+                <div class="orderInfoItem"> 收款地区:{{ editData.orderB.payInfo.area }}</div>
+              </el-col>
+              <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+                <div class="orderInfoItem"> 开户银行:{{ editData.orderB.payInfo.bank }}</div>
+              </el-col>
+              <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+                <div class="orderInfoItem"> 开户支行:{{ editData.orderB.payInfo.bankBranch }}</div>
+              </el-col>
+              <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+                <div class="orderInfoItem"> 二维码:</div>
+                <div>
+                  <img v-if="editData.orderB.paymentUrlOne" v-lazy="editData.orderB.paymentUrlOne" class="DetailvoucherImage" :preview="`${editData.id}withdarw011`" @click="dialogVisible=false">
+                  <span v-else>无</span>
+                  <img v-if="editData.orderB.paymentUrlTwo" v-lazy="editData.orderB.paymentUrlTwo" class="DetailvoucherImage" :preview="`${editData.id}withdarw011`" @click="dialogVisible=false">
+                  <img v-if="editData.orderB.paymentUrlThree" v-lazy="editData.orderB.paymentUrlThree" class="DetailvoucherImage" :preview="`${editData.id}withdarw011`" @click="dialogVisible=false">
+                </div>
+              </el-col>
+
+            </el-row>
+
+          </div>
+          <span v-else>无</span>
+
+        </div>
       </div>
 
       <span slot="footer" class="dialog-footer">
@@ -420,7 +490,9 @@ export default {
       },
       dialogVisible: false,
       editData: {
-        orderB: {},
+        orderB: {
+          payInfo: {}
+        },
         orderC: {}
       }
     }
@@ -461,7 +533,9 @@ export default {
       }
       this.fliterQuery = fliterQuery
       this.editData = {
-        orderB: {},
+        orderB: {
+          payInfo: {}
+        },
         orderC: {}
       }
       this.getList()

@@ -394,3 +394,14 @@ export function userRolesConstName(id, arr) {
     return '-'
   }
 }
+
+export function formatNumber(num) {
+  let content
+  const temp = num
+  if ((temp.toString()).split('.')[1].length <= 8) {
+    content = num
+  } else {
+    content = num.toFixed(8)
+  }
+  return content
+}

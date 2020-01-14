@@ -257,3 +257,12 @@ export function pro_odrder_rematch(data) {
   })
 }
 
+// 计算交易总价或数量
+export function reorder_calcul(data) {
+  return request({
+    url: `${scope}/reorder/calcul`,
+    method: 'post',
+    data
+  })
+}
+

@@ -42,7 +42,7 @@
           </el-col>
         </el-row></div>
     </el-card>
-    <el-card v-loading="detailLoading" class="box-card">
+    <el-card v-loading="detailLoading||calLoading" class="box-card">
       <div slot="header" class="clearfix">
         <span class="card-title">补单操作：</span>  </div>
       <div class="text item">
@@ -50,37 +50,37 @@
           <el-col :xs="12" :sm="8">
             <div class="cardItem">
               <span class="cardItem-title">原订单编号：</span>
-              <el-input v-model="newData.oldOrder" placeholder="请输入原订单编号" />
+              <el-input v-model.number="newData.oldOrder" :disabled="modals.newId!==null" is-uncontrolled placeholder="请输入原订单编号" />
             </div>
           </el-col>
           <el-col :xs="12" :sm="8">
             <div class="cardItem">
               <span class="cardItem-title">卖方UID：</span>
-              <el-input v-model="newData.sellerUid" placeholder="请输入原卖方UID" />
+              <el-input v-model="newData.sellerUid" :disabled="modals.newId!==null" placeholder="请输入原卖方UID" />
             </div>
           </el-col>
           <el-col :xs="12" :sm="8">
             <div class="cardItem">
               <span class="cardItem-title">买方UID：</span>
-              <el-input v-model="newData.buyerUid" placeholder="请输入买方UID" />
+              <el-input v-model="newData.buyerUid" :disabled="modals.newId!==null" placeholder="请输入买方UID" />
             </div>
           </el-col>
           <el-col :xs="12" :sm="8">
             <div class="cardItem">
               <span class="cardItem-title">单价（CNY)：</span>
-              <el-input v-model="newData.price" placeholder="请输单价" @blur="claLegalAmountByPrice" />
+              <el-input v-model="newData.price" v-float8 :disabled="modals.newId!==null" type="number" placeholder="请输单价" @blur="claLegalAmountByPrice" />
             </div>
           </el-col>
           <el-col :xs="12" :sm="8">
             <div class="cardItem">
               <span class="cardItem-title">交易数量：</span>
-              <el-input v-model="newData.newAmount" placeholder="请输入交易数量" @blur="claLegalAmountByAmount" />
+              <el-input v-model="newData.newAmount" v-float8 :disabled="modals.newId!==null" type="number" placeholder="请输入交易数量" @blur="claLegalAmountByPrice" />
             </div>
           </el-col>
           <el-col :xs="12" :sm="8">
             <div class="cardItem">
               <span class="cardItem-title">交易总价（CNY）：</span>
-              <el-input v-model="newData.legalAmount" placeholder="请输入交易总价" @blur="claAmount" />
+              <el-input v-model="newData.legalAmount" v-float8 :disabled="modals.newId!==null" type="number" placeholder="请输入交易总价" @blur="claAmount" />
             </div>
           </el-col>
 
@@ -98,14 +98,14 @@ import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 
 import { order_details } from '@/api/order'
-import float from '@/directive/float' // float Number directive
-
-import { reorder_pres as listApi, pro_order_detail, pre_odrder_save, pre_odrder_confirm } from '@/api/order'
+import float8 from '@/directive/float8' // float Number directive
+import { formatNumber } from '@/utils/index'
+import { reorder_pres as listApi, pro_order_detail, pre_odrder_save, pre_odrder_confirm, reorder_calcul } from '@/api/order'
 
 export default {
   name: 'Tab',
   components: { pagination },
-  directives: { waves, float },
+  directives: { waves, float8 },
   data() {
     return {
 
@@ -120,7 +120,8 @@ export default {
         'sellerUid': undefined
       },
       saveLoading: false,
-      detailLoading: false
+      detailLoading: false,
+      calLoading: false
     }
   },
   computed: {
@@ -143,22 +144,37 @@ export default {
   },
   methods: {
     claLegalAmountByPrice() {
-      const price = this.newData.price
-      if (price) {
-        this.newData.legalAmount = this.newData.newAmount * price
+      const data = {
+        price: this.newData.price,
+        amount: this.newData.newAmount
       }
+      this.clalegalPrice(data)
     },
-    claLegalAmountByAmount() {
-      const newAmount = this.newData.newAmount
-      if (newAmount) {
-        this.newData.legalAmount = this.newData.price * newAmount
-      }
-    },
+
     claAmount() {
-      const legalAmount = this.newData.legalAmount
-      if (legalAmount) {
-        this.newData.newAmount = legalAmount / this.newData.price
+      const data = {
+        price: this.newData.price,
+        legalAmount: this.newData.legalAmount
       }
+      this.clalegalPrice(data)
+    },
+    clalegalPrice(data) {
+      this.calLoading = true
+      reorder_calcul(data).then(res => {
+        this.calLoading = false
+        if (res.code === 0) {
+          const priceData = {
+            ...this.newData,
+            legalAmount: res.data.legalAmount,
+            newAmount: res.data.amount,
+            price: res.data.price
+          }
+          console.log('pricedata', priceData)
+          this.newData = priceData
+        }
+      }).catch(() => {
+        this.calLoading = false
+      })
     },
 
     getOrderDetail(id) {

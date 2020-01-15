@@ -60,9 +60,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="交易额" width="120">
+      <el-table-column align="center" label="交易数量(PQC)" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.amount }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" width="120px" label="交易总价(CNY)">
+        <template slot-scope="scope">
+          <span>{{ scope.row.legalAmount }}</span>
         </template>
       </el-table-column>
 

@@ -71,7 +71,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" width="60px" label="交易额">
+        <el-table-column align="center" width="60px" label="交易数量(PQC)">
           <template slot-scope="scope">
             <span>{{ scope.row.amount }}</span>
           </template>
@@ -191,12 +191,17 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" width="60px" label="交易额">
+        <el-table-column align="center" width="60px" label="交易额(PQC)">
           <template slot-scope="scope">
             <span>{{ scope.row.amount }}</span>
           </template>
         </el-table-column>
 
+        <el-table-column align="center" width="70px" label="交易总价(CNY)">
+          <template slot-scope="scope">
+            <span>{{ scope.row.legalAmount }}</span>
+          </template>
+        </el-table-column>
         <el-table-column min-width="80px" align="left" label="支付方式">
           <template slot-scope="scope">
             <el-tooltip placement="right">
@@ -297,9 +302,6 @@
             <div class="orderInfoItem"> 完成时间：{{ editData.orderC.receiveConfirmTime }}</div>
           </el-col>
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
-            <div class="orderInfoItem"> 所属广告：{{ editData.orderC.advertiseUuid }}</div>
-          </el-col>
-          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
             <div class="orderInfoItem"> 类型：{{ editData.orderC.type|advType }}</div>
           </el-col>
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
@@ -330,7 +332,10 @@
             <div class="orderInfoItem"> 买家:{{ editData.orderB.buyer }}</div>
           </el-col>
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
-            <div class="orderInfoItem"> 交易数量：{{ editData.orderB.amount }}</div>
+            <div class="orderInfoItem"> 所属广告：{{ editData.orderB.advertiseUuid }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 交易数量(PQC)：{{ editData.orderB.amount }}</div>
           </el-col>
 
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
@@ -338,7 +343,7 @@
           </el-col>
 
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
-            <div class="orderInfoItem"> 交易金额：{{ editData.orderB.legalAmount }}</div>
+            <div class="orderInfoItem"> 交易金额(CNY)：{{ editData.orderB.legalAmount }}</div>
           </el-col>
 
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
@@ -379,13 +384,7 @@
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
             <div class="orderInfoItem"> 提现审核人：{{ editData.orderB.outAuditAdmin }}</div>
           </el-col>
-          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
-            <div class="orderInfoItem"> 所属广告：{{ editData.orderB.advertiseUuid }}</div>
-          </el-col>
 
-          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
-            <div class="orderInfoItem"> 所属广告:{{ editData.orderB.advertiseUuid }}</div>
-          </el-col>
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
             <div class="orderInfoItem"> 支付方式:{{ editData.orderB.payType|payTypeName }}</div>
           </el-col>

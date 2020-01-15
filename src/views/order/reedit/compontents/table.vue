@@ -71,13 +71,13 @@
       </template>
     </el-table-column>
 
-    <el-table-column width="120px" label="原交数量">
+    <el-table-column width="120px" label="原交数量(PQC)">
       <template slot-scope="scope">
         <span>{{ scope.row.amount }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column align="center" label="原交易总价" min-width="120">
+    <el-table-column align="center" label="原交易总价(CNY)" min-width="120">
       <template slot-scope="scope">
         <span>{{ scope.row.legalAmount }}</span>
       </template>

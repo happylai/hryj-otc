@@ -19,8 +19,8 @@
           <el-col :xs="12" :sm="8"><div class="cardItem">买方UID：{{ modals.newBuyerUid }}</div></el-col>
           <el-col :xs="12" :sm="8"><div class="cardItem">交易类型：{{ modals.nickName }}</div></el-col>
           <el-col :xs="12" :sm="8"><div class="cardItem">交易单价：{{ modals.newPrice }}</div></el-col>
-          <el-col :xs="12" :sm="8"><div class="cardItem">交易数量：{{ modals.newAmount }}</div></el-col>
-          <el-col :xs="12" :sm="8"><div class="cardItem">交易总价：{{ modals.newLegalAmount }}</div></el-col>
+          <el-col :xs="12" :sm="8"><div class="cardItem">交易数量(PQC)：{{ modals.newAmount }}</div></el-col>
+          <el-col :xs="12" :sm="8"><div class="cardItem">交易总价(CNY)：{{ modals.newLegalAmount }}</div></el-col>
           <el-col :xs="12" :sm="8"><div class="cardItem">订单状态：<el-link :underline="false" :type="modals.oldStatus|orderStatusTagName">{{ modals.orderStatus|orderStatus }}</el-link> </div></el-col>
         </el-row></div>
     </el-card>

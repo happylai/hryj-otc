@@ -266,3 +266,21 @@ export function reorder_calcul(data) {
   })
 }
 
+// 当前委托
+export function withdraw_list(meta, data) {
+  return request({
+    url: `${scope}/withdraw_list`,
+    method: 'get',
+    params: data
+  })
+}
+
+// 订单详情
+export function order_info(data) {
+  return request({
+    url: `${scope}/order`,
+    method: 'get',
+    params: data
+  })
+}
+

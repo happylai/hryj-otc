@@ -113,6 +113,19 @@ export const asyncRoutes = [{
     }
   },
   {
+    path: 'withdrawList',
+    name: 'order_withdrawList',
+    component: () => import('@/views/order/withdrawList'),
+    // redirect: '/order/appeal/list',
+
+    meta: {
+      title: '提现列表',
+      icon: '',
+      authName: ['order_appeal']
+
+    }
+  },
+  {
     path: 'reedit',
     name: 'order_reedit',
     component: () => import('@/views/order/reedit'),

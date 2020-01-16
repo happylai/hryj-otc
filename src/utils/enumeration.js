@@ -627,4 +627,31 @@ export const SystemMessageStatus = [
     label: '已上架'
   }
 ]
+export const WithdrawStatus = [
+  {
+    id: 0,
+    name: 'MATCHING',
+    label: '匹配中'
+  },
+  {
+    id: 1,
+    name: 'WAIT_PAY',
+    label: '等待支付'
+  },
+  {
+    id: 2,
+    name: 'PAY_CONFIRMED',
+    label: '确认已付款'
+  },
+  {
+    id: 3,
+    name: 'COMPLETED',
+    label: '已经完成'
+  },
+  {
+    id: 4,
+    name: 'CANCELED',
+    label: '已经关闭'
+  }
+]
 

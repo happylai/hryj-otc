@@ -22,7 +22,8 @@ import {
   LogsModels,
   LogsTypes,
   SystemMessageTypes,
-  SystemMessageStatus
+  SystemMessageStatus,
+  WithdrawStatus
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -490,3 +491,13 @@ export function SystemMessageStatuName(id) {
   return res
 }
 
+export function WithdrawStatusName(id) {
+  let temp = '-'
+  if (has({ foo: { bar: id }}, 'foo.bar')) {
+    const data = WithdrawStatus.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      temp = data[0].label
+    }
+  }
+  return temp
+}

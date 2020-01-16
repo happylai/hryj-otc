@@ -599,15 +599,18 @@ export const LogsTypes = [
 export const SystemMessageTypes = [
   {
     id: 0,
+    name: 'app',
     label: 'App '
   },
   {
     id: 1,
+    name: 'merchant',
     label: 'B端后台'
   },
 
   {
     id: 2,
+    name: 'web',
     label: 'Web后台'
   }
 ]
@@ -615,10 +618,12 @@ export const SystemMessageTypes = [
 export const SystemMessageStatus = [
   {
     id: 0,
+    value: false,
     label: '已下架'
   },
   {
     id: 1,
+    value: true,
     label: '已上架'
   }
 ]

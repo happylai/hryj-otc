@@ -1,37 +1,41 @@
 <template>
   <div class="upload-container">
     <el-button :style="{background:color,borderColor:color}" icon="el-icon-upload" size="mini" type="primary" @click=" dialogVisible=true">
-      upload
+      上传图片
     </el-button>
     <el-dialog :visible.sync="dialogVisible">
       <el-upload
-        :multiple="true"
+        action="null"
         :file-list="fileList"
         :show-file-list="true"
-        :on-remove="handleRemove"
-        :on-success="handleSuccess"
-        :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="https://httpbin.org/post"
+        :auto-upload="false"
+        :on-change="upload"
         list-type="picture-card"
       >
         <el-button size="small" type="primary">
-          Click upload
+          点击上传
         </el-button>
       </el-upload>
-      <el-button @click="dialogVisible = false">
-        Cancel
-      </el-button>
-      <el-button type="primary" @click="handleSubmit">
-        Confirm
-      </el-button>
+      <div>
+        <div v-for="(item,index) in imageUrls" :key="index+'image'" style="margin-bottom:4px;">{{ item }}</div>
+      </div>
+      <div style="margin-top:20px;">
+        <el-button @click="dialogVisible = false">
+          取消
+        </el-button>
+        <el-button type="primary" @click="handleSubmit">
+          复制链接去添加图片
+        </el-button>
+      </div>
+
     </el-dialog>
   </div>
 </template>
 
 <script>
 // import { getToken } from 'api/qiniu'
-
+import { uploadImage } from '@/api/common'
 export default {
   name: 'EditorSlideUpload',
   props: {
@@ -44,7 +48,8 @@ export default {
     return {
       dialogVisible: false,
       listObj: {},
-      fileList: []
+      fileList: [],
+      imageUrls: []
     }
   },
   methods: {
@@ -96,6 +101,11 @@ export default {
         }
         resolve(true)
       })
+    },
+    async upload(e) {
+      const res = await uploadImage(e.raw)
+      console.log('upload', res)
+      this.imageUrls.push(res)
     }
   }
 }

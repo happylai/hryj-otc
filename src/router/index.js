@@ -46,53 +46,7 @@ export const constantRoutes = [{
   component: () => import('@/views/404'),
   hidden: true
 },
-{
-  path: '/message',
-  component: Layout,
-  name: 'message_list',
-  meta: {
-    title: '消息中心',
-    icon: 'chat',
-    authName: ['message_list']
 
-  },
-  children: [
-    {
-      path: 'system',
-      name: 'message_system',
-      component: () => import('@/views/message/system'),
-      meta: {
-        title: '系统公告',
-        authName: ['message_list']
-
-      }
-    },
-    {
-      path: 'chat',
-      name: 'message_chat',
-      component: () => import('@/views/message/index'),
-      meta: {
-        title: '系统客服',
-        authName: ['message_system']
-
-      }
-    },
-    {
-      path: 'system/:id',
-      name: 'chat',
-      hidden: true,
-      component: () => import('@/views/message/info'),
-      meta: {
-        title: '留言板',
-        icon: '',
-        activeMenu: '/message/system',
-        authName: ['message_system']
-
-      }
-    }
-  ]
-
-},
 {
   path: '/',
   component: Layout,
@@ -376,6 +330,77 @@ export const asyncRoutes = [{
     }
   }
   ]
+},
+{
+  path: '/message',
+  component: Layout,
+  name: 'message',
+  meta: {
+    title: '消息中心',
+    icon: 'chat',
+    authName: ['message_chat', 'message_system']
+
+  },
+  children: [
+    {
+      path: 'system',
+      name: 'message_system',
+      component: () => import('@/views/message/system'),
+      meta: {
+        title: '系统公告',
+        authName: ['message_system']
+
+      }
+    },
+    {
+      path: 'chat',
+      name: 'message_chat',
+      component: () => import('@/views/message/index'),
+      meta: {
+        title: '系统客服',
+        authName: ['message_chat']
+
+      }
+    },
+    {
+      path: 'chat/:id',
+      name: 'message_chat',
+      hidden: true,
+      component: () => import('@/views/message/chat'),
+      meta: {
+        title: '系统客服',
+        authName: ['message_system']
+
+      }
+    },
+    {
+      path: 'system/new',
+      name: 'message_system_new',
+      hidden: true,
+      component: () => import('@/views/message/info'),
+      meta: {
+        title: '新增',
+        icon: '',
+        activeMenu: '/message/system',
+        authName: ['message_system']
+
+      }
+    },
+    {
+      path: 'system/:id',
+      name: 'chat',
+      hidden: true,
+      component: () => import('@/views/message/info'),
+      meta: {
+        title: '详情',
+        icon: '',
+        activeMenu: '/message/system',
+        authName: ['message_system']
+
+      }
+    }
+  ]
+
 },
 {
   path: '/finance',

@@ -151,7 +151,7 @@ export default {
       this.getList(meta, data)
     },
     clickDetail(data) {
-      this.$router.push({ path: `message/${data.userId}` })
+      this.$router.push({ path: `chat/${data.userId}` })
     }
 
   }

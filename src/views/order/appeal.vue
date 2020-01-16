@@ -45,7 +45,7 @@
 
           <el-table-column min-width="120" align="center" label="申诉类型">
             <template slot-scope="scope">
-              <span>{{ scope.row.type|appealeType }}</span>
+              <span>{{ scope.row.isMatch|appealeType }}</span>
             </template>
           </el-table-column>
 

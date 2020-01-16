@@ -167,10 +167,10 @@
           <el-button v-waves class="filter-item" style="margin-left: 20px" type="info" @click="handleAudit(false)">
             申诉人败
           </el-button> -->
-          <el-button type="primary" size="small" @click="handleAudit(1,undefined,'强制完成')">强制完成</el-button>
-          <el-button type="primary" size="small" style="margin-left: 20px" @click="handleAudit(2,undefined,'强制取消')">强制取消</el-button>
-          <el-button type="primary" size="small" style="margin-left: 20px" @click="handleAudit(3,0,'驳回买家')">驳回买家</el-button>
-          <el-button type="primary" size="small" style="margin-left: 20px" @click="handleAudit(4,1,'驳回卖家')">驳回卖家</el-button>
+          <el-button type="primary" size="small" :disabled="modals.result===1||modals.result===2" @click="handleAudit(1,undefined,'强制完成')">强制完成</el-button>
+          <el-button type="primary" size="small" :disabled="modals.result===1||modals.result===2" style="margin-left: 20px" @click="handleAudit(2,undefined,'强制取消')">强制取消</el-button>
+          <el-button type="primary" size="small" :disabled="modals.result===1||modals.result===2||modals.rejectBuyer" style="margin-left: 20px" @click="handleAudit(3,0,'驳回买家')">驳回买家</el-button>
+          <el-button type="primary" size="small" :disabled="modals.result===1||modals.result===2||modals.rejectSeller" style="margin-left: 20px" @click="handleAudit(3,1,'驳回卖家')">驳回卖家</el-button>
         </div>
       </el-card>
     </div>

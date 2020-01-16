@@ -20,7 +20,9 @@ import {
   AppealeType,
   PriceTread,
   LogsModels,
-  LogsTypes
+  LogsTypes,
+  SystemMessageTypes,
+  SystemMessageStatus
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -465,3 +467,26 @@ export function LogsTypesName(id) {
   }
   return res
 }
+
+export function SystemMessageTypeName(id) {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = SystemMessageTypes.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+
+export function SystemMessageStatuName(id) {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = SystemMessageStatus.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+

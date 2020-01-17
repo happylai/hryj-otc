@@ -164,6 +164,7 @@
         <el-table-column min-width="120px" align="center" label="第三方订单号">
           <template slot-scope="scope">
             <span>{{ scope.row.merchantOrderNo }}</span>
+            <span v-if="scope.row.invokeCount">({{ scope.row.invokeCount }})</span>
           </template>
         </el-table-column>
 
@@ -173,11 +174,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column width="100px" align="center" label="匹配次数">
+        <!-- <el-table-column width="100px" align="center" label="匹配次数">
           <template slot-scope="scope">
             <span>{{ scope.row.invokeCount }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column width="60px" align="center" label="类型">
           <template slot-scope="scope">

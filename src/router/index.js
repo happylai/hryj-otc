@@ -147,6 +147,7 @@ export const asyncRoutes = [{
     meta: {
       title: '补单详情',
       icon: '',
+      activeMenu: '/order/reedit',
       authName: ['order_reedit']
 
     }

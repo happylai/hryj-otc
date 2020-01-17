@@ -101,7 +101,7 @@
 
       <el-table-column align="center" class-name="status-col" label="操作" min-width="220">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.status===0" type="primary" :loading="actionLoading" :disabled="actionLoading" size="small" @click="orderAction(scope.row,1)">取消委托</el-button>
+          <el-button v-if="scope.row.status===0" type="danger" :loading="actionLoading" :disabled="actionLoading" size="small" @click="orderAction(scope.row,1)">取消委托</el-button>
           <el-button v-if="scope.row.status>0" type="primary" :loading="actionLoading" :disabled="actionLoading" size="small" @click="showOrderDetail(scope.row)">查看详情</el-button>
           <!-- <el-button v-if="scope.row.status===2" type="success" :loading="actionLoading" :disabled="actionLoading" size="small" @click="orderAction(scope.row,0)">确认收款</el-button> -->
         </template>
@@ -354,6 +354,7 @@ export default {
         this.actionLoading = false
         if (res.code === 0) {
           this.$message({ type: 'success', message: res.message || '操作成功' })
+          this.handleFilter()
         } else {
           this.$message.error(res.message || '操作失败')
         }

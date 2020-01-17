@@ -75,7 +75,7 @@ export function order_appeal_audit(data) {
   })
 }
 
-// 出金审核列表
+// 出金列表列表
 export function order_out_orders(meta, data) {
   return request({
     url: `${scope}/out_orders`,
@@ -87,7 +87,7 @@ export function order_out_orders(meta, data) {
   })
 }
 
-// 出金审核详情
+// 出金列表详情
 export function out_order_detail(data) {
   return request({
     url: `${scope}/out_order`,
@@ -96,7 +96,7 @@ export function out_order_detail(data) {
   })
 }
 
-// 出金审核
+// 出金列表
 export function out_order_audit(data) {
   return request({
     url: `${scope}/out_order_audit`,
@@ -105,7 +105,7 @@ export function out_order_audit(data) {
   })
 }
 
-// 出金审核记录
+// 出金列表记录
 export function out_order_reorders(id) {
   return request({
     url: `${scope}/out_order/records/${id}`,

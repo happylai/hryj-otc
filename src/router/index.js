@@ -93,7 +93,7 @@ export const asyncRoutes = [{
     component: () => import('@/views/order/withdraw'),
 
     meta: {
-      title: '出金审核',
+      title: '出金列表',
       icon: '',
       authName: ['order_withdraw']
 

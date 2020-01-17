@@ -33,6 +33,8 @@
           <el-col :xs="12" :sm="8"><div class="cardItem">支付账号：{{ modals.account }}</div></el-col>
           <el-col :xs="12" :sm="8"><div class="cardItem">真实姓名：{{ modals.realName }}</div></el-col>
           <el-col :xs="12" :sm="8"><div class="cardItem">支付备注：{{ modals.meno }}</div></el-col>
+          <el-col :xs="12" :sm="8"><div class="cardItem">原订单编号：{{ modals.orderNo }}</div></el-col>
+
           <el-col :xs="12" :sm="8"><div class="cardItem">支付码：
             <div v-if="modals.qrCode">
               <img v-lazy="modals.qrCode" class="voucherImage" :preview="modals.preId+'withdarw0'">
@@ -219,18 +221,26 @@ export default {
         ...this.newData,
         newAmount: undefined
       }
-      this.saveLoading = true
-      pre_odrder_confirm(postData).then(res => {
-        this.saveLoading = false
-        if (res.code === 0) {
-          this.$message({ message: res.message || '操作成功', type: 'success' })
-          this.getOrderDetail()
-        } else {
-          this.$message.error(res.message || '操作失败')
-        }
-      }).catch(err => {
-        this.saveLoading = false
-        this.$message.error(err.message || '操作失败')
+
+      this.$confirm('确定进行补单操作吗？, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.saveLoading = true
+        pre_odrder_confirm(postData).then(res => {
+          this.saveLoading = false
+          if (res.code === 0) {
+            this.$message({ message: res.message || '操作成功', type: 'success' })
+            this.getOrderDetail()
+            this.$router.go(-1)
+          } else {
+            this.$message.error(res.message || '操作失败')
+          }
+        }).catch(err => {
+          this.saveLoading = false
+          this.$message.error(err.message || '操作失败')
+        })
       })
     }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="tab-container">
-    <tip miain-tip="出金审核要注意：1.查看订单详情；2.被申诉次数大于5则不予通过。" second-tip="温馨提示：若遇其他无法处理情况请及时联系管理员。" />
+    <tip miain-tip="出金列表要注意：1.查看订单详情；2.被申诉次数大于5则不予通过。" second-tip="温馨提示：若遇其他无法处理情况请及时联系管理员。" />
     <div class="filter-container" style="margin-bottom: 10px;">
       <el-input v-model="fliterQuery.query" placeholder="订单ID/用户ID/用户名/广告ID/买家/备注信息" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="fliterQuery.payType" placeholder="支付方式" clearable style="width: 140px" class="filter-item">

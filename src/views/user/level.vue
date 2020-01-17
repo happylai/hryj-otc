@@ -23,18 +23,21 @@
 
       <el-table-column
         align="center"
-        min-width="180"
-        type="expand"
-        element-loading-text="请给我点时间！"
-      />
-      <el-table-column
-        align="center"
         label="注册账号"
         min-width="180"
         prop="account"
         element-loading-text="请给我点时间！"
       />
-
+      <el-table-column
+        align="center"
+        min-width="180"
+        label="-"
+        element-loading-text="请给我点时间！"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.userId===searchUserId?'当前搜索':'-' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column width="120px" align="center" label="手机号" prop="phone" />
 
       <el-table-column min-width="120px" align="center" label="邮箱" prop="email" />
@@ -102,7 +105,7 @@ export default {
         this.loading = false
         console.log('res', res)
         if (res.code === 0) {
-          var resData = res.data
+          var resData = res.data.records
           return resData
         }
       })

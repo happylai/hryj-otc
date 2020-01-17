@@ -1,7 +1,6 @@
 <template>
   <div class="tab-container card-container">
 
-
     <el-card class="box-card marginT20">
       <div slot="header" class="clearfix">
         <span class="card-title">交易额总计（交易所交易资金总额）</span>
@@ -53,98 +52,156 @@
         </el-row>
       </div>
     </el-card>
+    <h3>整体统计</h3>
+    <div class="filter-container" style="margin-bottom: 10px;">
+      <el-input v-model="fliterQuery.query" placeholder="订单ID/广告ID/收付款昵称/卖家/卖家" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="fliterQuery.payType" placeholder="支付方式" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
+      </el-select>
+      <el-select v-model="fliterQuery.type" placeholder="交易类型" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in CounterParty" :key="item.id" :label="item.label" :value="item.id" />
+      </el-select>
+      <el-select v-model="fliterQuery.status" placeholder="订单状态" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in OrderStatus" :key="item.id" :label="item.label" :value="item.id" />
+      </el-select>
+      <el-date-picker
+        v-model="fliterQuery.creatDate"
+        class="filter-item"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="订单完创建开始日期"
+        end-placeholder="结束日期"
+      />
+      <el-date-picker
+        v-model="fliterQuery.complateDate"
+        class="filter-item"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="交易完成开始日期"
+        end-placeholder="结束日期"
+      />
+      <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
+        搜索
+      </el-button>
+    </div>
+    <div class="staticTable">
+      <el-row class="staticRow rowHeader" :gutter="10">
+        <el-col :span="6">
+          <span>统计名称</span>
+        </el-col>
+        <el-col :span="6">
+          <span>今日数据</span>
+        </el-col>
+        <el-col :span="6">
+          <span>昨日数据</span>
+        </el-col>
+        <el-col :span="6">
+          <span>累计数据</span>
+        </el-col>
+      </el-row>
 
-    <h2 class="marginT40">今日统计数据</h2>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>接口调用次数  |  总金额</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.apiCount }} | {{ statics.today.finishCountAmount }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.yesterday.apiCount }} | {{ statics.yesterday.finishCountAmount }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.all.apiCount }}| {{ statics.all.finishCountAmount }}</span>
+        </el-col>
+      </el-row>
 
-    <el-card class="box-card marginT20">
-      <div slot="header" class="clearfix">
-        <span class="card-title">接口调用统计</span>
-        <!-- <el-button type="primary" size="small" style="float: right;">详情</el-button> -->
-        </span></div>
-      <div class="text item">
-        <el-row :gutter="10">
-          <el-col :span="8">
-            <div class="card-item borderR">
-              <div class="cart-i-t">总调用次数 </div>
-              <div class="cart-i-v">{{merchant_statics.today.depositApiCount}}</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="card-item borderR">
-              <div class="cart-i-t">订单匹配失败占比</div>
-              <div class="cart-i-v">{{merchant_statics.today.matchFailPercent}}</div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="card-item ">
-              <div class="cart-i-t">未扫码占比</div>
-              <div class="cart-i-v">{{merchant_statics.today.unForwardToPayPercent}}</div>
-            </div>
-          </el-col>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>B端用户未扫码订单数  |  占比</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.noMatch }} | {{ statics.today.noMatchPercent }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.yesterday.noMatch }} | {{ statics.yesterday.noMatchPercent }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.all.noMatch }} | {{ statics.all.noMatchPercent }}</span>
+        </el-col>
+      </el-row>
 
-        </el-row>
-      </div>
-    </el-card>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>匹配成功订单数  |  总金额</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.matchSuccess }} | {{ statics.today.matchSuccessAmount }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.yesterday.matchSuccess }} | {{ statics.yesterday.matchSuccessAmount }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.all.matchSuccess }} | {{ statics.all.matchSuccessAmount }}</span>
+        </el-col>
+      </el-row>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>匹配失败订单数  |  占比</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.matchFailedAmount }} | {{ statics.today.matchFailedPercent }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.yesterday.matchFailedAmount }} | {{ statics.yesterday.matchFailedPercent }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.all.matchFailedAmount }} | {{ statics.all.matchFailedPercent }}</span>
+        </el-col>
+      </el-row>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>完成订单数  |  总金额</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.finishCount }} | {{ statics.today.finishCountAmount }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.yesterday.finishCount }} | {{ statics.yesterday.finishCountAmount }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.all.finishCount }} | {{ statics.all.finishCountAmount }}</span>
+        </el-col>
+      </el-row>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>系统成功率</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.successPercentSys }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.yesterday.successPercentSys }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.all.successPercentSys }}</span>
+        </el-col>
+      </el-row>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>B端成功率</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.successPercentB }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.successPercentB }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.successPercentB }}</span>
+        </el-col>
+      </el-row>
 
-    <el-card class="box-card marginT20">
-      <div slot="header" class="clearfix">
-        <span class="card-title">出售订单统计</span>
-        <!-- <el-button type="primary" size="small" style="float: right;">详情</el-button> -->
-        </span></div>
-      <div class="text item">
-        <el-row :gutter="10">
-          <el-col :span="6">
-            <div class="card-item borderR">
-              <div class="cart-i-t">订单总数 </div>
-              <div class="cart-i-v">{{merchant_statics.today.matchedOrderTotalCount}}</div>
-            </div>
-          </el-col>
-          <el-col :span="6">
-            <div class="card-item borderR">
-              <div class="cart-i-t">订单总金额</div>
-              <div class="cart-i-v">{{merchant_statics.today.matchedOrderTotalLegalAmount}}</div>
-            </div>
-          </el-col>
-          <el-col :span="6">
-            <div class="card-item borderR">
-              <div class="cart-i-t">订单总金额 </div>
-              <div class="cart-i-v">{{merchant_statics.today.matchedOrderTotalLegalAmount}}</div>
-            </div>
-          </el-col>
-          <el-col :span="6">
-            <div class="card-item">
-              <div class="cart-i-t">完成订单总金额</div>
-              <div class="cart-i-v">{{merchant_statics.today.matchedAndEndedOrderTotalLegalAmount}}</div>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-    </el-card>
-
-    <el-card class="box-card marginT20">
-      <div slot="header" class="clearfix">
-        <span class="card-title">成功率统计</span>
-        <!-- <el-button type="primary" size="small" style="float: right;">详情</el-button> -->
-        </span></div>
-      <div class="text item">
-        <el-row :gutter="10">
-          <el-col :span="12">
-            <div class="card-item borderR">
-              <div class="cart-i-t">系统成功率 </div>
-              <div class="cart-i-v">{{merchant_statics.today.systemSuccessRate}}</div>
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="card-item ">
-              <div class="cart-i-t">站点成功率</div>
-              <div class="cart-i-v">{{merchant_statics.today.merchantSuccessRate}}</div>
-
-            </div>
-          </el-col>
-
-        </el-row>
-      </div>
-    </el-card>
+    </div>
 
   </div>
 </template>
@@ -154,7 +211,7 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect } from '@/utils/enumeration'
-import { data_center,merchant_order_statics } from '@/api/statistic'
+import { data_center, merchant_statics_total } from '@/api/statistic'
 
 export default {
   name: 'Tab',
@@ -172,6 +229,9 @@ export default {
         page: 1,
         size: 20,
         date: null,
+        payChannel: undefined,
+        userUid: undefined,
+        payType: undefined,
         query: undefined,
         authent: undefined,
         groupId: undefined
@@ -195,7 +255,11 @@ export default {
         activeGold: 423
 
       },
-      merchant_statics:{},
+      statics: {
+        today: {},
+        yesterday: {},
+        all: {}
+      },
       editData: {}
 
     }
@@ -221,9 +285,9 @@ export default {
       })
     },
     get_merchant_statics() {
-      merchant_order_statics().then(res=>{
+      merchant_statics_total().then(res => {
         if (res.code === 0) {
-          this.merchant_statics = res.data
+          this.statics = res.data
         }
       })
     },
@@ -299,6 +363,23 @@ export default {
 .userRow {
   min-height: 20px;
   margin: 10px 0;
+}
+.staticRow{
+  border-bottom:1px solid #ddd;
+  padding:10px
+}
+.staticRow:nth-child(2n)
+{
+background:#FAFAFA;
+}
+.rowHeader{
+  font-size: 16px;
+  font-weight: bold
+}
+.staticTable{
+  font-size: 14px;
+  border:1px solid #dddddd;
+  padding:0 8px
 }
 
 </style>

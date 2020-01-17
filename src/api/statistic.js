@@ -30,3 +30,17 @@ export function merchant_order_statics(meta, data) {
     }
   })
 }
+
+// 整体统计数据
+export function merchant_statics_total(meta, data) {
+  console.log('params', data)
+  return request({
+    url: `/admin/statistics/merchant_statics_total`,
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta,
+      'Content-Type': 'application/json'
+    }
+  })
+}

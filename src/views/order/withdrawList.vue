@@ -5,6 +5,8 @@
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
     </el-tabs>
     <div class="filter-container" style="margin-bottom: 10px;">
+      <el-input v-model="fliterQuery.uuid" placeholder="B端UID" style="width: 180px;" class="filter-item" @keyup.enter.native="handleFilter" />
+
       <el-select v-model="fliterQuery.payType" placeholder="支付方式" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
@@ -26,6 +28,11 @@
       </el-button>
     </div>
     <el-table :data="list" border fit highlight-current-row style="width: 100%">
+      <el-table-column min-width="200px" align="center" label="B端UID">
+        <template slot-scope="scope">
+          <span>{{ scope.row.uuid }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
 
         align="center"
@@ -94,7 +101,7 @@
 
       <el-table-column align="center" class-name="status-col" label="操作" min-width="220">
         <template slot-scope="scope">
-          <!-- <el-button v-if="scope.row.status===0" type="primary" :loading="actionLoading" :disabled="actionLoading" size="small" @click="orderAction(scope.row,1)">取消委托</el-button> -->
+          <el-button v-if="scope.row.status===0" type="primary" :loading="actionLoading" :disabled="actionLoading" size="small" @click="orderAction(scope.row,1)">取消委托</el-button>
           <el-button v-if="scope.row.status>0" type="primary" :loading="actionLoading" :disabled="actionLoading" size="small" @click="showOrderDetail(scope.row)">查看详情</el-button>
           <!-- <el-button v-if="scope.row.status===2" type="success" :loading="actionLoading" :disabled="actionLoading" size="small" @click="orderAction(scope.row,0)">确认收款</el-button> -->
         </template>
@@ -250,6 +257,7 @@ export default {
       PayType,
       WithdrawType,
       fliterQuery: {
+        uuid: undefined,
         accountNo: undefined,
         payType: undefined,
         realName: undefined,

@@ -284,3 +284,11 @@ export function order_info(data) {
   })
 }
 
+// 关闭提现申请
+export function close_withdraw(data) {
+  return request({
+    url: `${scope}/close_withdraw`,
+    method: 'post',
+    data: data
+  })
+}

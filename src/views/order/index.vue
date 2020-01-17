@@ -173,6 +173,12 @@
           </template>
         </el-table-column>
 
+        <el-table-column width="100px" align="center" label="匹配次数">
+          <template slot-scope="scope">
+            <span>{{ scope.row.invokeCount }}</span>
+          </template>
+        </el-table-column>
+
         <el-table-column width="60px" align="center" label="类型">
           <template slot-scope="scope">
             <span>{{ scope.row.type|advType }}</span>

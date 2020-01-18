@@ -37,10 +37,11 @@ export function merchant_statics_total(meta, data) {
   return request({
     url: `/admin/statistics/merchant_statics_total`,
     method: 'get',
-    params: data,
+    params: qs.stringify(data),
     headers: {
       ...meta,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/x-www-form-urlencoded'
+
     }
   })
 }
@@ -51,10 +52,13 @@ export function merchant_statics_day(meta, data) {
   return request({
     url: `/admin/statistics/merchant_statics_day`,
     method: 'get',
-    params: data,
+    params: qs.stringify(data),
     headers: {
       ...meta,
-      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/json'
+
+      'Content-Type': 'application/x-www-form-urlencoded'
+
     }
   })
 }

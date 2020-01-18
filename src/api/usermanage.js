@@ -231,10 +231,13 @@ export function agent_children(meta, data) {
 }
 
 // 邀请下级列表
-export function user_web_children(id) {
+export function user_web_children(id, meta) {
   return request({
     url: `/admin/user/user_web_children/${id}`,
-    method: 'get'
+    method: 'get',
+    headers: {
+      ...meta
+    }
   })
 }
 

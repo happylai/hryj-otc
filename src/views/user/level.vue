@@ -7,16 +7,20 @@
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
+      <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="init">
+        查询一级
+      </el-button>
     </div>
 
     <el-table
+      v-if="!isSearch"
       ref="table"
       :data="list"
       style="width: 100%"
       row-key="userId"
       border
       lazy
-      row-class-name="setCurrent"
+      :row-class-name="setCurrent"
       :load="load"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
@@ -28,17 +32,8 @@
         prop="account"
         element-loading-text="请给我点时间！"
       />
-      <el-table-column
-        align="center"
-        min-width="180"
-        label="-"
-        element-loading-text="请给我点时间！"
-      >
-        <template slot-scope="scope">
-          <span>{{ scope.row.userId===searchUserId?'当前搜索':'-' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="120px" align="center" label="手机号" prop="phone" />
+
+      <el-table-column min-width="120px" align="center" label="手机号" prop="phone" />
 
       <el-table-column min-width="120px" align="center" label="邮箱" prop="email" />
 
@@ -53,6 +48,53 @@
       <el-table-column align="center" label="交易总额(To B)" min-width="120" prop="orderTob" />
 
     </el-table>
+    <div>
+      <el-table
+        ref="table2"
+        :data="searchList"
+        style="width: 100%"
+        row-key="userId"
+        border
+        default-expand-all
+        :row-class-name="setCurrent"
+        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      >
+
+        <el-table-column
+          align="center"
+          label="注册账号"
+          min-width="180"
+          prop="account"
+          element-loading-text="请给我点时间！"
+        />
+        <el-table-column
+          align="center"
+          min-width="120"
+          label="-"
+          element-loading-text="请给我点时间！"
+        >
+          <template slot-scope="scope">
+            <span>{{ scope.row.isSearch?'当前搜索':'-' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column min-width="120px" align="center" label="手机号" prop="phone" />
+
+        <el-table-column min-width="120px" align="center" label="邮箱" prop="email" />
+
+        <el-table-column min-width="120px" align="center" label="用户UID" prop="userUid" />
+
+        <el-table-column min-width="120px" align="center" label="注册时间">
+          <template slot-scope="scope">
+            <span>{{ scope.row.createTime }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="交易总额(To B)" min-width="120" prop="orderTob" />
+
+      </el-table>
+    </div>
+
+    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
 
   </div>
 </template>
@@ -61,11 +103,12 @@
 // import tabPane from './components/TabPane'
 import waves from '@/directive/waves' // waves directive
 import { user_web_children, user_web_init } from '@/api/usermanage'
+import pagination from '@/components/Pagination'
 
 export default {
   name: 'UserInstation',
   directives: { waves },
-
+  components: { pagination },
   data() {
     return {
       openLeaveId: [],
@@ -77,7 +120,16 @@ export default {
       loading: false,
       list: [
       ],
-      searchUserId: undefined
+      searchList: [],
+      meta: {
+        current: 1,
+        size: 10
+      },
+      paginationMeta: {
+        total: 10,
+        pages: 1
+      },
+      isSearch: false
 
     }
   },
@@ -86,26 +138,37 @@ export default {
 
   },
 
-  mounted() {
+  async mounted() {
+    this.init()
   },
+
   methods: {
+    init() {
+      this.isSearch = false
+      this.getList(0)
+    },
     async load(tree, treeNode, resolve) {
       console.log('tree', tree)
       const data = await this.getList(tree.userId)
-      console.log('loaddata', data)
-      if (data.userId === this.searchUserId) {
-        data.isSearch = true
-      }
+      this.paginationMeta.total = 0
+
       resolve(data)
     },
 
-    async getList(id) {
+    async getList(id, meta) {
       this.loading = true
-      const responeData = await user_web_children(id).then(res => {
+      const responeData = await user_web_children(id, meta).then(res => {
         this.loading = false
         console.log('res', res)
         if (res.code === 0) {
           var resData = res.data.records
+
+          if (id === 0) {
+            this.list = res.data.records
+            this.meta.current = res.data.current
+            this.paginationMeta.total = res.data.total
+            this.paginationMeta.pages = res.data.pages
+          }
           return resData
         }
       })
@@ -116,10 +179,11 @@ export default {
       this.loading = true
       user_web_init(this.fliterQuery).then(res => {
         this.loading = false
+        this.isSearch = true
         console.log('res', res)
         if (res.code === 0) {
           this.setCurrentSearch(res.data)
-          this.list = res.data
+          this.searchList = res.data
         }
       })
     },
@@ -136,9 +200,10 @@ export default {
         }
       })
     },
-    setCurrent(row) {
-      console.log('row', row)
-      if (row.userId === this.searchUserId) {
+    setCurrent(row, index) {
+      // console.log('row', row)
+      if (row.isSearch) {
+        console.log('index', index)
         return 'current'
       }
     },
@@ -146,7 +211,12 @@ export default {
     goDetail(id) {
       this.$router.push({ path: `/user/instation/${id}` })
     },
-
+    paginationChange(e) {
+      console.log('paginationChange', e)
+      this.meta.size = e.limit
+      this.meta.current = e.page
+      this.getList(0, this.meta)
+    },
     async loadchildren(id) {
       const data = {
         parentId: id

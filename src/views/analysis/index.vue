@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-container card-container">
+  <div class="tab-container ">
 
     <el-card class="box-card marginT20">
       <div slot="header" class="clearfix">
@@ -54,27 +54,19 @@
     </el-card>
     <h3>整体统计</h3>
     <div class="filter-container" style="margin-bottom: 10px;">
-      <el-input v-model="fliterQuery.query" placeholder="B端UID" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="fliterQuery.payType" placeholder="支付通道" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
+      <el-input v-model="fliterQuery.userUid" clearable placeholder="B端UID" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="fliterQuery.payChannel" clearable placeholder="支付通道" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in PayChannel" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-model="fliterQuery.payType" placeholder="支付方式" clearable style="width: 140px" class="filter-item">
+      <el-select v-model="fliterQuery.payType" clearable placeholder="支付方式" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
       <el-date-picker
-        v-model="fliterQuery.creatDate"
+        v-model="fliterQuery.date"
         class="filter-item"
         type="daterange"
         range-separator="至"
-        start-placeholder="订单完创建开始日期"
-        end-placeholder="结束日期"
-      />
-      <el-date-picker
-        v-model="fliterQuery.complateDate"
-        class="filter-item"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="交易完成开始日期"
+        start-placeholder="开始日期"
         end-placeholder="结束日期"
       />
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
@@ -174,13 +166,14 @@
           <span>系统成功率</span>
         </el-col>
         <el-col :span="6">
-          <span>{{ statics.today.successPercentSys }}</span>
+          <span>{{ statics.today.successPercentSys||'0' }}</span>
+
         </el-col>
         <el-col :span="6">
-          <span>{{ statics.yesterday.successPercentSys }}</span>
+          <span>{{ statics.yesterday.successPercentSys }} </span>
         </el-col>
         <el-col :span="6">
-          <span>{{ statics.all.successPercentSys }}</span>
+          <span>{{ statics.all.successPercentSys }} </span>
         </el-col>
       </el-row>
       <el-row class="staticRow" :gutter="10">
@@ -188,17 +181,18 @@
           <span>B端成功率</span>
         </el-col>
         <el-col :span="6">
-          <span>{{ statics.today.successPercentB }}</span>
+          <span>{{ statics.today.successPercentB||'0' }}</span>
         </el-col>
         <el-col :span="6">
-          <span>{{ statics.today.successPercentB }}</span>
+          <span>{{ statics.yesterday.successPercentB }}</span>
         </el-col>
         <el-col :span="6">
-          <span>{{ statics.today.successPercentB }}</span>
+          <span>{{ statics.all.successPercentB }}</span>
         </el-col>
       </el-row>
 
     </div>
+    <staticDetail />
 
   </div>
 </template>
@@ -207,31 +201,25 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
-import { Groups, UserType, Authents, emptySelect } from '@/utils/enumeration'
+import { PayChannel, PayType } from '@/utils/enumeration'
 import { data_center, merchant_statics_total, merchant_statics_day } from '@/api/statistic'
+import staticDetail from './detail'
 
 export default {
   name: 'Tab',
-  components: { pagination },
+  components: { pagination, staticDetail },
   directives: { waves },
   data() {
     return {
-      UserType,
-      Authents: [{ id: '',
-        mame: '',
-        label: '请选择'
-      }, ...Authents],
-      Groups: [emptySelect, ...Groups],
+      PayChannel,
+      PayType,
+
       fliterQuery: {
-        page: 1,
-        size: 20,
         date: null,
         payChannel: undefined,
         userUid: undefined,
-        payType: undefined,
-        query: undefined,
-        authent: undefined,
-        groupId: undefined
+        payType: undefined
+
       },
       meta: {
         current: 1,
@@ -281,10 +269,11 @@ export default {
         console.log('res')
       })
     },
-    get_merchant_statics() {
-      merchant_statics_total().then(res => {
+    get_merchant_statics(meta, data) {
+      merchant_statics_total(meta || this.meta, data).then(res => {
         if (res.code === 0) {
           this.statics = res.data
+          this.meta.current = res.data.current
         }
       })
     },
@@ -293,16 +282,14 @@ export default {
       console.log('paginationChange', e)
       this.meta.size = e.limit
       this.meta.current = e.page
-      this.getList()
+      this.get_merchant_statics()
     },
     handleFilter() {
       const fliterQuery = this.fliterQuery
       console.log('fliterQuery', this.fliterQuery)
       const data = {
-        authent: fliterQuery.authent,
-        groupId: fliterQuery.groupId,
-        query: fliterQuery.query,
-        roleId: fliterQuery.roleId
+        ...this.fliterQuery,
+        date: undefined
       }
       if (fliterQuery.date) {
         data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
@@ -311,7 +298,7 @@ export default {
       }
       const meta = this.meta
       meta.current = 1
-      this.getList(meta, data)
+      this.get_merchant_statics(meta, data)
     },
     getList() {},
     clickAduit() {
@@ -324,7 +311,9 @@ export default {
 </script>
 
 <style scoped>
-
+.tab-container{
+  padding:0 30px;
+}
 .filter-item{
   margin-top:5px
 }

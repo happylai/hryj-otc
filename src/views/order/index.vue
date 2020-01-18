@@ -627,7 +627,7 @@ export default {
   .tab-container {
     margin: 30px;
   }
-  .appealImage{
+  .DetailvoucherImage, .appealImage{
     height: 40px;
     max-width: 100px;
   }

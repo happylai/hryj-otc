@@ -85,9 +85,9 @@ const actions = {
           headers
         } = response
         commit('SET_TOKEN', headers['x-auth-token'])
-        commit('SET_USERINFO', data.data.data)
+        commit('SET_USERINFO', data.data)
         console.log('logindata', data)
-        const authorities = data.data.data.authorities
+        const authorities = data.data.authorities
         commit('SET_AUTH', authorities)
 
         setToken(headers['x-auth-token'])

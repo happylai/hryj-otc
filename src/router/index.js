@@ -369,7 +369,27 @@ export const asyncRoutes = [{
     {
       path: 'chat',
       name: 'message_chat',
+      component: () => import('@/views/chat/chat'),
+      meta: {
+        title: '系统客服',
+        authName: ['message_chat']
+
+      }
+    },
+    {
+      path: 'chatList',
+      name: 'message_chat_friend',
       component: () => import('@/views/message/index'),
+      meta: {
+        title: '聊天列表',
+        authName: ['message_chat']
+
+      }
+    },
+    {
+      path: 'friend',
+      name: 'message_chat_friend',
+      component: () => import('@/views/chat/friend'),
       meta: {
         title: '系统客服',
         authName: ['message_chat']
@@ -605,6 +625,17 @@ export const asyncRoutes = [{
       component: () => import('@/views/system/user'),
       meta: {
         title: '后台用户列表',
+        icon: '',
+        authName: ['system_admin_user']
+
+      }
+    },
+    {
+      path: 'services',
+      name: 'system_services',
+      component: () => import('@/views/system/services'),
+      meta: {
+        title: '后台客服列表',
         icon: '',
         authName: ['system_admin_user']
 

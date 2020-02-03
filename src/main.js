@@ -18,7 +18,6 @@ import imageLoading from './assets/loading.gif'
 import ElTreeGrid from 'element-tree-grid'
 import '@/icons' // icon
 import '@/permission' // permission control
-
 import moment from 'moment'
 
 import * as filters from './filters' // global filters

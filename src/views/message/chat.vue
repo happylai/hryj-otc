@@ -3,17 +3,19 @@
     <div>与{{ this.id }}对话中</div>
     <div class="chat-container">
       <div class="chat-history">
-        <div v-for="(item,index) in list" :key="index" class="chat-item " :class="item.fromAdmin?'send':'reviced' ">
+        <div v-for="(item,index) in list" :key="index" class="chat-item " :class="item.senderUserId===id?'reviced':'send' ">
+
           <div class="chat-item-warp">
-            <div v-if="!item.fromAdmin" class="chat-avatar ">
-              <div class="avatar">{{ (item.nickName) }}</div>
+            <div v-if="!item.senderUserId===id" class="chat-avatar ">
+              <div class="avatar">{{ (item.targetId) }}</div>
             </div>
             <div>
-              <div class="massage-time">{{ item.createTime|timesArrayFormat }}</div>
+              <div class="massage-time">{{ item.receivedTime|timestampFormat }}</div>
               <div class="chat-text">
-                <img v-if="item.type===1" v-lazy="item.message" :preview="'chat'" class="chatImage">
+                <span v-if="item.messageType==='TextMessage'">{{ item.content.content }}</span>
 
-                <span v-else>{{ item.message }}</span>
+                <img v-else v-lazy="item.message" :preview="'chat'" class="chatImage">
+
               </div>
 
             </div>
@@ -127,7 +129,19 @@ export default {
   },
   methods: {
 
-    getList(id) {
+    getList(id, timestrap = null) {
+      const _this = this
+      RongIMLib.RongIMClient.getInstance().getHistoryMessages(1, id, timestrap, this.meta.size, {
+        onSuccess: function(list, hasMsg) {
+          console.log('list', list)
+          _this.list = list
+        // list => Message 数组。
+        // hasMsg => 是否还有历史消息可以获取。
+        },
+        onError: function(error) {
+          console.log('GetHistoryMessages, errorcode:' + error)
+        }
+      })
       message_detail(id || this.id).then(res => {
         console.log('res', res)
         if (res.code === 0) {
@@ -152,20 +166,45 @@ export default {
         this.$message.error('请输入信息')
       } else {
         console.log('true')
+        var msg = new RongIMLib.TextMessage({ content: chat, extra: '附加信息' })
         const postData = {
           type: 0,
           userId: this.id,
           message: chat
         }
-        this.handleSend(postData)
+        this.handleSend(msg)
       }
     },
-    handleSend(data) {
-      message_reply(data).then(res => {
-        console.log('res', res)
-        if (res.code === 0) {
-          this.chat = undefined
-          this.getList()
+    handleSend(msg, conversationType = 1) {
+      RongIMClient.getInstance().sendMessage(conversationType, this.id, msg, {
+        onSuccess: function(message) {
+        // message 为发送的消息对象并且包含服务器返回的消息唯一 Id 和发送消息时间戳
+          console.log('Send successfully')
+          this.getList(id)
+        },
+        onError: function(errorCode, message) {
+          var info = ''
+          switch (errorCode) {
+            case RongIMLib.ErrorCode.TIMEOUT:
+              info = '超时'
+              break
+            case RongIMLib.ErrorCode.UNKNOWN:
+              info = '未知错误'
+              break
+            case RongIMLib.ErrorCode.REJECTED_BY_BLACKLIST:
+              info = '在黑名单中，无法向对方发送消息'
+              break
+            case RongIMLib.ErrorCode.NOT_IN_DISCUSSION:
+              info = '不在讨论组中'
+              break
+            case RongIMLib.ErrorCode.NOT_IN_GROUP:
+              info = '不在群组中'
+              break
+            case RongIMLib.ErrorCode.NOT_IN_CHATROOM:
+              info = '不在聊天室中'
+              break
+          }
+          console.log('发送失败: ' + info + errorCode)
         }
       })
     }

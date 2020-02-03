@@ -94,6 +94,41 @@
       </el-table>
     </div>
 
+    <tree-table
+      ref="table"
+      :data="searchList"
+      :columns="columns"
+      selection-type="false"
+      :expand-type="false"
+    >
+      <!-- <tree-table
+        :columns="columns"
+        :expand-type="false"
+        :selection-type="false"
+        :data="data"> -->
+
+      <template slot-scope="scope">
+        {{ scope.row.account }}
+      </template>
+      <template slot-scope="scope">
+        {{ scope.row.phone }}
+      </template>
+      <template slot-scope="scope">
+        {{ scope.row.email }}
+      </template>
+      <template slot-scope="scope">
+        {{ scope.row.userUid }}
+      </template>
+      <template slot-scope="scope">
+        {{ scope.row.createTime }}
+      </template>
+      <template slot-scope="scope">
+        {{ scope.row.orderTob }}
+      </template>
+
+      <!-- <el-table-column min-width="120px" align="center" label="手机号" prop="phone" /> -->
+    </tree-table>
+
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
 
   </div>
@@ -129,7 +164,34 @@ export default {
         total: 10,
         pages: 1
       },
-      isSearch: false
+      isSearch: false,
+      columns: [
+        {
+          title: '注册账号',
+          key: 'account'
+        },
+        {
+          title: '手机号',
+          key: 'phone'
+        },
+        {
+          title: '邮箱',
+          key: 'email'
+        },
+        {
+          title: '用户UID',
+          key: 'userUid'
+        },
+        {
+          title: '注册时间',
+          key: 'createTime'
+        },
+        {
+          title: '交易总额(To B)',
+          key: 'orderTob'
+        }
+
+      ]
 
     }
   },

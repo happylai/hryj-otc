@@ -31,3 +31,36 @@ export function message_reply(data) {
   })
 }
 
+// 客服详情
+
+export function customer_service_detail(id) {
+  return request({
+    url: `/admin/customer_service/${id}`,
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
+// 创建客服
+export function customer_service_create(data) {
+  return request({
+    url: `/admin/customer_service/create`,
+    method: 'post',
+    data: data
+  })
+}
+
+// 客服列表
+export function customer_service_list(meta, data) {
+  return request({
+    url: `/admin/customer_service/list`,
+    method: 'get',
+    params: data,
+    headers: {
+
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}

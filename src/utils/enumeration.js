@@ -20,6 +20,18 @@ export const PayType = [{
 }
 ]
 
+export const PayChannel = [{
+  name: 'CASHIER_DESK',
+  id: 0,
+  label: '收银台'
+},
+{
+  name: 'CALL_API',
+  id: 1,
+  label: 'API'
+}
+]
+
 export const PayTypeExtent = [{
   name: 'ALI_PAY',
   id: 0,
@@ -136,7 +148,12 @@ export const OrderStatus = [{
   id: 8,
   label: '收款超时',
   tagType: 'danger'
-
+},
+{
+  name: 'AUDITING',
+  id: 9,
+  label: '审核中',
+  tagType: 'INFO'
 }
 ]
 
@@ -179,6 +196,16 @@ export const Roles = [{
 {
   id: 2,
   label: '角色2'
+}
+]
+
+export const PriceTread = [{
+  id: 0,
+  label: 'To C'
+},
+{
+  id: 1,
+  label: 'To B'
 }
 ]
 
@@ -482,7 +509,7 @@ export const OrderAuditStatus = [
   },
   {
     id: 2,
-    label: '退回重新提交'
+    label: '驳回'
   },
   {
     id: 3,
@@ -530,3 +557,113 @@ export const AppealeType = [
     label: '其他'
   }
 ]
+
+export const LogsModels = [
+  {
+    id: 0,
+    label: '订单中心 '
+  },
+  {
+    id: 1,
+    label: '广告管理'
+  },
+  {
+    id: 2,
+    label: '用户管理 '
+  },
+  {
+    id: 3,
+    label: '参数管理'
+  },
+  {
+    id: 4,
+    label: '后台管理 '
+  },
+  {
+    id: 5,
+    label: '留言板'
+  }
+]
+
+export const LogsTypes = [
+  {
+    id: 0,
+    label: '保存数据 '
+  },
+  {
+    id: 1,
+    label: '删除数据'
+  },
+  {
+    id: 2,
+    label: '审核数据 '
+  },
+  {
+    id: 3,
+    label: '冻结账号'
+  },
+  {
+    id: 4,
+    label: '其他操作 '
+  }
+]
+
+export const SystemMessageTypes = [
+  {
+    id: 0,
+    name: 'app',
+    label: 'App '
+  },
+  {
+    id: 1,
+    name: 'merchant',
+    label: 'B端后台'
+  },
+
+  {
+    id: 2,
+    name: 'web',
+    label: 'Web后台'
+  }
+]
+
+export const SystemMessageStatus = [
+  {
+    id: 0,
+    value: false,
+    label: '已下架'
+  },
+  {
+    id: 1,
+    value: true,
+    label: '已上架'
+  }
+]
+export const WithdrawStatus = [
+  {
+    id: 0,
+    name: 'MATCHING',
+    label: '匹配中'
+  },
+  {
+    id: 1,
+    name: 'WAIT_PAY',
+    label: '等待支付'
+  },
+  {
+    id: 2,
+    name: 'PAY_CONFIRMED',
+    label: '确认已付款'
+  },
+  {
+    id: 3,
+    name: 'COMPLETED',
+    label: '已经完成'
+  },
+  {
+    id: 4,
+    name: 'CANCELED',
+    label: '已经关闭'
+  }
+]
+

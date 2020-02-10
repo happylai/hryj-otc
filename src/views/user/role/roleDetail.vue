@@ -99,7 +99,7 @@
         v-loading="loading"
         align="center"
         label="订单ID"
-        width="65"
+        min-width="120"
         element-loading-text="请给我点时间！"
       >
         <template slot-scope="scope">
@@ -150,7 +150,7 @@
       </el-table-column>
 
     </el-table>
-    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="paginationMeta.pages" :limit.sync="meta.size" @pagination="paginationChange" />
+    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
     <el-dialog :visible.sync="dialogVisible" title="基础信息审核">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户ID：</el-col>
@@ -178,10 +178,10 @@
         <el-col :span="8" class="textAlingR">身份证号：</el-col>
         <el-col :span="8">{{ editData.idNumber }}</el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageFront" v-lazy="editData.identityImageFront" class="idImage" alt="身份证正面">
+          <img v-if="editData.identityImageFront" v-lazy="editData.identityImageFront" @click="dialogVisible=false" :preview="id+'Idcard'" class="idImage" alt="身份证正面">
         </el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageBack" v-lazy="editData.identityImageBack" class="idImage" alt="身份证反面">
+          <img v-if="editData.identityImageBack" v-lazy="editData.identityImageBack" @click="dialogVisible=false" :preview="id+'Idcard'" class="idImage" alt="身份证反面">
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
@@ -329,6 +329,7 @@ export default {
       role_apply_detail({ applyId: id || this.id }).then(res => {
         if (res.code === 0) {
           this.modals = res.data
+          this.$previewRefresh()
         }
         console.log('res')
       })

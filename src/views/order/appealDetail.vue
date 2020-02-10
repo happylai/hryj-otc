@@ -36,7 +36,7 @@
       </el-button>
     </div>
     <div v-if="activeType==='1'">
-      <h4>申述类型： {{ modals.type|appealeType }}</h4>
+      <h4>申诉类型： {{ modals.type|appealeType }}</h4>
       <div class="filter-container" style="margin-bottom: 10px;">
         <el-row :gutter="10" class="card-row">
           <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
@@ -82,7 +82,7 @@
                     <el-col :span="6" class="textAlingR">图片证据：</el-col>
                     <el-col :span="18">
                       <div v-if="modals.sourceProof" class="images-container">
-                        <img v-for="(item,index) in modals.sourceProofArr" :key="index+'sourceProof'" v-lazy="item" class="proofImage" :preview="'sourceProof'" alt="被申述人证据">
+                        <img v-for="(item,index) in modals.sourceProofArr" :key="index+'sourceProof'" v-lazy="item" class="proofImage" :preview="'sourceProof'" alt="被申诉人证据">
                       </div>
                       <span v-else>无</span>
                     </el-col>
@@ -135,7 +135,7 @@
                     <el-col :span="6" class="textAlingR">图片内容：</el-col>
                     <el-col :span="18">
                       <div v-if="modals.targetProof" class="images-container">
-                        <img v-for="(item,index) in modals.targetProofArr" :key="index+'targetProof'" v-lazy="item" class="proofImage" :preview="'targetProof'" alt="被申述人证据">
+                        <img v-for="(item,index) in modals.targetProofArr" :key="index+'targetProof'" v-lazy="item" class="proofImage" :preview="'targetProof'" alt="被申诉人证据">
                       </div>
                       <span v-else>无</span>
                     </el-col>
@@ -150,7 +150,7 @@
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span class="card-title">申述处理</span>
+          <span class="card-title">申诉处理</span>
         </div>
         <div class="text item">
           <el-input
@@ -160,13 +160,17 @@
             placeholder="请输入处理反馈描述，该描述将以推送方式至申诉双方的消息中心。"
           />
         </div>
-        <div>
-          <el-button v-waves class="filter-item" type="primary" @click="handleAudit(true)">
+        <div style="margin-top:10px">
+          <!-- <el-button v-waves class="filter-item" type="primary" @click="handleAudit(true)">
             申诉人胜
           </el-button>
           <el-button v-waves class="filter-item" style="margin-left: 20px" type="info" @click="handleAudit(false)">
             申诉人败
-          </el-button>
+          </el-button> -->
+          <el-button type="primary" size="small" :disabled="modals.result===1||modals.result===2" @click="handleAudit(1,undefined,'强制完成')">强制完成</el-button>
+          <el-button type="primary" size="small" :disabled="modals.result===1||modals.result===2" style="margin-left: 20px" @click="handleAudit(2,undefined,'强制取消')">强制取消</el-button>
+          <el-button type="primary" size="small" :disabled="modals.result===1||modals.result===2||modals.rejectBuyer" style="margin-left: 20px" @click="handleAudit(3,0,'驳回买家')">驳回买家</el-button>
+          <el-button type="primary" size="small" :disabled="modals.result===1||modals.result===2||modals.rejectSeller" style="margin-left: 20px" @click="handleAudit(3,1,'驳回卖家')">驳回卖家</el-button>
         </div>
       </el-card>
     </div>
@@ -276,7 +280,7 @@ export default {
       })
     },
 
-    handleAudit(data) {
+    handleAudit(data, rejectParty, text) {
       if (!this.resultReason) {
         this.$message.error('请输入申诉处理描述')
         return false
@@ -285,19 +289,16 @@ export default {
         adminId: this.adminId,
         id: this.id,
         result: data,
-        resultReason: this.resultReason
+        resultReason: this.resultReason,
+        rejectParty: rejectParty
       }
-      if (data) {
+      this.$confirm(`确认${text}`, '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'danger'
+      }).then((val) => {
         this.appealAudit(postData)
-      } else {
-        this.$confirm('确认申述人失败', '提示', {
-          confirmButtonText: '确认',
-          cancelButtonText: '取消',
-          type: 'danger'
-        }).then((val) => {
-          this.appealAudit(postData)
-        })
-      }
+      })
     },
     appealAudit(data) {
       console.log('data', data)
@@ -308,6 +309,9 @@ export default {
             message: '操作成功',
             type: 'success'
           })
+          setTimeout(() => {
+            this.$router.go(-1)
+          }, 1500)
         } else {
           this.$message.error(res.message || '操作失败')
         }
@@ -391,6 +395,9 @@ export default {
 }
 .proofImage{
   /* max-width: 100%; */
+  max-width: 60px;
+  max-height: 100px;
+  margin-right: 10px;
 
 }
 </style>

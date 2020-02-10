@@ -40,3 +40,16 @@ export function get_system_const(data, meta) {
     params: data
   })
 }
+
+// 查询后台操作日志
+export function operate_logs(meta, data) {
+  return request({
+    url: `/admin/operate_logs`,
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta
+    }
+  })
+}
+

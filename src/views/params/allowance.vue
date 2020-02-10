@@ -6,7 +6,7 @@
     </el-tabs>
     <!-- <tab-pane :loading="loading" :data="list" @edit="handlEdit" /> -->
     <div v-if="activeType!=='3'" class="filter-container" style="margin-bottom: 10px;">
-      <el-select v-if="activeType!=='5'&&activeType!=='3'&&activeType!=='4'" v-model="addData.roleId" placeholder="选择角色" clearable style="width: 160px" class="filter-item">
+      <el-select v-if="activeType!=='5'&&activeType!=='0'&&activeType!=='3'&&activeType!=='4'" v-model="addData.roleId" placeholder="选择角色" clearable style="width: 160px" class="filter-item">
         <el-option v-for="item in userRolesConst" :key="item.id" :disabled="!addUserType[activeType].includes(item.id)" :label="item.zhName" :value="item.id" />
       </el-select>
       <el-select v-if="activeType!=='3'" v-model="addData.payType" placeholder="支付方式" clearable style="width: 160px" class="filter-item">
@@ -34,7 +34,7 @@
     </div>
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
-        v-if="activeType!=='5'&&activeType!=='3'&&activeType!=='4'"
+        v-if=" activeType!=='5'&&activeType!=='0'&&activeType!=='3'&&activeType!=='4'"
         align="center"
         label="角色"
         width="120"
@@ -75,7 +75,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="activeType!=='3'" align="center" :label="placeHolder[this.activeType]">
+      <el-table-column v-if="activeType!=='3'" align="center" :label="placeHolder[activeType]">
         <template slot-scope="scope">
           <span>{{ scope.row.subsidyMax }}</span>
         </template>
@@ -92,10 +92,11 @@
           <el-button type="primary" size="small" @click="handlEdit(scope.row)">详情</el-button>
         </template>
       </el-table-column>
-    </el-table>   <pagination v-show="meta.total>0" :total="meta.total" :page.sync="meta.pages" :limit.sync="meta.size" @pagination="metaChange" />
+    </el-table>
+    <pagination v-show="meta.total>0" :total="meta.total" :page.sync="meta.pages" :limit.sync="meta.size" @pagination="metaChange" />
 
     <el-dialog :visible.sync="dialogVisible" :title="tabMapOptionsName[activeType].label" style="min-width: 800px;">
-      <el-row v-if="activeType!=='3'&&activeType!=='4'&&activeType!=='5'" :gutter="20" class="userRow">
+      <el-row v-if="activeType!=='3'&&activeType!=='0'&&activeType!=='4'&&activeType!=='5'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">当前角色：</el-col>
         <el-col :span="16">{{ userRolesConstName(editData.roleId,userRolesConst) }}</el-col>
       </el-row>

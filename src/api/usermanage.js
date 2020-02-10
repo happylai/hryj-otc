@@ -230,6 +230,26 @@ export function agent_children(meta, data) {
   })
 }
 
+// 邀请下级列表
+export function user_web_children(id, meta) {
+  return request({
+    url: `/admin/user/user_web_children/${id}`,
+    method: 'get',
+    headers: {
+      ...meta
+    }
+  })
+}
+
+// 邀请下级初始化
+export function user_web_init(data) {
+  return request({
+    url: `/admin/user/user_web_children/init`,
+    method: 'get',
+    params: data
+  })
+}
+
 // 代理商收益明细列表查询
 export function agent_earnings(meta, data) {
   return request({
@@ -256,6 +276,15 @@ export function get_deal_subsidy(data) {
 export function deal_subsidy(data) {
   return request({
     url: `/admin/user/user_web/deal_subsidy_save`,
+    method: 'post',
+    data
+  })
+}
+
+// 用户系统转账
+export function system_transfer(data) {
+  return request({
+    url: `/admin/user/user_web/system_transfer`,
     method: 'post',
     data
   })

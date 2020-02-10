@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-container card-container">
+  <div class="tab-container ">
 
     <el-card class="box-card marginT20">
       <div slot="header" class="clearfix">
@@ -52,78 +52,147 @@
         </el-row>
       </div>
     </el-card>
+    <h3>整体统计</h3>
+    <div class="filter-container" style="margin-bottom: 10px;">
+      <el-input v-model="fliterQuery.userUid" clearable placeholder="B端UID" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="fliterQuery.payChannel" clearable placeholder="支付通道" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in PayChannel" :key="item.id" :label="item.label" :value="item.id" />
+      </el-select>
+      <el-select v-model="fliterQuery.payType" clearable placeholder="支付方式" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
+      </el-select>
+      <el-date-picker
+        v-model="fliterQuery.date"
+        class="filter-item"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+      />
+      <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
+        搜索
+      </el-button>
+    </div>
+    <div class="staticTable">
+      <el-row class="staticRow rowHeader" :gutter="10">
+        <el-col :span="6">
+          <span>统计名称</span>
+        </el-col>
+        <el-col :span="6">
+          <span>今日数据</span>
+        </el-col>
+        <el-col :span="6">
+          <span>昨日数据</span>
+        </el-col>
+        <el-col :span="6">
+          <span>累计数据</span>
+        </el-col>
+      </el-row>
 
-    <el-card class="box-card marginT20">
-      <div slot="header" class="clearfix">
-        <span class="card-title">接口调用统计</span>
-        <el-button type="primary" size="small" style="float: right;">详情</el-button>
-        </span></div>
-      <div class="text item">
-        <el-row :gutter="10">
-          <el-col :span="12">
-            <div class="card-item borderR">
-              <div class="cart-i-t">总调用次数 </div>
-              <div class="cart-i-v"/>
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="card-item ">
-              <div class="cart-i-t">失败次数</div>
-              <div class="cart-i-v"/>
-            </div>
-          </el-col>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>接口调用次数  |  总金额</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.apiCount }} | {{ statics.today.finishCountAmount }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.yesterday.apiCount }} | {{ statics.yesterday.finishCountAmount }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.all.apiCount }}| {{ statics.all.finishCountAmount }}</span>
+        </el-col>
+      </el-row>
 
-        </el-row>
-      </div>
-    </el-card>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>B端用户未扫码订单数  |  占比</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.noMatch }} | {{ statics.today.noMatchPercent }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.yesterday.noMatch }} | {{ statics.yesterday.noMatchPercent }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.all.noMatch }} | {{ statics.all.noMatchPercent }}</span>
+        </el-col>
+      </el-row>
 
-    <el-card class="box-card marginT20">
-      <div slot="header" class="clearfix">
-        <span class="card-title">匹配接口统计</span>
-        <el-button type="primary" size="small" style="float: right;">详情</el-button>
-        </span></div>
-      <div class="text item">
-        <el-row :gutter="10">
-          <el-col :span="12">
-            <div class="card-item borderR">
-              <div class="cart-i-t">总调用次数 </div>
-              <div class="cart-i-v"/>
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="card-item ">
-              <div class="cart-i-t">失败次数</div>
-              <div class="cart-i-v"/>
-            </div>
-          </el-col>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>匹配成功订单数  |  总金额</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.matchSuccess }} | {{ statics.today.matchSuccessAmount }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.yesterday.matchSuccess }} | {{ statics.yesterday.matchSuccessAmount }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.all.matchSuccess }} | {{ statics.all.matchSuccessAmount }}</span>
+        </el-col>
+      </el-row>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>匹配失败订单数  |  占比</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.matchFailedAmount }} | {{ statics.today.matchFailedPercent }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.yesterday.matchFailedAmount }} | {{ statics.yesterday.matchFailedPercent }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.all.matchFailedAmount }} | {{ statics.all.matchFailedPercent }}</span>
+        </el-col>
+      </el-row>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>完成订单数  |  总金额</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.finishCount }} | {{ statics.today.finishCountAmount }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.yesterday.finishCount }} | {{ statics.yesterday.finishCountAmount }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.all.finishCount }} | {{ statics.all.finishCountAmount }}</span>
+        </el-col>
+      </el-row>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>系统成功率</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.successPercentSys||'0' }}</span>
 
-        </el-row>
-      </div>
-    </el-card>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.yesterday.successPercentSys }} </span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.all.successPercentSys }} </span>
+        </el-col>
+      </el-row>
+      <el-row class="staticRow" :gutter="10">
+        <el-col :span="6">
+          <span>B端成功率</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.today.successPercentB||'0' }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.yesterday.successPercentB }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span>{{ statics.all.successPercentB }}</span>
+        </el-col>
+      </el-row>
 
-    <el-card class="box-card marginT20">
-      <div slot="header" class="clearfix">
-        <span class="card-title">支付接口统计</span>
-        <el-button type="primary" size="small" style="float: right;">详情</el-button>
-        </span></div>
-      <div class="text item">
-        <el-row :gutter="10">
-          <el-col :span="12">
-            <div class="card-item borderR">
-              <div class="cart-i-t">总调用次数 </div>
-              <div class="cart-i-v"/>
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="card-item ">
-              <div class="cart-i-t">失败次数</div>
-              <div class="cart-i-v"/>
-            </div>
-          </el-col>
-
-        </el-row>
-      </div>
-    </el-card>
+    </div>
+    <staticDetail />
 
   </div>
 </template>
@@ -132,28 +201,25 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
-import { Groups, UserType, Authents, emptySelect } from '@/utils/enumeration'
-import { data_center } from '@/api/statistic'
+import { PayChannel, PayType } from '@/utils/enumeration'
+import { data_center, merchant_statics_total, merchant_statics_day } from '@/api/statistic'
+import staticDetail from './detail'
 
 export default {
   name: 'Tab',
-  components: { pagination },
+  components: { pagination, staticDetail },
   directives: { waves },
   data() {
     return {
-      UserType,
-      Authents: [{ id: '',
-        mame: '',
-        label: '请选择'
-      }, ...Authents],
-      Groups: [emptySelect, ...Groups],
+      PayChannel,
+      PayType,
+
       fliterQuery: {
-        page: 1,
-        size: 20,
         date: null,
-        query: undefined,
-        authent: undefined,
-        groupId: undefined
+        payChannel: undefined,
+        userUid: undefined,
+        payType: undefined
+
       },
       meta: {
         current: 1,
@@ -174,6 +240,11 @@ export default {
         activeGold: 423
 
       },
+      statics: {
+        today: {},
+        yesterday: {},
+        all: {}
+      },
       editData: {}
 
     }
@@ -185,6 +256,7 @@ export default {
 
   mounted() {
     this.detail()
+    this.get_merchant_statics()
   },
   methods: {
 
@@ -197,21 +269,27 @@ export default {
         console.log('res')
       })
     },
+    get_merchant_statics(meta, data) {
+      merchant_statics_total(meta || this.meta, data).then(res => {
+        if (res.code === 0) {
+          this.statics = res.data
+          this.meta.current = res.data.current
+        }
+      })
+    },
 
     paginationChange(e) {
       console.log('paginationChange', e)
       this.meta.size = e.limit
       this.meta.current = e.page
-      this.getList()
+      this.get_merchant_statics()
     },
     handleFilter() {
       const fliterQuery = this.fliterQuery
       console.log('fliterQuery', this.fliterQuery)
       const data = {
-        authent: fliterQuery.authent,
-        groupId: fliterQuery.groupId,
-        query: fliterQuery.query,
-        roleId: fliterQuery.roleId
+        ...this.fliterQuery,
+        date: undefined
       }
       if (fliterQuery.date) {
         data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
@@ -220,7 +298,7 @@ export default {
       }
       const meta = this.meta
       meta.current = 1
-      this.getList(meta, data)
+      this.get_merchant_statics(meta, data)
     },
     getList() {},
     clickAduit() {
@@ -233,7 +311,9 @@ export default {
 </script>
 
 <style scoped>
-
+.tab-container{
+  padding:0 30px;
+}
 .filter-item{
   margin-top:5px
 }
@@ -269,6 +349,23 @@ export default {
 .userRow {
   min-height: 20px;
   margin: 10px 0;
+}
+.staticRow{
+  border-bottom:1px solid #ddd;
+  padding:10px
+}
+.staticRow:nth-child(2n)
+{
+background:#FAFAFA;
+}
+.rowHeader{
+  font-size: 16px;
+  font-weight: bold
+}
+.staticTable{
+  font-size: 14px;
+  border:1px solid #dddddd;
+  padding:0 8px
 }
 
 </style>

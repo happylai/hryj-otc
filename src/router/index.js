@@ -93,7 +93,7 @@ export const asyncRoutes = [{
     component: () => import('@/views/order/withdraw'),
 
     meta: {
-      title: '出金审核',
+      title: '出金列表',
       icon: '',
       authName: ['order_withdraw']
 
@@ -106,9 +106,49 @@ export const asyncRoutes = [{
     // redirect: '/order/appeal/list',
 
     meta: {
-      title: '订单申述',
+      title: '订单申诉',
       icon: '',
       authName: ['order_appeal']
+
+    }
+  },
+  {
+    path: 'withdrawList',
+    name: 'order_withdrawList',
+    component: () => import('@/views/order/withdrawList'),
+    // redirect: '/order/appeal/list',
+
+    meta: {
+      title: '提现列表',
+      icon: '',
+      authName: ['order_appeal']
+
+    }
+  },
+  {
+    path: 'reedit',
+    name: 'order_reedit',
+    component: () => import('@/views/order/reedit'),
+    // redirect: '/order/appeal/list',
+
+    meta: {
+      title: '补单',
+      icon: '',
+      authName: ['order_reedit']
+
+    }
+  },
+  {
+    path: 'reedit/:id',
+    name: 'order_reedit',
+    component: () => import('@/views/order/reedit/detail'),
+    // redirect: '/order/appeal/list',
+    hidden: true,
+    meta: {
+      title: '补单详情',
+      icon: '',
+      activeMenu: '/order/reedit',
+      authName: ['order_reedit']
 
     }
   },
@@ -118,7 +158,7 @@ export const asyncRoutes = [{
     component: () => import('@/views/order/appealDetail'),
     hidden: true,
     meta: {
-      title: '申述详情',
+      title: '申诉详情',
       activeMenu: '/order/appeal',
       icon: '',
       authName: ['order_appeal']
@@ -226,6 +266,17 @@ export const asyncRoutes = [{
       ]
     },
     {
+      path: 'level',
+      name: 'user_level',
+      component: () => import('@/views/user/level'),
+      meta: {
+        title: '邀请关系',
+        icon: '',
+        authName: ['user_level']
+
+      }
+    },
+    {
       path: 'instation/:id',
       hidden: true,
       name: 'user_instation_detail',
@@ -295,6 +346,77 @@ export const asyncRoutes = [{
   ]
 },
 {
+  path: '/message',
+  component: Layout,
+  name: 'message',
+  meta: {
+    title: '消息中心',
+    icon: 'chat',
+    authName: ['message_chat', 'message_system']
+
+  },
+  children: [
+    {
+      path: 'system',
+      name: 'message_system',
+      component: () => import('@/views/message/system'),
+      meta: {
+        title: '系统公告',
+        authName: ['message_system']
+
+      }
+    },
+    {
+      path: 'chat',
+      name: 'message_chat',
+      component: () => import('@/views/message/index'),
+      meta: {
+        title: '系统客服',
+        authName: ['message_chat']
+
+      }
+    },
+    {
+      path: 'chat/:id',
+      name: 'message_chat',
+      hidden: true,
+      component: () => import('@/views/message/chat'),
+      meta: {
+        title: '系统客服',
+        authName: ['message_system']
+
+      }
+    },
+    {
+      path: 'system/new',
+      name: 'message_system_new',
+      hidden: true,
+      component: () => import('@/views/message/info'),
+      meta: {
+        title: '新增',
+        icon: '',
+        activeMenu: '/message/system',
+        authName: ['message_system']
+
+      }
+    },
+    {
+      path: 'system/:id',
+      name: 'chat',
+      hidden: true,
+      component: () => import('@/views/message/info'),
+      meta: {
+        title: '详情',
+        icon: '',
+        activeMenu: '/message/system',
+        authName: ['message_system']
+
+      }
+    }
+  ]
+
+},
+{
   path: '/finance',
   component: Layout,
   name: 'finance_manage',
@@ -328,44 +450,7 @@ export const asyncRoutes = [{
   }
   ]
 },
-{
-  path: '/message',
-  component: Layout,
-  name: 'message_list',
-  meta: {
-    title: '留言板',
-    icon: 'chat',
-    authName: ['message_list']
 
-  },
-  children: [
-    {
-      path: '',
-      name: 'message_list',
-      component: () => import('@/views/message/index'),
-      meta: {
-        title: '留言板',
-        icon: 'chat',
-        authName: ['message_list']
-
-      }
-    },
-    {
-      path: ':id',
-      name: 'chat',
-      hidden: true,
-      component: () => import('@/views/message/chat'),
-      meta: {
-        title: '留言板',
-        icon: '',
-        activeMenu: '/message',
-        authName: ['message_list']
-
-      }
-    }
-  ]
-
-},
 {
   path: '/records',
   name: 'records_center',
@@ -524,6 +609,17 @@ export const asyncRoutes = [{
         authName: ['system_admin_user']
 
       }
+    },
+    {
+      path: 'logs',
+      name: 'system_admin_logs',
+      component: () => import('@/views/system/logs'),
+      meta: {
+        title: '操作日志',
+        icon: '',
+        authName: ['system_admin_user']
+
+      }
     }
   ]
 },
@@ -542,7 +638,7 @@ export const asyncRoutes = [{
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({
     y: 0
   }),

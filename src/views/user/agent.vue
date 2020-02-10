@@ -29,24 +29,15 @@
     </div>
 
     <el-table
-      v-loading="listLoading"
-      :data="tableListData2"
-      :row-style="toggleDisplayTr"
-      border
-      fit
-      highlight-current-row
+      :data="list"
       style="width: 100%"
+      row-key="userId"
+      border
+      lazy
+      :load="load"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column
-        v-loading="listLoading"
-        align="center"
-        label=""
-        width="50"
-      >
-        <template slot-scope="scope">
-          <p :style="`margin-left: ${scope.row.__level * 20}px;margin-top:0;margin-bottom:0`"><i class="el-icon-arrow-right" :class="toggleFoldingClass(scope.row)" @click="toggleFoldingStatus(scope.row)" /></p>
-        </template>
-      </el-table-column>
+
       <el-table-column
         v-loading="loading"
         align="center"
@@ -187,6 +178,30 @@ export default {
       dialogVisible: false,
       loading: false,
       list: [],
+
+      tableData1: [{
+        id: 1,
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        id: 2,
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄'
+      }, {
+        id: 3,
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄',
+        hasChildren: true
+      }, {
+        id: 4,
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄'
+      }],
+
       paginationMeta: {
         total: 10,
         pages: 1
@@ -209,19 +224,19 @@ export default {
       'groupsConst',
       'userRolesConst',
       'adminRolesConst'
-    ]),
-    tableListData2: {
-      get() {
-        return this.formatConversion([], this.list)
-      }
-    }
+    ])
   },
 
   mounted() {
     this.getList()
   },
   methods: {
-
+    async load(tree, treeNode, resolve) {
+      console.log('tree', tree)
+      const data = await this.getList({ current: 1, size: 100 }, { parentId: tree.userId })
+      console.log('loaddata', data)
+      resolve(data)
+    },
     paginationChange(e) {
       console.log('paginationChange', e)
       this.meta.size = e.limit
@@ -230,17 +245,16 @@ export default {
     },
     async getList(meta, data) {
       this.listLoading = true
-      const resData = await users_agent(meta || this.meta, data).then(res => {
+      const responeData = await users_agent(meta || this.meta, data).then(res => {
         this.listLoading = false
         console.log('res', res)
         if (res.code === 0) {
           var resData = res.data.records
           resData.map((item, index) => {
-            resData[index].haschildren = item.childNum > 0
-            resData[index].children = []
+            resData[index].hasChildren = item.childNum > 0
+            // resData[index].children = []
             resData[index].index = index
           })
-
           if (data) {
             return resData
           }
@@ -248,9 +262,10 @@ export default {
           this.meta.current = res.data.current
           this.paginationMeta.total = res.data.total
           this.paginationMeta.pages = res.data.pages
+          return resData
         }
       })
-      return resData
+      return responeData
     },
     handleFilter() {
       const fliterQuery = this.fliterQuery
@@ -360,75 +375,7 @@ export default {
       console.log('childrenData', resData)
       return (resData)
     },
-    /** *******************************
-      ** Fn: toggleFoldingStatus
-      ** Intro: 切换展开 还是折叠
-      ** @params: params 当前点击行的数据
-      ** Author: zyx
-    *********************************/
-    async toggleFoldingStatus(params) {
-      console.log('data', params)
-      if (params.childNum) {
-        const resData = await this.loadchildren(params.userId)
-        const formatData = this.tableListData
-        formatData[params.index].children = resData
-        this.tableListData = this.formatConversion([], formatData)
-      }
 
-      this.foldList.includes(params.__identity) ? this.foldList.splice(this.foldList.indexOf(params.__identity), 1) : this.foldList.push(params.__identity)
-    },
-    /** *******************************
-      ** Fn: toggleDisplayTr
-      ** Intro: 该方法会对每一行数据都做判断 如果foldList 列表中的元素 也存在与当前行的 __family列表中  则该行不展示
-      ** @params:
-      ** Author: zyx
-    *********************************/
-    toggleDisplayTr({ row, index }) {
-      for (let i = 0; i < this.foldList.length; i++) {
-        const item = this.foldList[i]
-        // 如果foldList中元素存在于 row.__family中，则该行隐藏。  如果该行的自身标识等于隐藏元素，则代表该元素就是折叠点
-        if (row.__family.includes(item) && row.__identity !== item) return 'display:none;'
-      }
-      return ''
-    },
-    /** *******************************
-      ** Fn: toggleFoldingClass
-      ** Intro: 如果子集长度为0，则不返回字体图标。
-      ** Intro: 如果子集长度为不为0，根据foldList是否存在当前节点的标识返回相应的折叠或展开图标
-      ** Intro: 关于class说明：permission_placeholder返回一个占位符，具体查看class
-      ** @params: params 当前行的数据对象
-      ** Author: zyx
-    *********************************/
-    toggleFoldingClass(params) {
-      return params.childNum > 0 ? (this.openLeaveId.indexOf(params.userId) === -1 ? 'el-icon-arrow-right' : 'el-icon-arrow-down') : ''
-    },
-    /** *******************************
-      ** Fn: formatConversion
-      ** Intro: 将树形接口数据扁平化
-      ** @params: parent 为当前累计的数组  也是最后返回的数组
-      ** @params: children 为当前节点仍需继续扁平子节点的数据
-      ** @params: index 默认等于0， 用于在递归中进行累计叠加 用于层级标识
-      ** @params: family 装有当前包含元素自身的所有父级 身份标识
-      ** @params: elderIdentity 父级的  唯一身份标识
-      ** Author: zyx
-    *********************************/
-    formatConversion(parent, children, index = 0, family = [], elderIdentity = '0') {
-      // children如果长度等于0，则代表已经到了最低层
-      // let page = (this.startPage - 1) * 10
-      if (children.length > 0) {
-        children.map((x, i) => {
-          // 设置 __level 标志位 用于展示区分层级
-          Vue.set(x, '__level', index)
-          // 设置 __family 为家族关系 为所有父级，包含本身在内
-          Vue.set(x, '__family', [...family, elderIdentity + '_' + i])
-          // 本身的唯一标识  可以理解为个人的身份证咯 一定唯一。
-          Vue.set(x, '__identity', elderIdentity + '_' + i)
-          parent.push(x)
-          // 如果仍有子集，则进行递归
-          if (x.children && x.children.length > 0) this.formatConversion(parent, x.children, index + 1, [...family, elderIdentity + '_' + i], elderIdentity + '_' + i)
-        })
-      } return parent
-    },
     handleAddAgent(id) {
       this.regForm.parent = id
       this.showAddUser = true

@@ -8,6 +8,9 @@
               <el-select v-model="price.token" placeholder="请选择币种" clearable style="width: 140px" class="filter-item" @change="filterChange">
                 <el-option v-for="item in TokenType" :key="item.label+'tokenType'" :label="item.label" :value="item.label" />
               </el-select>
+              <el-select v-model="price.origin" placeholder="请选择交易方" clearable style="width: 140px" class="filter-item" @change="filterChange">
+                <el-option v-for="item in tradeType" :key="item.label+'tread'" :label="item.label" :value="item.id" />
+              </el-select>
               <el-select v-model="price.fiat" placeholder="请选择法币" clearable style="width: 140px" class="filter-item" @change="filterChange">
                 <el-option v-for="item in FiatType" :key="item.label+'tokenType'" :label="item.label" :value="item.label" />
               </el-select>
@@ -44,6 +47,11 @@
             </template>
           </el-table-column>
 
+          <el-table-column min-width="180px" align="center" label="交易方">
+            <template slot-scope="scope">
+              <span>{{ scope.row.origin|PriceTreadName }}</span>
+            </template>
+          </el-table-column>
           <el-table-column min-width="180px" align="center" label="汇率">
             <template slot-scope="scope">
               <span>{{ scope.row.exchangeRate }}</span>
@@ -113,7 +121,7 @@
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">汇率：</el-col>
         <el-col :span="16">
-          当前汇率：{{ modals.exchangeRate }}
+          {{ modals.exchangeRate }}
         </el-col>
       </el-row>
 
@@ -160,6 +168,10 @@ export default {
         { label: '固定价格', key: '0' },
         { label: '灵活价格', key: '1' }
       ],
+      tradeType: [
+        { label: 'To B', id: 1, name: 'NORMAL' },
+        { label: 'To C', id: 0, name: 'QUICK ' }
+      ],
       FiatType,
       DealType,
       activeType: '0',
@@ -176,6 +188,7 @@ export default {
         token: 'PQC',
         dealType: 0,
         fiat: 'CNY',
+        origin: 0,
         exchangeRate: undefined
       },
       variableActive: 'false',
@@ -213,8 +226,11 @@ export default {
         fiat: this.price.fiat,
         type: this.activeType,
         token: this.price.token,
-        dealType: this.price.dealType
+        dealType: this.price.dealType,
+        origin: this.price.origin
+
       }
+      console.log('data', datas)
       pricing(datas).then(res => {
         if (res.code === 0) {
           console.log('res', res)
@@ -262,7 +278,9 @@ export default {
 
     handleSave() {
       const price = this.price
-      if (!price.exchangeRate) {
+      if (price.origin === '') {
+        this.$message.error('请选择交易方')
+      } else if (!price.exchangeRate) {
         this.$message.error('请填写汇率')
       } else {
         const data = {
@@ -339,7 +357,7 @@ export default {
       const p = this.price
       console.log('filter change')
       this.price.exchangeRate = undefined
-      if (p.token !== undefined && p.fiat !== (undefined || '') && p.dealType !== (undefined || '')) {
+      if (p.origin !== (undefined || '') && p.token !== undefined && p.fiat !== (undefined || '') && p.dealType !== (undefined || '')) {
         console.log('filter change')
 
         this.getPriceDetail()

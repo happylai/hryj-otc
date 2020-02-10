@@ -2,11 +2,11 @@
   <div class="tab-container">
     <tip :miain-tip="miainTip" :second-tip="secondTip" :show-contact="false" />
 
-    <div
-      class="filter-container"
-      style="margin-bottom: 10px;"
-    >
+    <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
+      <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
+    </el-tabs>
 
+    <div class="filter-container" style="margin-bottom: 10px;">
       <el-input v-model="fliterQuery.query" placeholder="广告ID / 创建人" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="fliterQuery.type" placeholder="广告类型" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in AdvType" :key="item.id" :label="item.label" :value="item.id" />
@@ -62,13 +62,32 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="最小成交额">
+      <el-table-column width="70px" align="center" label="库存">
+        <template slot-scope="scope">
+          <span>{{ scope.row.remainAmount }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="120px" align="left" label="支付方式">
+        <template slot-scope="scope">
+          <el-tooltip v-for="(item,index) in scope.row.payInfos" :key="`pay${index}`" placement="right">
+            <div slot="content">
+              <div>支付地区：{{ item.area }}</div>
+              <div>支付昵称：{{ item.nick }}</div>
+            </div>
+            <div> <el-link :underline="false"><i class="el-icon-info" /> {{ item.payType|payTypeName }} {{ item.account }}</el-link>  </div>
+          </el-tooltip>
+          <!-- <span>{{ scope.row.remainAmount }}</span> -->
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="70px" align="center" label="最小成交额">
         <template slot-scope="scope">
           <span>{{ scope.row.minLimit }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="最大成交额" width="100">
+      <el-table-column align="center" label="最大成交额" min-width="70">
         <template slot-scope="scope">
           <span>{{ scope.row.maxLimit }}</span>
         </template>
@@ -80,11 +99,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="支付方式" min-width="180px">
+      <!-- <el-table-column align="center" label="支付方式" min-width="180px">
         <template slot-scope="scope">
           <span>{{ scope.row.payType|payTypeNames }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column align="center" min-width="180px" label="创建时间">
         <template slot-scope="scope">
@@ -131,6 +150,12 @@ export default {
       PayType,
       miainTip: '广告下架：1.查看广告详情；2.核查是否有未完成交易。',
       secondTip: '温馨提示：若遇其他非上述情况请及时联系管理员。',
+      tabMapOptions: [
+        { label: '站内广告', key: '0' },
+        { label: 'To B广告', key: '1' }
+      ],
+      activeType: '0',
+
       fliterQuery: {
         page: 1,
         size: 20,
@@ -163,7 +188,22 @@ export default {
     this.getList()
   },
   methods: {
-
+    handleTabClick(tab, event) {
+      console.log('tab', tab)
+      this.meta.current = 1
+      this.activeType = tab.name
+      const fliterQuery = {
+        page: 1,
+        size: 10,
+        payType: undefined,
+        query: undefined,
+        status: undefined,
+        creatDate: undefined,
+        complateDate: undefined
+      }
+      this.fliterQuery = fliterQuery
+      this.getList()
+    },
     paginationChange(e) {
       console.log('paginationChange', e)
       this.meta.size = e.limit
@@ -171,8 +211,9 @@ export default {
       this.getList()
     },
     getList(meta, data) {
-      this.listLoading = true
-      advertises(meta || this.meta, data).then(res => {
+      this.loading = true
+      advertises(meta || this.meta, data || { origin: this.activeType }).then(res => {
+        this.loading = false
         console.log('res', res)
         if (res.code === 0) {
           this.list = res.data.records
@@ -189,7 +230,8 @@ export default {
         type: fliterQuery.type,
         payType: fliterQuery.payType,
         query: fliterQuery.query,
-        status: fliterQuery.status
+        status: fliterQuery.status,
+        origin: this.activeType
       }
       if (fliterQuery.date) {
         data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')

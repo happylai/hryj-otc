@@ -137,7 +137,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="paginationMeta.pages" :limit.sync="meta.size" @pagination="paginationChange" />
+    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
     <!-- <el-dialog :visible.sync="dialogVisible" title="基础信息审核">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户名ID：</el-col>
@@ -298,7 +298,19 @@ export default {
       console.log('paginationChange', e)
       this.meta.size = e.limit
       this.meta.current = e.page
-      this.getList()
+      const fliterQuery = this.fliterQuery
+      const data = {
+        authent: fliterQuery.authent,
+        groupId: fliterQuery.groupId,
+        query: fliterQuery.query,
+        roleId: fliterQuery.roleId
+      }
+      if (fliterQuery.date) {
+        data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
+        // data.start = '2019-10-16 12:11:11'
+        data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
+      }
+      this.getList(this.meta,data)
     },
     handleFilter() {
       const fliterQuery = this.fliterQuery

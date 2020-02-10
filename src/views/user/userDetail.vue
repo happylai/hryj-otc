@@ -4,7 +4,7 @@
       <div slot="header" class="clearfix">
         <span class="card-title">基础信息</span>
         <el-button style="float: right; " type="primary" size="small" @click="clickAduit">编辑</el-button>
-        <el-button style="float: right; margin-right:10px " type="primary" size="small" @click="clickApply">交易补贴</el-button>
+        <el-button v-if="modals.roleId>=5" style="float: right; margin-right:10px " type="primary" size="small" @click="clickApply">交易补贴</el-button>
       </div>
       <div class="text item">
         <el-row :gutter="10" class="card-row">
@@ -117,6 +117,7 @@
     <el-card class="box-card marginT40">
       <div slot="header" class="clearfix">
         <span class="card-title">用户资产（当前用户资产/冻结资产/保证金）</span>
+        <el-button style="float: right; " type="primary" size="small" @click="editAssets">修改资产</el-button>
         <!-- <el-button style="float: right; padding: 3px 0" type="text">审核</el-button> -->
       </div>
       <div class="text item">
@@ -244,7 +245,8 @@
       </el-table-column>
 
     </el-table>
-    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="paginationMeta.pages" :limit.sync="meta.size" @pagination="paginationChange" />
+    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
+
     <el-dialog v-loading="orderLoading" :visible.sync="dialogVisible" title="基础信息修改">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户ID：</el-col>
@@ -288,14 +290,14 @@
           <el-input v-model="newPassword" style="width: 240px" name="changepassword" type="text" placeholder="请输入密码" tabindex="2" />
         </el-col>
       </el-row>
-      <el-row v-if="type==='1'" :gutter="20" class="userRow">
+      <!-- <el-row v-if="type==='1'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">角色升级：</el-col>
         <el-col :span="16">
           <el-link type="success" :underline="false">超级 {{ userRolesConstName(editData.currentRoleId,userRolesConst) }}</el-link>
           <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.roleId,userRolesConst) }}</el-link>
         </el-col>
-      </el-row>
-      <el-row v-else :gutter="20" class="userRow">
+      </el-row> -->
+      <!-- <el-row v-else :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户角色：</el-col>
         <el-col :span="16">
           <el-select v-model="newData.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
@@ -304,7 +306,7 @@
 
           <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.roleId,userRolesConst) }}</el-link>
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">所在分组：</el-col>
         <el-col :span="16">
@@ -324,7 +326,7 @@
           />{{ newData.active?'正常':'冻结' }}
           <el-link type="danger" :underline="false">当前状态： {{ editData.active?'正常':'冻结' }}</el-link></el-col>
       </el-row>
-      <el-row :gutter="20" class="userRow">
+      <!-- <el-checkbox-group :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">收付款方式：</el-col>
         <el-col :span="16">
           <el-checkbox-group v-model="newData.payTypes">
@@ -332,7 +334,7 @@
           </el-checkbox-group>
           <el-link type="danger" :underline="false">当前收付款方式：{{ editData.payTypes|payTypeNames }}</el-link>
         </el-col>
-      </el-row>
+      </el-checkbox-group> -->
 
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click=" handleAudit() ">保存</el-button>
@@ -346,40 +348,100 @@
         <el-col :span="5">银行卡</el-col>
         <el-col :span="5">云闪付</el-col>
       </el-row>
-      <el-row v-if="showBuy" :gutter="10" class="supplyRow">
+      <el-row :gutter="10" class="supplyRow">
         <el-col :span="4" class="textAlingR supplyType">买</el-col>
         <el-col :span="5">
-          <el-input v-model="subsidyBuy[0].rebate" placeholder="支付宝补贴" />
+          <el-input v-model="subsidyBuy[0].rebate" v-float type="number" min="0" max="100" placeholder="支付宝补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="subsidyBuy[1].rebate" placeholder="微信补贴" />
+          <el-input v-model="subsidyBuy[1].rebate" v-float type="number" min="0" max="100" placeholder="微信补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="subsidyBuy[2].rebate" placeholder="银行卡补贴" />
+          <el-input v-model="subsidyBuy[2].rebate" v-float type="number" min="0" max="100" placeholder="银行卡补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="subsidyBuy[3].rebate" placeholder="云闪付补贴" />
+          <el-input v-model="subsidyBuy[3].rebate" v-float type="number" min="0" max="100" placeholder="云闪付补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
       </el-row>
-      <el-row v-if="showSell" :gutter="10" class="supplyRow">
+      <el-row :gutter="10" class="supplyRow">
         <el-col :span="4" class="textAlingR supplyType">
           卖</el-col>
         <el-col :span="5">
-          <el-input v-model="subsidySell[0].rebate" placeholder="支付宝补贴" />
+          <el-input v-model="subsidySell[0].rebate" v-float type="number" min="0" max="100" placeholder="支付宝补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="subsidySell[1].rebate" placeholder="微信补贴" />
+          <el-input v-model="subsidySell[1].rebate" v-float type="number" min="0" max="100" placeholder="微信补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="subsidySell[2].rebate" placeholder="银行卡补贴" />
+          <el-input v-model="subsidySell[2].rebate" v-float type="number" min="0" max="100" placeholder="银行卡补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
         <el-col :span="5">
-          <el-input v-model="subsidySell[3].rebate" placeholder="云闪付补贴" />
+          <el-input v-model="subsidySell[3].rebate" v-float type="number" min="0" max="100" placeholder="云闪付补贴">
+            <template slot="append">%</template>
+          </el-input>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
         <el-button v-loading="supplyLoading" type="primary" @click=" handleNewApply() ">保存</el-button>
         <el-button @click="dialogVisibleApply=false">取消</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog :visible.sync="showEditAssets" title="修改资产" width="650px">
+      <el-tabs v-model="assetsEditTab" type="border-card">
+        <el-tab-pane label="增加资产" name="0">
+          <div class="text_red" style="margin-bottom:20px">说明：增加资产操作是将扣款账户中的资产减少，并划转增加到当前账户中请谨慎操作！</div>
+          <el-form ref="assetsAddForm" :model="assetsAdd" :rules="rules" label-width="180px" class="demo-ruleForm">
+            <el-form-item label="扣款账号" prop="uuid">
+              <el-input v-model="assetsAdd.uuid" placeholder="输入扣款账号UID" />
+            </el-form-item>
+
+            <el-form-item label="划转金额" prop="amount">
+              <el-input v-model="assetsAdd.amount" placeholder="输入划转金额" />
+            </el-form-item>
+
+            <el-form-item label="输入划转原因" prop="remark">
+              <el-input v-model="assetsAdd.remark" placeholder="输入划转原因和发生纠纷双方的订单号" type="textarea" />
+            </el-form-item>
+
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="减少资产" name="1">
+          <div class="text_red" style="margin-bottom:20px">说明：减少资产操作是将当前账号的资产减少，并划转增加到转入账号上请谨慎操作！</div>
+
+          <el-form ref="assetsDesForm" :model="assetsDes" :rules="rules" label-width="180px" class="demo-ruleForm">
+            <el-form-item label="转入账号" prop="uuid">
+              <el-input v-model="assetsDes.uuid" placeholder="输入转入账号UID" />
+            </el-form-item>
+
+            <el-form-item label="划转金额" prop="amount">
+              <el-input v-model="assetsDes.amount" placeholder="输入划转金额" />
+            </el-form-item>
+
+            <el-form-item label="输入划转原因" prop="remark">
+              <el-input v-model="assetsDes.remark" placeholder="输入划转原因和发生纠纷双方的订单号" type="textarea" />
+            </el-form-item>
+
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
+      <span slot="footer" class="dialog-footer">
+        <el-button :loading="saveLoading" :disabled="saveLoading" type="primary" @click=" handleEditAssets() ">确认划转</el-button>
+        <el-button @click="showEditAssets=false">取消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -390,16 +452,15 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
-
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect, OrderStatus, CounterParty, PayType } from '@/utils/enumeration'
-import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, get_deal_subsidy, deal_subsidy } from '@/api/usermanage'
+import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, get_deal_subsidy, deal_subsidy, system_transfer } from '@/api/usermanage'
 import { order_details } from '@/api/order'
-
+import float from '@/directive/float' // float Number directive
 export default {
   name: 'Tab',
   components: { pagination },
-  directives: { waves },
+  directives: { waves, float },
   data() {
     return {
       groupsConstName,
@@ -463,7 +524,19 @@ export default {
       supplyLoading: false,
       detailLoading: false,
       payTypeLoading: false,
-      orderLoading: false
+      orderLoading: false,
+      showEditAssets: false,
+      assetsAdd: {},
+      assetsDes: {
+      },
+      rules: {
+
+        uuid: [{ required: true, message: '请输入', trigger: 'blur' }],
+        amount: [{ required: true, message: '请输入', trigger: 'blur' }],
+        remark: [{ required: true, message: '请输入', trigger: 'blur' }]
+      },
+      assetsEditTab: '0',
+      saveLoading: false
 
     }
   },
@@ -637,18 +710,16 @@ export default {
           // this.addApply(data)
         }
       }
-      if (this.showBuy) {
-        const buy = this.subsidyBuy
-        for (const i in buy) {
-          if (buy[i].rebate) {
-            const data = {
-              'partyEnum': '0',
-              'payType': i,
-              'id': buy[i].id || undefined,
-              'rebate': buy[i].rebate
-            }
-            subsidies.push(data)
+      const buy = this.subsidyBuy
+      for (const i in buy) {
+        if (buy[i].rebate) {
+          const data = {
+            'partyEnum': '0',
+            'payType': i,
+            'id': buy[i].id || undefined,
+            'rebate': buy[i].rebate
           }
+          subsidies.push(data)
         }
       }
       const postData = {
@@ -669,6 +740,40 @@ export default {
           })
           this.get_subsidy()
         }
+      })
+    },
+    editAssets() {
+      this.showEditAssets = true
+    },
+    handleEditAssets() {
+      const formName = ['assetsAddForm', 'assetsDesForm'][this.assetsEditTab]
+      const data = [this.assetsAdd, this.assetsDes][this.assetsEditTab]
+      this.$refs[formName].validate((valid) => {
+        console.log('valid', valid)
+        if (!valid) {
+          return false
+        }
+        this.saveLoading = true
+        system_transfer({
+          ...data,
+          transfer: this.assetsEditTab,
+          userId: this.id
+        }).then(res => {
+          this.saveLoading = false
+
+          if (res.code === 0) {
+            this.$message({
+              type: 'success',
+              message: '划转成功'
+            })
+            this.detail()
+          } else {
+            this.$message.error(res.message || '划转失败')
+          }
+        }).catch(err => {
+          this.saveLoading = false
+          this.$message.error(err.message || '划转失败')
+        })
       })
     }
 
@@ -734,5 +839,8 @@ export default {
   line-height: 40px;
   font-size: 16px;
   font-weight: bold;
+}
+.text_red{
+  color: #f56c6c
 }
 </style>

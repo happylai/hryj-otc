@@ -387,10 +387,25 @@ export function userRolesConstName(id, arr) {
     const data = arr.filter((item) => { if (item.id === id) { return item } })
     if (has({ foo: { bar: data }}, 'foo.bar')) {
       return data[0].zhName
+    }
+    // 后面新加的角色暂未进入枚举
+    else if (id === -1) {
+      return '信任大宗'
     } else {
       return '-'
     }
   } else {
     return '-'
   }
+}
+
+export function formatNumber(num) {
+  let content
+  const temp = num
+  if ((temp.toString()).split('.')[1].length <= 8) {
+    content = num
+  } else {
+    content = num.toFixed(8)
+  }
+  return content
 }

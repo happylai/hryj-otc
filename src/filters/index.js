@@ -17,7 +17,14 @@ import {
   AdvType,
   AuthType,
   OrderAuditStatus,
-  AppealeType
+  AppealeType,
+  PriceTread,
+  LogsModels,
+  LogsTypes,
+  SystemMessageTypes,
+  SystemMessageStatus,
+  WithdrawStatus,
+  PayChannel
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -170,6 +177,21 @@ export function payTypeName(id) {
   let res = '-'
   if (has({ foo: id }, 'foo')) {
     const data = PayTypeExtent.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+
+/**
+ * PriceTreadName
+ * @param {number} num
+ */
+export function PriceTreadName(id) {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = PriceTread.filter((item) => { if (item.id === id) { return item } })
     if (has({ foo: data }, 'foo')) {
       res = data[0].label
     }
@@ -392,7 +414,7 @@ export function authTypeName(id = null) {
  * OrderAuditStatus
  * @param {number} num
  */
-export function orderAuditStatus(id) {
+export function OrderAuditStatusName(id) {
   if (id === 'null') {
     return '-'
   } else if (has({ foo: id }, 'foo')) {
@@ -426,3 +448,68 @@ export function appealeType(id) {
   }
 }
 
+export function LogsModelsName(id) {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = LogsModels.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+
+export function LogsTypesName(id) {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = LogsTypes.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+
+export function SystemMessageTypeName(id) {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = SystemMessageTypes.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+
+export function SystemMessageStatuName(id) {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = SystemMessageStatus.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+
+export function WithdrawStatusName(id) {
+  let temp = '-'
+  if (has({ foo: { bar: id }}, 'foo.bar')) {
+    const data = WithdrawStatus.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      temp = data[0].label
+    }
+  }
+  return temp
+}
+
+export function PayChannelName(id) {
+  let temp = '-'
+  if (has({ foo: { bar: id }}, 'foo.bar')) {
+    const data = PayChannel.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      temp = data[0].label
+    }
+  }
+  return temp
+}

@@ -16,7 +16,12 @@
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>金额：{{ modals.amount }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>成交量：{{ modals.successAmount }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>支付方式：{{ modals.payTypes|payTypeNames }}</div></el-col>
+          <el-col :xs="12" :sm="16" :md="8" :lg="12" :xl="12"><div>支付方式：
+            <div v-for="(item,index) in modals.payInfos" :key="`paytype${index}`">
+              <span>{{ item.payType|payTypeName }}</span> <span> 昵称：{{ item.nick }}</span> <span v-if="item.PayType!==2"> 地区：{{ item.area }} </span>
+            </div>
+          </div>
+          </el-col>
 
         </el-row>
         <el-row :gutter="10" class="card-row">
@@ -107,7 +112,7 @@
       </el-table-column>
 
     </el-table>
-    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="paginationMeta.pages" :limit.sync="meta.size" @pagination="paginationChange" />
+    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
 
   </div>
 </template>

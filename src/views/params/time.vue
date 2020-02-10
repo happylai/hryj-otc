@@ -59,14 +59,14 @@ export default {
       tabMapOptions: [
         { label: '买家付款超时', key: '0' ,visible:true },
         { label: '卖家确认超时', key: '1' ,visible:true},
-        { label: '触发申述时间', key: '2' ,visible:false},
+        { label: '触发申诉时间', key: '2' ,visible:false},
         { label: '解冻货币时间', key: '3' ,visible:true},
         { label: '一键接单时间', key: '4' ,visible:true}
       ],
       TimeParamsTypePlaceHolder: {
         0: '超时参数',
         1: '超时参数',
-        2: '申述激活时间',
+        2: '申诉激活时间',
         3: '自动解冻时间',
         4: '一键接单时间'
       },

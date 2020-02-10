@@ -352,7 +352,7 @@ export const asyncRoutes = [{
   meta: {
     title: '消息中心',
     icon: 'chat',
-    authName: ['message_chat', 'message_system']
+    authName: ['message_chat', 'message_system', 'order_list']
 
   },
   children: [
@@ -362,27 +362,18 @@ export const asyncRoutes = [{
       component: () => import('@/views/message/system'),
       meta: {
         title: '系统公告',
-        authName: ['message_system']
+        authName: ['message_system', 'order_list']
 
       }
     },
-    {
-      path: 'chat',
-      name: 'message_chat',
-      component: () => import('@/views/chat/chat'),
-      meta: {
-        title: '系统客服',
-        authName: ['message_chat']
 
-      }
-    },
     {
       path: 'chatList',
       name: 'message_chat_friend',
       component: () => import('@/views/message/index'),
       meta: {
         title: '聊天列表',
-        authName: ['message_chat']
+        authName: ['message_chat', 'order_list']
 
       }
     },
@@ -392,7 +383,7 @@ export const asyncRoutes = [{
       component: () => import('@/views/chat/friend'),
       meta: {
         title: '系统客服',
-        authName: ['message_chat']
+        authName: ['message_chat', 'order_list']
 
       }
     },
@@ -403,7 +394,7 @@ export const asyncRoutes = [{
       component: () => import('@/views/message/chat'),
       meta: {
         title: '系统客服',
-        authName: ['message_system']
+        authName: ['message_system', 'order_list']
 
       }
     },

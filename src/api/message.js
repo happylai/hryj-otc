@@ -64,3 +64,33 @@ export function customer_service_list(meta, data) {
     }
   })
 }
+
+// 群组列表
+export function chat_group_list(meta, data) {
+  return request({
+    url: `/admin/chat_group/list`,
+    method: 'get',
+    params: data,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
+// 创建群组
+export function chat_group_create(data) {
+  return request({
+    url: `/admin/chat_group/create`,
+    method: 'post',
+    data: data
+  })
+}
+
+// 将用户加入群组
+export function chat_group_add_user(data) {
+  return request({
+    url: `/admin/chat_group/add_user`,
+    method: 'post',
+    data: data
+  })
+}

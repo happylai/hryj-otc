@@ -1,6 +1,6 @@
 <template>
   <div class="tab-container">
-    <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
+    <el-tabs v-model="activeType" style="margin-top:15px;">
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
       <tip />
       <div class="filter-container" style="margin-bottom: 10px;">
@@ -29,18 +29,23 @@
         <el-table-column align="center" class-name="status-col" prop="nickName" label="姓名" min-width="120" />
         <el-table-column align="center" class-name="status-col" label="内容" min-width="140">
           <template slot-scope="scope">
-            <span v-if="scope.row.type===0">{{ scope.row.message }}</span>
+            <span v-if="scope.row.latestMessage.messageType==='TextMessage'">{{ scope.row.latestMessage.content.content }}</span>
             <img v-else v-lazy="scope.row.message" :preview="'chat'+scope.row.id" class="chatListImage">
           </template>
         </el-table-column>
         <el-table-column align="center" class-name="status-col" label="时间" min-width="120">
           <template slot-scope="scope">
-            <span>{{ scope.row.createTime|timesArrayFormat }}</span>
+            <span>{{ scope.row.sentTime|timestampFormat }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" class-name="status-col" label="操作" min-width="80">
+        <el-table-column align="center" class-name="status-col" label="操作" min-width="80" style="padding:28px 0">
           <template slot-scope="scope">
-            <el-button type="primary" size="small" @click="clickDetail(scope.row)">回复</el-button>
+            <div style="padding-top:10px">
+              <el-badge :value="scope.row.unreadMessageCount" class="item">
+                <el-button type="primary" size="small" @click="clickDetail(scope.row)">回复</el-button>
+              </el-badge>
+            </div>
+
           </template>
         </el-table-column>
       </el-table>
@@ -58,6 +63,7 @@ import pagination from '@/components/Pagination'
 import { message_list, message_detail, message_reply } from '@/api/message'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, PayType, OrderStatus, CounterParty } from '@/utils/enumeration'
+import { init } from '@/utils/rongcloudutils.js'
 export default {
   name: 'Tab',
   components: { tip, pagination },
@@ -95,7 +101,11 @@ export default {
         pages: 1
       },
       dialogVisible: false,
-      editData: {}
+      editData: {},
+      token: 'qYfQJoOrW5dBGc952clwAeSR0DN+JyB07a25AmSQ+/9MhOnxW+0tJeJrTwftulGHb8WQPegSxXDXF3SwM3xV+clh5rknwh8h3cEEi8YesTG2buVtM/UOnQ==',
+      appkey: 'p5tvi9dspqhm4', // 这是我们之前保存的 appkey *重要
+      targetId: '', // 你要给谁发送消息 目标ID
+      showDatas: [] // 初始化信息
     }
   },
   watch: {
@@ -103,7 +113,12 @@ export default {
       this.$router.push(`${this.$route.path}?tab=${val}`)
     }
   },
+  // computed: {
 
+  //   ...mapGetters([
+  //     'token'
+  //   ])
+  // },
   created() {
     // init the default selected tab
     const tab = this.$route.query.tab
@@ -112,9 +127,67 @@ export default {
     }
   },
   mounted() {
-    this.getList()
+    // this.getList()
+    this.initRongCloud()
   },
   methods: {
+    addPromptInfo(prompt, userId = null) {
+      const _this = this
+
+      const avatarList = [
+        'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4100987808,2324741924&fm=26&gp=0.jpg',
+        'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2988245209,2476612762&fm=26&gp=0.jpg',
+        'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=4259300811,497831842&fm=26&gp=0.jpg',
+        'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3684587473,1286660191&fm=26&gp=0.jpg',
+        'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2884107401,3797902000&fm=26&gp=0.jpg'
+      ]
+
+      // 真实环境是通过登录 后台接口返回的 token 拿到的用户信息  我在这为为了模拟 所以给初始化后的用户随机生成一个头像
+      // const avatar = avatarList[Math.floor(Math.random() * (3 + 1))]
+      _this.showDatas.push(prompt)
+      console.log('userid', userId)
+      this.getMessageList()
+      // const timer = setInterval(() => {
+      //   if (userId) {
+      //     clearInterval(timer) // 路由跳转后销毁定时器
+      //     _this.$store.commit('SET_MEMBER', { // 保存用户信息
+      //       userId: userId,
+      //       avatar: avatar
+      //     })
+      //     _this.$store.commit('SET_TARGETID', _this.targetId) // 保存目标ID
+      //     _this.$router.push({ name: 'RongCloud' })
+      //   }
+      // }, 500)
+    },
+
+    getMessageList() {
+      const _this = this
+      RongIMClient.getInstance().getConversationList({
+        onSuccess: function(list) {
+          console.log('list', list)
+          _this.list = list
+        // list => 会话列表集合
+        },
+        onError: function(error) {
+          console.log('error', error)
+        // do something
+        }
+      }, null)
+    },
+
+    initRongCloud() {
+      var appkey = this.appkey
+      var token = this.token
+      if (!appkey || !token) {
+        alert('appkey 和 token 不能为空')
+      } else {
+        // 这个init 是我们之前撸的 `utils.js`
+        init({
+          appkey: appkey,
+          token: token
+        }, this.addPromptInfo)
+      }
+    },
 
     paginationChange(e) {
       console.log('paginationChange', e)
@@ -151,7 +224,7 @@ export default {
       this.getList(meta, data)
     },
     clickDetail(data) {
-      this.$router.push({ path: `chat/${data.userId}` })
+      this.$router.push({ path: `chat/${data.targetId}` })
     }
 
   }

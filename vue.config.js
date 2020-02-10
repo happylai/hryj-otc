@@ -41,8 +41,8 @@ module.exports = {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
         // target: `http://127.0.0.1:${port}/mock`,
-        target: `http://192.168.3.144:4009/api`,
-        // target: `http://192.168.3.185:4009/api`,
+        // target: `http://192.168.3.144:4009/api`,
+        target: `http://c3ykmh.natappfree.cc/api`,
 
         changeOrigin: true,
         pathRewrite: {
@@ -52,7 +52,7 @@ module.exports = {
       [process.env.VUE_APP_FILE_API]: {
         // target: `http://127.0.0.1:${port}/mock`,
         target: `http://192.168.3.144:4000/api`,
-        // target: `http://192.168.3.185:4009/api`,
+        // target: `http://jrx23q.natappfree.cc/api`,
 
         changeOrigin: true,
         pathRewrite: {

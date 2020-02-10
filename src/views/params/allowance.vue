@@ -1,16 +1,16 @@
 <template>
   <div class="tab-container">
     <el-tabs v-model="activeType" style="margin-top:15px;" @tab-click="handleTabClick">
-      <el-tab-pane v-for="item in tabMapOptions" v-if="activeType<4" :key="item.key" :label="item.label" :name="item.key" />
-      <el-tab-pane v-for="item in tabMapOptions1" v-if="activeType>=4" :key="item.key" :label="item.label" :name="item.key" />
+      <el-tab-pane v-for="item in tabMapOptions" v-if="activeType<4||activeType==='6'" :key="item.key" :label="item.label" :name="item.key" />
+      <el-tab-pane v-for="item in tabMapOptions1" v-if="activeType==='4'||activeType==='5'" :key="item.key" :label="item.label" :name="item.key" />
     </el-tabs>
     <!-- <tab-pane :loading="loading" :data="list" @edit="handlEdit" /> -->
     <div v-if="activeType!=='3'" class="filter-container" style="margin-bottom: 10px;">
-      <el-select v-if="activeType!=='5'&&activeType!=='0'&&activeType!=='3'&&activeType!=='4'" v-model="addData.roleId" placeholder="选择角色" clearable style="width: 160px" class="filter-item">
+      <el-select v-if="activeType!=='5'&&activeType!=='0'&&activeType!=='3'&&activeType!=='4'&&activeType!=='6'" v-model="addData.roleId" placeholder="选择角色" clearable style="width: 160px" class="filter-item">
         <el-option v-for="item in userRolesConst" :key="item.id" :disabled="!addUserType[activeType].includes(item.id)" :label="item.zhName" :value="item.id" />
       </el-select>
-      <el-select v-if="activeType!=='3'" v-model="addData.payType" placeholder="支付方式" clearable style="width: 160px" class="filter-item">
-        <el-option v-for="item in PayTypeUstd" :key="item.id" :disabled="item.id===4&&activeType!=='5'" :label="item.label" :value="item.id" />
+      <el-select v-if="activeType!=='3'&&activeType!=='6'" v-model="addData.payType" placeholder="支付方式" clearable style="width: 160px" class="filter-item">
+        <el-option v-for="item in PayTypeUstd" :key="item.id" :disabled="item.id===4&&activeType!=='5'&&activeType!=='6'" :label="item.label" :value="item.id" />
       </el-select>
       <el-select v-if="activeType==='0'||activeType==='1'" v-model="addData.counterParty" placeholder="交易方" clearable style="width: 160px" class="filter-item">
         <el-option v-for="item in CounterParty" :key="item.id" :label="item.label" :value="item.id" />
@@ -26,15 +26,15 @@
       />
       <el-input v-if="activeType!=='3'&&activeType!=='2'" v-model="addData.ratio" :placeholder="ratioPlaceHolder[activeType]" style="width: 180px;" class="filter-item" />
       <el-input v-if="activeType!=='3'&&activeType==='2'" v-model="addData.achieveAmount" placeholder="达量补贴达标标准" style="width: 180px;" class="filter-item" />
-      <el-input v-if="activeType==='0'||activeType==='3'" v-model="addData.levelDiffer" :placeholder="activeType==='0'?'层级差':'激活金'" style="width: 180px;" class="filter-item" />
-      <el-input v-model="addData.subsidyMax" :placeholder="placeHolder[activeType]" style="width: 180px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-if="activeType==='0'||activeType==='3'||activeType==='6'" v-model="addData.levelDiffer" :placeholder="levelDifferPlaceholder[activeType]" style="width: 180px;" class="filter-item" />
+      <el-input v-if="activeType!=='6'" v-model="addData.subsidyMax" :placeholder="placeHolder[activeType]" style="width: 180px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" @click="handleAdd">
         确认添加
       </el-button>
     </div>
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
-        v-if=" activeType!=='5'&&activeType!=='0'&&activeType!=='3'&&activeType!=='4'"
+        v-if=" activeType!=='5'&&activeType!=='0'&&activeType!=='3'&&activeType!=='4'&&activeType!=='6'"
         align="center"
         label="角色"
         width="120"
@@ -45,7 +45,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="activeType!=='3'" align="center" label="支付方式" width="120">
+      <el-table-column v-if="activeType!=='3'&&activeType!=='6'" align="center" label="支付方式" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.payType|payTypeUstdName }}</span>
         </template>
@@ -75,13 +75,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="activeType!=='3'" align="center" :label="placeHolder[activeType]">
+      <el-table-column v-if="activeType!=='3'&&activeType!=='6'" align="center" :label="placeHolder[activeType]">
         <template slot-scope="scope">
           <span>{{ scope.row.subsidyMax }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column v-if="activeType==='3'||activeType==='0'" align="center" :label="activeType==='0'?'层级差':'上级奖励'">
+      <el-table-column v-if="activeType==='3'||activeType==='0'||activeType==='6'" align="center" :label="levelDifferPlaceholder[activeType]">
         <template slot-scope="scope">
           <span>{{ scope.row.levelDiffer||'-' }}</span>
         </template>
@@ -96,7 +96,7 @@
     <pagination v-show="meta.total>0" :total="meta.total" :page.sync="meta.pages" :limit.sync="meta.size" @pagination="metaChange" />
 
     <el-dialog :visible.sync="dialogVisible" :title="tabMapOptionsName[activeType].label" style="min-width: 800px;">
-      <el-row v-if="activeType!=='3'&&activeType!=='0'&&activeType!=='4'&&activeType!=='5'" :gutter="20" class="userRow">
+      <el-row v-if="activeType!=='3'&&activeType!=='0'&&activeType!=='4'&&activeType!=='5'&&activeType!=='6'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">当前角色：</el-col>
         <el-col :span="16">{{ userRolesConstName(editData.roleId,userRolesConst) }}</el-col>
       </el-row>
@@ -136,17 +136,17 @@
           <el-link type="danger" :underline="false">当前达量标准：{{ editData.achieveAmount }}</el-link>
         </el-col>
       </el-row>
-      <el-row v-if="activeType!=='3'" :gutter="20" class="userRow inputRow">
+      <el-row v-if="activeType!=='3'&&activeType!=='6'" :gutter="20" class="userRow inputRow">
         <el-col :span="8" class="textAlingR">补贴限额：</el-col>
         <el-col :span="16">
           <el-input v-model="editData.newsubsidyMax" style="width: 200px;height:30px" placeholder="请设置补贴限额(如:1000)" />
           <el-link type="danger" :underline="false">当前补贴限额：{{ editData.subsidyMax }}</el-link>
         </el-col>
       </el-row>
-      <el-row v-if="activeType==='0'||activeType==='3'" :gutter="20" class="userRow inputRow">
-        <el-col :span="8" class="textAlingR">{{ activeType==='0'?'层级差':'上级奖励' }}：</el-col>
+      <el-row v-if="activeType==='0'||activeType==='3'||activeType==='6'" :gutter="20" class="userRow inputRow">
+        <el-col :span="8" class="textAlingR">{{ levelDifferPlaceholder[activeType] }}：</el-col>
         <el-col :span="16">
-          <el-input v-model="editData.newlevelDiffer" style="width: 200px;height:30px" :placeholder="'请设置'+activeType==='0'?'层级差':'上级奖励'+'(如:1000)'" />
+          <el-input v-model="editData.newlevelDiffer" style="width: 200px;height:30px" :placeholder="'请设置'+levelDifferPlaceholder[activeType]+'(如:1000)'" />
           <el-link type="danger" :underline="false">当前{{ activeType==='0'?'层级差':'上级奖励' }}：{{ editData.levelDiffer }}</el-link>
         </el-col>
       </el-row>
@@ -180,7 +180,7 @@ export default {
       type: 0,
       tab1: 0,
       ratioPlaceHolder: [
-        '奖励比例%', '奖励比例%', '奖励比例%', '邀请奖励', '交易提成比%', '提现手续费%'
+        '奖励比例%', '奖励比例%', '奖励比例%', '邀请奖励', '交易提成比%', '提现手续费%', '奖励比例%'
       ],
       tabMapOptionsName: [
         { label: '交易补贴', key: '0' },
@@ -188,19 +188,27 @@ export default {
         { label: '达量补贴', key: '2' },
         { label: '邀请奖励', key: '3' },
         { label: '入金手续费', key: '4' },
-        { label: '出金手续费', key: '5' }
+        { label: '出金手续费', key: '5' },
+        { label: 'B端确认奖励', key: '6' }
       ],
       tabMapOptions: [
         { label: '交易补贴', key: '0' },
         { label: '夜间补贴', key: '1' },
         { label: '达量补贴', key: '2' },
-        { label: '邀请奖励', key: '3' }
+        { label: '邀请奖励', key: '3' },
+        { label: 'B端确认奖励', key: '6' }
+
       ],
       tabMapOptions1: [
         { label: '入金手续费', key: '4' },
         { label: '出金手续费', key: '5' }
       ],
       placeHolder: ['单笔补贴最高限额', '每天补贴最高限额', '总补贴额', '补贴最高限额', '最高提成限额', '最高提成限额'],
+      levelDifferPlaceholder: {
+        0: '层级差',
+        3: '上级奖励',
+        6: '确认时间'
+      },
       addUserType: {
         0: [5, 6, 7, 8],
         1: [5, 6, 7, 8],
@@ -217,6 +225,7 @@ export default {
         total: 1,
         pages: 1
       },
+
       addData: {
         roleId: undefined,
         levelDiffer: undefined,
@@ -306,9 +315,9 @@ export default {
     handleAdd() {
       const data = this.addData
       console.log('data', data)
-      if (!data.roleId && (this.activeType !== '5' && this.activeType !== '3' && this.activeType !== '4')) {
+      if (!data.roleId && (this.activeType !== '5' && this.activeType !== '3' && this.activeType !== '4'&& this.activeType !== '6')) {
         this.$message.error('请选择角色')
-      } else if (((data.payType === '' || data.payType === undefined) && this.activeType !== '3')) {
+      } else if (((data.payType === '' || data.payType === undefined) && this.activeType !== '3' && this.activeType !== '6')) {
         this.$message.error('请选择支付方式')
       } else if (this.activeType === '1' && (data.date === '' || data.date === undefined)) {
         this.$message.error('请选择时间段')
@@ -320,12 +329,12 @@ export default {
         this.$message.error('请填写达量标准')
       } else if ((this.activeType === '0' || this.activeType === '3') && (data.levelDiffer === '' || data.levelDiffer === undefined)) {
         this.$message.error(this.activeType === '0' ? '请填写层级差' : '上级奖励')
-      } else if (this.activeType !== '3' && !data.subsidyMax) {
+      } else if (this.activeType !== '3' && this.activeType !== '6' && !data.subsidyMax) {
         this.$message.error('请填写最高限额')
       } else {
         const postData = {
           roleId: this.activeType !== '5' || this.activeType !== '3' ? data.roleId : undefined,
-          levelDiffer: this.activeType === '0' || this.activeType === '3' ? data.levelDiffer : undefined,
+          levelDiffer: this.activeType === '0' || this.activeType === '3'|| this.activeType === '6' ? data.levelDiffer : undefined,
           payType: this.activeType !== '3' ? data.payType : undefined,
           counterParty: this.activeType === '0' || this.activeType === '1' ? data.counterParty : undefined,
           ratio: data.ratio,

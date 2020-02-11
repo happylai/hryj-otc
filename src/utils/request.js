@@ -50,6 +50,9 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
+    if (response.config.responseType === 'blob' || response.config.responseType === 'arraybuffer') {
+      return response
+    }
     console.log('response res', response)
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 0) {

@@ -292,3 +292,15 @@ export function close_withdraw(data) {
     data: data
   })
 }
+
+export function export_excel(meta, data) {
+  return request({
+    url: `${scope}/export`,
+    method: 'get',
+    headers: {
+      ...meta
+    },
+    params: data,
+    responseType: 'arraybuffer'
+  })
+}

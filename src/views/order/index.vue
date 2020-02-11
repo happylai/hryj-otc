@@ -33,6 +33,9 @@
         <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
           搜索
         </el-button>
+        <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-download" @click="handleDownload">
+          导出
+        </el-button>
       </div>
       <el-table v-if="activeType==='1'" v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%;font-size:10px">
         <el-table-column
@@ -452,9 +455,10 @@ import tabPane from './components/TabPane'
 import tip from '@/components/Tip'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
-import { order_list, order_detail, order_cancel, order_confirm, pro_odrder_rematch } from '@/api/order'
+import { order_list, order_detail, order_cancel, order_confirm, pro_odrder_rematch, export_excel } from '@/api/order'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, PayType, OrderStatus, CounterParty } from '@/utils/enumeration'
+import {exportExcel} from "../../api/order";
 export default {
   name: 'Tab',
   components: { tabPane, pagination, tip },
@@ -588,6 +592,42 @@ export default {
       resetPage ? meta.current = 1 : null
 
       this.getList(meta, data)
+    },
+    handleDownload(resetPage = true) {
+      const fliterQuery = this.fliterQuery
+      console.log('fliterQuery', this.fliterQuery)
+      const data = {
+        isMatch: this.activeType === '2',
+        type: fliterQuery.type,
+        payType: fliterQuery.payType,
+        query: fliterQuery.query,
+        status: fliterQuery.status,
+        userId: this.userId
+      }
+      if (fliterQuery.creatDate) {
+        data.createStart = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
+        data.createEnd = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
+      }
+      if (fliterQuery.complateDate) {
+        data.confirmStart = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
+        data.confirmEnd = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
+      }
+      const meta = this.meta
+      resetPage ? meta.current = 1 : null
+      export_excel(meta, data).then(response => {
+        this.downloadExcel(response)
+      }).catch(() => console.log('export excel error'))
+    },
+    downloadExcel(response) {
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      const fileName = decodeURI(response.headers['content-disposition'].split('=')[1])
+      link.download = fileName
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
     },
     clickDetail(data) {
       this.getOrderDetail(data.id)

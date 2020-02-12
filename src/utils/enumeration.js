@@ -666,4 +666,35 @@ export const WithdrawStatus = [
     label: '已经关闭'
   }
 ]
+export const AwardType = [
+  {
+    id: 7,
+    name: 'DEAL_SUBSIDY',
+    label: '交易补贴'
+  },{
+    id: 8,
+    name: 'NIGHT_SUBSIDY',
+    label: '夜间补贴'
+  },{
+    id: 9,
+    name: 'AMOUNT_SUBSIDY',
+    label: '达量补贴'
+  },{
+    id: 10,
+    name: 'SHARE_SUBSIDY',
+    label: '邀请奖励'
+  },{
+    id: 13,
+    name: 'AGENT_SUBSIDY',
+    label: '代理商补贴'
+  },{
+    id: 15,
+    name: 'JUNIOR_DEAL_SUBSIDY',
+    label: '下级交易贡献'
+  },{
+    id: 18,
+    name: 'RELEASE_REWARD',
+    label: '放行奖励'
+  }
+]
 

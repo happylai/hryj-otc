@@ -36,25 +36,25 @@
       </div>
       <div class="text item">
         <el-row :gutter="10">
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5">
+          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="card-item borderR">
               <div class="cart-i-t">交易补贴 </div>
               <div class="cart-i-v">{{ modals.dealSubsidy }}</div>
             </div>
           </el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5">
+          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="card-item borderR">
               <div class="cart-i-t">夜间补贴</div>
               <div class="cart-i-v">{{ modals.nightSubsidy }}</div>
             </div>
           </el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5">
+          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="card-item borderR">
               <div class="cart-i-t">达量补贴</div>
               <div class="cart-i-v">{{ modals.amountSubsidy }}</div>
             </div>
           </el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5">
+          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="card-item borderR">
               <div class="cart-i-t">退还激活金 </div>
               <div class="cart-i-v">{{ modals.depositBack }}</div>
@@ -64,6 +64,12 @@
             <div class="card-item ">
               <div class="cart-i-t">邀请奖励</div>
               <div class="cart-i-v">{{ modals.shareSubsidy }}</div>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4">
+            <div class="card-item ">
+              <div class="cart-i-t">放行奖励</div>
+              <div class="cart-i-v">{{ modals.releaseSubsidy }}</div>
             </div>
           </el-col>
         </el-row>

@@ -363,6 +363,9 @@
             <div class="orderInfoItem"> 夜间补贴：{{ editData.orderB.nightSubsidy }}</div>
           </el-col>
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
+            <div class="orderInfoItem"> 放行补贴：{{ editData.orderB.releaseSubsidy }}</div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">
             <div class="orderInfoItem"> 手续费：{{ editData.orderB.fee }}</div>
           </el-col>
           <el-col :xs="12" :sm="6" :md="6" :xl="6"class="">

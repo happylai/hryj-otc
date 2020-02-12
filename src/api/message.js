@@ -52,6 +52,24 @@ export function customer_service_create(data) {
   })
 }
 
+// 编辑客服
+export function customer_service_update(data) {
+  return request({
+    url: `/admin/customer_service/update`,
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改客服状态
+export function customer_service_change_status(data) {
+  return request({
+    url: `/admin/customer_service/change_status`,
+    method: 'post',
+    data: data
+  })
+}
+
 // 客服列表
 export function customer_service_list(meta, data) {
   return request({
@@ -59,9 +77,15 @@ export function customer_service_list(meta, data) {
     method: 'get',
     params: data,
     headers: {
-
       'Content-Type': 'application/x-www-form-urlencoded'
     }
+  })
+}
+// 删除客服
+export function customer_service_delete(uuid) {
+  return request({
+    url: `/admin/customer_service/delete/${uuid}`,
+    method: 'post',
   })
 }
 
@@ -92,5 +116,17 @@ export function chat_group_add_user(data) {
     url: `/admin/chat_group/add_user`,
     method: 'post',
     data: data
+  })
+}
+
+// 查询站内用户
+export function chat_group_users(meta, data) {
+  return request({
+    url: `/admin/chat_group/users`,
+    method: 'get',
+    params: data,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
   })
 }

@@ -1,9 +1,9 @@
 <template>
   <div class="tab-container">
     <div class="filter-container" style="margin-bottom: 10px;">
-      <el-input v-model="querymeta.query" placeholder="昵称/账户/IP地址" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="querymeta.roleId" placeholder="选择权限" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in adminRolesConst" :key="item.label+'srole'" :label="item.zhName" :value="item.id" />
+      <!-- <el-input v-model="querymeta.query" placeholder="昵称/账户/IP地址" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" /> -->
+      <el-select v-model="querymeta.active" placeholder="选择权限" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="item in SelectActive" :key="item.label+'srole'" :label="item.label" :value="item.name" />
       </el-select>
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
@@ -12,8 +12,8 @@
         添加客服
       </el-button>
     </div>
-    <el-table :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column v-loading="loading" align="center" label="昵称" width="220" element-loading-text="请给我点时间！">
+    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
+      <el-table-column v-loading="listLoading" align="center" label="昵称" width="220" element-loading-text="请给我点时间！">
         <template slot-scope="scope">
           <span>{{ scope.row.nickName }}</span>
         </template>
@@ -31,6 +31,17 @@
         </template>
       </el-table-column>
 
+      <el-table-column align="center" label="是否启用" min-width="160">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.active"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            @change="handleChangeStatus(scope.row)"
+          />
+        </template>
+      </el-table-column>
+
       <!-- <el-table-column align="center" label="状态" width="95">
       <template slot-scope="scope">
         <el-link :underline="false" :type="scope.row.orderStatus|orderStatusTagName">{{ scope.row.orderStatus|orderStatus }}</el-link>
@@ -40,55 +51,12 @@
       <el-table-column class-name="status-col" align="center" label="操作" width="220">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="clickEdit(scope.row)">编辑</el-button>
-          <el-button type="danger" size="small" @click="clickFreeze(scope.row.id)">冻结</el-button>
+          <el-button type="danger" size="small" @click="handlDel(scope.row.uuid)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <pagination :total="meta.total" :page.sync="meta.pages" :limit.sync="meta.size" @pagination="paginationChange" />
-    <el-dialog :visible.sync="dialogVisible" title="后台用户编辑">
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">昵称：</el-col>
-        <el-col :span="16">{{ editData.nickName }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">登录邮箱：</el-col>
-        <el-col :span="16">{{ editData.email }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">登陆IP：</el-col>
-        <el-col :span="16">
-          {{ editData.ip }}
-          <el-checkbox v-model="ipOnly">
-            <el-link type="danger" :underline="false">是否限制改IP登录</el-link>
-          </el-checkbox>
-          <el-link type="primary">详情</el-link>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">角色：</el-col>
-        <el-col :span="16">
-          <el-select v-model="newRole" placeholder="更换角色">
-            <el-option v-for="(item,index) in adminRolesConst" :key="index" :label="item.zhName" :value="item.id" />
-          </el-select>
-          <el-link type="danger" :underline="false">当前登录角色：{{ adminRolesConstName(editData.role,adminRolesConst) }}</el-link>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">上次登陆时间：</el-col>
-        <el-col :span="16">{{ editData.createTime|timestampFormat }}</el-col>
-      </el-row>
-      <el-row :gutter="20" class="userRow">
-        <el-col :span="16" :offset="8">
-          <el-checkbox v-model="isfreeze">
-            <el-link type="danger" :underline="false">冻结该账号</el-link>
-          </el-checkbox>
-        </el-col>
-      </el-row>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click=" saveEdit() ">保存</el-button>
-        <el-button @click="dialogVisible = false">取消</el-button>
-      </span>
-    </el-dialog>
+
     <el-dialog :visible.sync="showAddUser" title="添加客服">
       <el-form ref="regForm" :model="regForm" :rules="loginRules" class="login-form" label-width="80px" auto-complete="on" label-position="right">
         <el-form-item label="邮箱" class="addUserItem" prop="email">
@@ -114,10 +82,9 @@
 <script>
 import tabPane from './components/TabPane'
 import { mapState, mapGetters } from 'vuex' // 先要引入
-import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves'
-import { customer_service_list as listApi, customer_service_create as customerCreat, customer_detail as customer_service_detail } from '@/api/message'
+import { customer_service_list as listApi, customer_service_create as customerCreat, customer_detail as customer_service_detail, customer_service_delete, customer_service_change_status, customer_service_update } from '@/api/message'
 import { Auths, Roles } from '@/utils/enumeration'
 import { validateUsername, validateEamil, validatePassword } from '@/utils/validate'
 
@@ -138,12 +105,8 @@ export default {
       }
     }
     return {
-      groupsConstName,
-      userRolesConstName,
-      adminRolesConstName,
-      SelectRoles: [{ label: '全部', id: '' }, ...Roles],
-      Roles,
-      Auths,
+
+      SelectActive: [{ label: '已启用', id: '1', name: 'true' }, { label: '未启用', id: '1', name: 'false' }],
       loading: false,
       loginRules: {
         nickName: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -154,8 +117,7 @@ export default {
       dialogVisible: false,
       showAddUser: false,
       querymeta: {
-        roleId: '',
-        query: ''
+        active: 'true'
       },
       isfreeze: false,
       ipOnly: false,
@@ -169,7 +131,8 @@ export default {
         password: ''
       },
       passwordType: 'password',
-      list: []
+      list: [],
+      listLoading: false
 
     }
   },
@@ -235,10 +198,16 @@ export default {
     getList(meta, data) {
       this.listLoading = true
 
-      listApi(meta, data || { active: true }).then(res => {
+      listApi(meta, data || this.querymeta).then(res => {
+        this.listLoading = false
         if (res.code === 0) {
           this.list = res.data.records
+          this.meta.current = res.data.current
+          this.paginationMeta.total = res.data.total
+          this.paginationMeta.pages = res.data.pages
         }
+      }).catch( () => {
+        this.listLoading = false
       })
     },
     handleFilter(data) {
@@ -247,7 +216,7 @@ export default {
         ...data,
         current: 1
       }
-      // console.log('searchMeat', this.querymeta)
+      console.log('searchMeat', newMeta)
       this.getList(newMeta)
     },
     handleEdit(data) {
@@ -314,6 +283,60 @@ export default {
           console.log('error submit!!')
           return false
         }
+      })
+    },
+    handlDel(id) {
+      this.$confirm('是否删除该客服?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        customer_service_delete(id).then(res => {
+          if (res.code === 0) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.getList()
+          } else {
+            this.$message.error(res.message || '操作失败')
+          }
+        })
+      })
+    },
+    handleChangeStatus(data) {
+      customer_service_change_status({ uuid: data.uuid, active: data.active }).then(res => {
+        if (res.code === 0) {
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+          this.getList()
+        } else {
+          this.$message.error('操作失败')
+        }
+      }).catch(err => {
+        this.$message.error(err)
+      })
+    },
+    clickEdit(data) {
+      this.$prompt('请输入修改后的昵称', '修改昵称', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }).then(({ value }) => {
+        customer_service_update({ uuid: data.uuid, nickName: value }).then(res => {
+          if (res.code === 0) {
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+            this.getList()
+          } else {
+            this.$message.error('操作失败')
+          }
+        }).catch(err => {
+          this.$message.error(err || '操作失败')
+        })
       })
     }
   }

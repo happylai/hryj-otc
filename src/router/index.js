@@ -366,31 +366,9 @@ export const asyncRoutes = [{
 
       }
     },
-
     {
-      path: 'chatList',
-      name: 'message_chat_friend',
-      component: () => import('@/views/message/index'),
-      meta: {
-        title: '聊天列表',
-        authName: ['message_chat', 'order_list']
-
-      }
-    },
-    {
-      path: 'friend',
-      name: 'message_chat_friend',
-      component: () => import('@/views/chat/friend'),
-      meta: {
-        title: '系统客服',
-        authName: ['message_chat', 'order_list']
-
-      }
-    },
-    {
-      path: 'chat/:id',
+      path: 'chat',
       name: 'message_chat',
-      hidden: true,
       component: () => import('@/views/message/chat'),
       meta: {
         title: '系统客服',

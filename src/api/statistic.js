@@ -62,3 +62,15 @@ export function merchant_statics_day(meta, data) {
     }
   })
 }
+
+export function order_awards(meta, data) {
+  return request({
+    url: '/admin/order/order_award',
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta,
+      'Content-Type': 'application/json'
+    }
+  })
+}

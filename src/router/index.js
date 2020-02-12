@@ -468,7 +468,7 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '数据中心',
-    icon: 'iconshujuzhongxin',
+    icon: 'statistic',
     authName: ['records_statistics']
 
   },
@@ -478,9 +478,19 @@ export const asyncRoutes = [{
     component: () => import('@/views/analysis/index'),
     meta: {
       title: '数据统计',
-      icon: 'statistic',
+      icon: '',
       authName: ['records_statistics']
 
+    }
+  },
+  {
+    path: 'order_award',
+    name: 'order_award',
+    component: () => import('@/views/analysis/award'),
+    meta: {
+      title: '活动奖励',
+      icon: '',
+      authName: ['order_award']
     }
   }
   // {

@@ -24,7 +24,8 @@ import {
   SystemMessageTypes,
   SystemMessageStatus,
   WithdrawStatus,
-  PayChannel
+  PayChannel,
+  AwardType
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -512,4 +513,19 @@ export function PayChannelName(id) {
     }
   }
   return temp
+}
+
+/**
+ * awardType
+ * @param {number} num
+ */
+export function awardType(id) {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = AwardType.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
 }

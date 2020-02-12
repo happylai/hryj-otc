@@ -55,7 +55,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination :total="meta.total" :page.sync="meta.pages" :limit.sync="meta.size" @pagination="paginationChange" />
+    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
 
     <el-dialog :visible.sync="showAddUser" title="添加客服">
       <el-form ref="regForm" :model="regForm" :rules="loginRules" class="login-form" label-width="80px" auto-complete="on" label-position="right">
@@ -132,8 +132,11 @@ export default {
       },
       passwordType: 'password',
       list: [],
-      listLoading: false
-
+      listLoading: false,
+      paginationMeta: {
+        total: 10,
+        pages: 1
+      }
     }
   },
   computed: {

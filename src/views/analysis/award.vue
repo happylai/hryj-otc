@@ -107,7 +107,7 @@ export default {
       }
     }
   },
-  mounted() {
+  created() {
     this.getList()
   },
   methods: {
@@ -142,7 +142,17 @@ export default {
     paginationChange(e) {
       this.meta.size = e.limit
       this.meta.current = e.page
-      this.getList()
+      const fliterQuery = this.fliterQuery
+      const data = {
+        type: fliterQuery.type,
+        orderNo: fliterQuery.orderNo,
+        userUid: fliterQuery.userUid
+      }
+      if (fliterQuery.date) {
+        data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
+        data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
+      }
+      this.getList(this.meta, data)
     }
   }
 }

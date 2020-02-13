@@ -26,14 +26,10 @@
                 </div>
               </el-tab-pane>
               <el-tab-pane label="群聊会话" name="3">
-                <div v-for="(item,index) in groupList" :key="index+'user'" @click="changeCurrentChat(item.uuid)" class="chat-userList" :class="item.targetId==id?'userListactive':'' ">
-                  <!-- <el-avatar> {{ item.name }} </el-avatar>
-                  <span>{{ item.name }}</span>
-                  <span>{{ item.createTime }}</span> -->
-
+                <div v-for="(item,index) in groupList" :key="index+'user'" @click="changeCurrentChat(item.uuid)" class="chat-userList" :class="item.uuid==id?'userListactive':'' ">
                   <div class="chat-avatar">
                     <el-badge :value="0" class="item" :hidden="false">
-                     <el-avatar> {{item.name}} </el-avatar>
+                      <el-avatar> {{item.name}} </el-avatar>
                     </el-badge>
                   </div>
                   <div class="chat-his">
@@ -55,14 +51,15 @@
           </div></el-col>
 
         <el-col :span="16">
-          <el-dropdown>
+          <el-dropdown @command="handleDropdown" v-if="tabIndex==='3'">
             <span class="el-dropdown-link">
               群聊管理<i class="el-icon-arrow-down el-icon--right" />
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>新建群聊</el-dropdown-item>
-              <el-dropdown-item>新增成员</el-dropdown-item>
-
+              <el-dropdown-item command="1">新建群聊</el-dropdown-item>
+              <el-dropdown-item command="2">新增成员</el-dropdown-item>
+              <el-dropdown-item command="3">移除成员</el-dropdown-item>
+              <el-dropdown-item command="4">解散群组</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <div class="chat-history" id="chatHistory">
@@ -124,25 +121,91 @@
     </div>
     <el-dialog
       title="新建群聊"
-      :visible.sync="dialogVisible"
-      width="30%"
+      :visible.sync="newGroupDig"
+      width="400px"
     >
       <el-form ref="form" :model="newGroup" label-width="80px">
         <el-form-item label="群聊名称">
           <el-input v-model="newGroup.name" />
         </el-form-item>
         <el-form-item label="客服ID">
-          <el-input v-model="newGroup.id" />
+          <el-select style="width:100%" v-model="newGroup.id" multiple placeholder="请选择">
+            <el-option
+              v-for="item in customerlist"
+              :key="item.uuid"
+              :label="item.nickName"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleCreat">立即创建</el-button>
-          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button @click="newGroupDig = false">取消</el-button>
         </el-form-item>
       </el-form>
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span> -->
+    </el-dialog>
+    <el-dialog
+      title="添加群成员群聊"
+      :visible.sync="joinGroup"
+      width="400px"
+    >
+      <el-form ref="form" :model="newGroup" label-width="80px">
+        <el-form-item label="成员id">
+          <el-select
+              style="width:100%"
+              v-model="joinGroupArr"
+              multiple
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入关键词搜索成员"
+              :remote-method="querUer"
+              :loading="loading">
+              <el-option
+                v-for="item in userQueryList"
+                :key="item.uuid"
+                :label="item.uuid"
+                :value="item.id">
+              </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleJoin">立即加入</el-button>
+          <el-button @click="joinGroup = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+<el-dialog
+      title="移除群成员群聊"
+      :visible.sync="delGroupNumDig"
+      width="400px"
+    >
+      <el-form ref="form" :model="newGroup" label-width="80px">
+        <el-form-item label="成员id">
+          <el-select
+            v-model="delGroupNumArr"
+            style="width:100%"
+            multiple
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入关键词搜索成员"
+            :remote-method="querUer"
+            :loading="loading">
+            <el-option
+              v-for="item in userQueryList"
+              :key="item.uuid"
+              :label="item.uuid"
+              :value="item.id">
+            </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleDelGroupNum">立即移除</el-button>
+          <el-button @click="delGroupNumDig = false">取消</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
   </div>
 </template>
@@ -151,10 +214,11 @@
 import tip from '@/components/Tip'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import { uploadImage } from '@/api/common'
-import { message_detail, message_reply, chat_group_list, chat_group_create, chat_group_add_user } from '@/api/message'
+import { message_detail, message_reply, chat_group_current, chat_group_create, chat_group_add_user, chat_group_users, customer_service_list, chat_group_remove_user, chat_group_delete } from '@/api/message'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, PayType, OrderStatus, CounterParty } from '@/utils/enumeration'
 import { init } from '@/utils/rongcloudutils.js'
+
 
 export default {
   name: 'Tab',
@@ -195,7 +259,7 @@ export default {
       ],
       chatList: [],
       chat: undefined,
-      id: "1226843160513089537",
+      id: "",
       token: '',
       appkey: 'p5tvi9dspqhm4', // 这是我们之前保存的 appkey *重要
       targetId: '', // 你要给谁发送消息 目标ID
@@ -209,7 +273,15 @@ export default {
       uuid: undefined,
       userName: undefined,
       tabIndex: '1',
-      conversationType:1
+      conversationType:1,
+      newGroupDig:false,
+      delGroupNumDig:false,
+      customerlist:[],
+      joinGroup:false,
+      joinGroupId:undefined,
+      joinGroupArr:[],
+      userQueryList:[],
+      delGroupNumArr:[],
     }
   },
   computed: {
@@ -259,7 +331,7 @@ export default {
       const index=tab.index;
       const arr = [1, 3]
       this.conversationType = arr[tab.index]
-      const id=index==="1"?(this.groupList.length?this.groupList[0].uuid:undefined):(this.chatList.length ? this.chatList[0].targetId : undefined)
+      const id=index==="1"?(this.groupList && this.groupList.length?this.groupList[0].uuid:undefined):(this.chatList.length ? this.chatList[0].targetId : undefined)
       this.id=id
       console.log("targetId",id)
       this.getList()
@@ -433,6 +505,7 @@ export default {
         // message 为发送的消息对象并且包含服务器返回的消息唯一 Id 和发送消息时间戳
           const time= new Date().getTime()
           console.log('Send successfully',time)
+          _this.chat=undefined
           _this.getList(0,1)
         },
         onError: function(errorCode, message) {
@@ -462,11 +535,14 @@ export default {
       })
     },
     getGroupList() {
-      chat_group_list().then(res => {
+      chat_group_current().then(res => {
         
-        console.log('chat_group_list', res)
+        console.log('chat_group_current', res)
         if (res.code === 0) {
-          this.groupList = res.data.records
+          this.groupList = res.data
+          if(!this.id&&res.data){
+            this.id=res.data[0].uuid
+          }
         }
       })
     },
@@ -474,7 +550,7 @@ export default {
       const data = {
         name: this.newGroup.name,
         // customerServicePeopleIds: this.newGroup.id
-        customerServicePeopleIds: [11, 12]
+        customerServicePeopleIds:this.newGroup.id
       }
 
       chat_group_create(data).then(res => {
@@ -483,26 +559,123 @@ export default {
             type: 'success',
             message: '创建成功'
           })
+          this.getGroupList()
         }
       })
     },
 
     // 删除会话
-    delChat(){
-    var params = {
-      conversationType:this.conversationType,
-      targetId: '"1226843160513089537"',
-      timestamp: new Date().getTime() // 可取 sentTime, 收发消息和历史消息中都有 sentTime 字段
-    };
-    RongIMLib.RongIMClient.getInstance().clearRemoteHistoryMessages(params, {
-      onSuccess: function() {
-        console.log('清除成功');
-      },
-      onError: function(error) {
-        console.log('清除失败', error);
+    delChat() {
+      var params = {
+        conversationType:this.conversationType,
+        targetId: '"1226843160513089537"',
+        timestamp: new Date().getTime() // 可取 sentTime, 收发消息和历史消息中都有 sentTime 字段
+      };
+      RongIMLib.RongIMClient.getInstance().clearRemoteHistoryMessages(params, {
+        onSuccess: function() {
+          console.log('清除成功');
+        },
+        onError: function(error) {
+          console.log('清除失败', error);
+        }
+      });
+    },
+    getCustomerList() {
+      customer_service_list({current:1,size:100}, {active:true}).then(res => {
+        this.listLoading = false
+        if (res.code === 0) {
+          this.customerlist = res.data.records
+        }
+      }).catch( () => {
+        this.listLoading = false
+      })
+    },
+    handleNewGroup() {
+      console.log("新建群聊")
+      this.newGroupDig = true
+      this.getCustomerList()
+    },
+    handleDropdown(command) {
+      console.log("command",command)
+      if(command==='1') {
+        this.handleNewGroup()
+      }else if(command==='2'){
+        this.joinGroup = true
+      }else if(command==='3'){
+        this.delGroupNumDig=true
+      }else if(command==='4'){
+        this.delGroup()
       }
-    });
-    }
+    },
+    handleJoin() {
+      const group=(this.groupList).filter(item=>item.uuid==this.id)
+
+      const data={
+        groupId: group[0].id,
+        userIds: this.joinGroupArr
+      }
+      chat_group_add_user(data).then(res=>{
+        if (res.code === 0) {
+          this.$message({
+            type: 'success',
+            message: '加入成功'
+          })
+          this.getGroupList()
+        }
+      })
+    },
+    handleDelGroupNum() {
+      const group=(this.groupList).filter(item=>item.uuid==this.id)
+
+      const data={
+        groupId: group[0].id,
+        userIds: this.delGroupNumArr
+      }
+      chat_group_remove_user(data).then(res=>{
+        if (res.code === 0) {
+          this.$message({
+            type: 'success',
+            message: '移除成功'
+          })
+          this.getGroupList()
+        }else{
+
+        }
+      })
+    },
+
+    querUer(data) {
+      chat_group_users({current:1,size:10},{query:data}).then(res=>{
+        if(res.code===0) {
+          this.userQueryList=res.data.records;
+        }
+      })
+    },
+    delGroup() {
+      this.$confirm('是否解散当前群组?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const group=(this.groupList).filter(item=>item.uuid==this.id)
+
+        const data={
+          groupIds: [group[0].id],
+        }
+        chat_group_delete(data).then( res => {
+          if(res.code===0) {
+            this.$message({
+              type: 'success',
+              message: '解散群组成功!'
+            });
+            this.id
+          this.getGroupList()
+
+          }
+        })
+
+      })
+    },
 
   }
 

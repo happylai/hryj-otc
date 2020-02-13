@@ -362,7 +362,7 @@ export const asyncRoutes = [{
       component: () => import('@/views/message/system'),
       meta: {
         title: '系统公告',
-        authName: ['message_system']
+        authName: ['message_system','order_list']
 
       }
     },
@@ -372,7 +372,7 @@ export const asyncRoutes = [{
       component: () => import('@/views/message/chat'),
       meta: {
         title: '系统客服',
-        authName: ['message_system']
+        authName: ['message_system','order_list']
 
       }
     },

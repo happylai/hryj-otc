@@ -101,6 +101,19 @@ export function chat_group_list(meta, data) {
   })
 }
 
+// 客服查询自己所在群组
+export function chat_group_current(meta, data) {
+  return request({
+    url: `/admin/chat_group/current`,
+    method: 'get',
+    params: data,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
+
 // 创建群组
 export function chat_group_create(data) {
   return request({
@@ -119,6 +132,23 @@ export function chat_group_add_user(data) {
   })
 }
 
+// 将用户移除群组
+export function chat_group_remove_user(data) {
+  return request({
+    url: `/admin/chat_group/remove_user`,
+    method: 'post',
+    data: data
+  })
+}
+
+// 删除群组
+export function chat_group_delete(data) {
+  return request({
+    url: `/admin/chat_group/delete`,
+    method: 'post',
+    data: data
+  })
+}
 // 查询站内用户
 export function chat_group_users(meta, data) {
   return request({

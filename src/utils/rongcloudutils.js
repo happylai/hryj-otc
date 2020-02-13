@@ -1,4 +1,4 @@
-export const init = (params, addPromptInfo) => {
+export const init = (params, addPromptInfo, reviceMessage,) => {
   var appkey = params.appkey
   var token = params.token
   RongIMClient.init(appkey)
@@ -7,16 +7,19 @@ export const init = (params, addPromptInfo) => {
       switch (status) {
         case RongIMLib.ConnectionStatus['CONNECTED']:
         case 0:
-          addPromptInfo('连接成功')
+          console.log("连接成功")
+          addPromptInfo('连接成功', status)
           break
 
         case RongIMLib.ConnectionStatus['CONNECTING']:
         case 1:
+          console.log("正在连接中")
           addPromptInfo('正在连接中')
           break
 
         case RongIMLib.ConnectionStatus['DISCONNECTED']:
         case 2:
+          console.log("当前用户主动断开链接")
           addPromptInfo('当前用户主动断开链接')
           break
 
@@ -51,7 +54,7 @@ export const init = (params, addPromptInfo) => {
       switch (message.messageType) {
         case RongIMClient.MessageType.TextMessage:
           // message.content.content => 文字内容
-          addPromptInfo('新消息 ' + message.targetId + ':' + JSON.stringify(message))
+          reviceMessage('新消息 ' + message.targetId + ':' + JSON.stringify(message))
           break
         case RongIMClient.MessageType.VoiceMessage:
           // message.content.content => 格式为 AMR 的音频 base64

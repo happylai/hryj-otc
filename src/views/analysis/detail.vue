@@ -198,7 +198,19 @@ export default {
       console.log('paginationChange', e)
       this.meta.size = e.limit
       this.meta.current = e.page
-      this.getList()
+
+      const fliterQuery = this.fliterQuery
+      const data = {
+        ...this.fliterQuery,
+        date: undefined
+      }
+      if (this.fliterQuery.date) {
+        data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
+        // data.start = '2019-10-16 12:11:11'
+        data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
+      }
+
+      this.getList(this.meta, data)
     },
     getList(meta, data) {
       this.listLoading = true

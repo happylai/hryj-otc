@@ -289,7 +289,6 @@ export default {
       console.log('fliterQuery', this.fliterQuery)
       const data = {
         ...this.fliterQuery,
-        date: undefined
       }
       if (fliterQuery.date) {
         data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')

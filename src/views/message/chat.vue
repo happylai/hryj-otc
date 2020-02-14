@@ -409,9 +409,9 @@ export default {
           }else{
             return false
           }
-          if(_this.conversationType==='1') {
+          if(_this.conversationType===1) {
             _this.list = list
-          }else if(_this.conversationType==='3') {
+          }else if(_this.conversationType===3) {
             _this.groupChatLiat=list
           }
 

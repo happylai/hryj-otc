@@ -282,6 +282,7 @@ export default {
       joinGroupArr:[],
       userQueryList:[],
       delGroupNumArr:[],
+      groupChatList:[],
     }
   },
   computed: {
@@ -333,8 +334,13 @@ export default {
       this.conversationType = arr[tab.index]
       const id=index==="1"?(this.groupList && this.groupList.length?this.groupList[0].uuid:undefined):(this.chatList.length ? this.chatList[0].targetId : undefined)
       this.id=id
+      if(index==='1') {
+        this.getMessageList()
+      }
       console.log("targetId",id)
-      this.getList()
+      if(id){
+        this.getList()
+      }
     },
     changeCurrentChat(id) {
       console.log('id', id)
@@ -403,8 +409,12 @@ export default {
           }else{
             return false
           }
+          if(_this.conversationType==='1') {
+            _this.list = list
+          }else if(_this.conversationType==='3') {
+            _this.groupChatLiat=list
+          }
 
-          _this.list = list
           if (list.length > 0 && !this.id) {
             const id=list[0].targetId.toString();
             console.log("id",id)
@@ -418,7 +428,7 @@ export default {
           console.log('error', error)
         // do something
         }
-      }, null)
+      }, [_this.conversationType])
     },
 
     initRongCloud() {

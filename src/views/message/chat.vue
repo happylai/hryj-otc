@@ -4,21 +4,21 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <div>
-            <el-tabs v-model="tabIndex" type="border-card" @tab-click="handleClick">
-              <el-tab-pane label="进行中的会话" name='1'>
-                <div  v-for="(item,index) in list" :key="index+'user'" @click="changeCurrentChat(item.targetId)" class="chat-userList" :class="item.targetId==id?'userListactive':'' ">
+            <el-tabs v-model="tabIndex" @tab-click="handleClick">
+              <el-tab-pane label="进行中的会话" name="1">
+                <div v-for="(item,index) in list" :key="index+'user'" class="chat-userList" :class="item.targetId==id?'userListactive':'' " @click="changeCurrentChat(item.targetId)">
                   <div class="chat-avatar">
                     <el-badge :value="item.unreadMessageCount" class="item" :hidden="item.unreadMessageCount==0">
-                     <el-avatar> user </el-avatar>
+                      <el-avatar> user </el-avatar>
                     </el-badge>
                   </div>
                   <div class="chat-his">
                     <div class="chat-conact">
-                      <div class="chat-user-name">{{item.targetId}}</div>
-                      <div>{{item.latestMessage.sentTime|timestampFormat}}</div>
+                      <div class="chat-user-name">{{ item.targetId }}</div>
+                      <div>{{ item.latestMessage.sentTime|timestampFormat }}</div>
                     </div>
                     <div class="chat-des text-overflow">
-                      <div class="text-overflow" v-if="item.latestMessage.messageType==='TextMessage'">{{ item.latestMessage.content.content }}</div>
+                      <div v-if="item.latestMessage.messageType==='TextMessage'" class="text-overflow">{{ item.latestMessage.content.content }}</div>
                       <span v-else>[图片]</span>
                     </div>
                   </div>
@@ -26,16 +26,16 @@
                 </div>
               </el-tab-pane>
               <el-tab-pane label="群聊会话" name="3">
-                <div v-for="(item,index) in groupList" :key="index+'user'" @click="changeCurrentChat(item.uuid)" class="chat-userList" :class="item.uuid==id?'userListactive':'' ">
+                <div v-for="(item,index) in groupList" :key="index+'user'" class="chat-userList" :class="item.uuid==id?'userListactive':'' " @click="changeCurrentChat(item.uuid)">
                   <div class="chat-avatar">
                     <el-badge :value="0" class="item" :hidden="false">
-                      <el-avatar> {{item.name}} </el-avatar>
+                      <el-avatar> {{ item.name }} </el-avatar>
                     </el-badge>
                   </div>
                   <div class="chat-his">
                     <div class="chat-conact">
-                      <div class="chat-user-name">{{item.name}}</div>
-                      <div>{{item.createTime}}</div>
+                      <div class="chat-user-name">{{ item.name }}</div>
+                      <div>{{ item.createTime }}</div>
                     </div>
                     <div class="chat-des text-overflow">
                       <!-- <div class="text-overflow" v-if="item.latestMessage.messageType==='TextMessage'">{{ item.latestMessage.content.content }}</div>
@@ -51,7 +51,7 @@
           </div></el-col>
 
         <el-col :span="16">
-          <el-dropdown @command="handleDropdown" v-if="tabIndex==='3'">
+          <el-dropdown v-if="tabIndex==='3'" @command="handleDropdown">
             <span class="el-dropdown-link">
               群聊管理<i class="el-icon-arrow-down el-icon--right" />
             </span>
@@ -62,17 +62,17 @@
               <el-dropdown-item command="4">解散群组</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <div class="chat-history" id="chatHistory">
+          <div id="chatHistory" class="chat-history">
             <div v-for="(item,index) in chatList" :key="index" class="chat-item " :class="item.senderUserId==uuid?'send':'reviced' ">
 
               <div class="chat-item-warp">
                 <div v-if="item.senderUserId!==uuid" class="chat-avatar ">
-                  <div class="avatar">{{ JSON.parse(item.content.extra).userName}}</div>
+                  <div class="avatar">{{ JSON.parse(item.content.extra).userName }}</div>
                 </div>
                 <div>
                   <div class="massage-time">
-                    <div>{{JSON.parse(item.content.extra).userName}}  
-                      <span>{{JSON.parse(item.content.extra).userId}}</span>
+                    <div>{{ JSON.parse(item.content.extra).userName }}
+                      <span>{{ JSON.parse(item.content.extra).userId }}</span>
                     </div>
                     {{ item.sentTime|timestampFormat }}</div>
                   <div class="chat-text">
@@ -85,7 +85,7 @@
                 </div>
 
                 <div v-if="item.senderUserId==uuid" class="chat-avatar ">
-                  <div class="avatar">{{JSON.parse(item.content.extra).userName}}</div>
+                  <div class="avatar">{{ JSON.parse(item.content.extra).userName }}</div>
                 </div>
               </div>
 
@@ -131,13 +131,13 @@
           <el-input v-model="newGroup.name" />
         </el-form-item>
         <el-form-item label="客服ID">
-          <el-select style="width:100%" v-model="newGroup.id" multiple placeholder="请选择">
+          <el-select v-model="newGroup.id" style="width:100%" multiple placeholder="请选择">
             <el-option
               v-for="item in customerlist"
               :key="item.uuid"
               :label="item.nickName"
-              :value="item.id">
-            </el-option>
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -154,22 +154,23 @@
       <el-form ref="form" :model="newGroup" label-width="80px">
         <el-form-item label="成员id">
           <el-select
-              style="width:100%"
-              v-model="joinGroupArr"
-              multiple
-              filterable
-              remote
-              reserve-keyword
-              placeholder="请输入关键词搜索成员"
-              :remote-method="querUer"
-              :loading="loading">
-              <el-option
-                v-for="item in userQueryList"
-                :key="item.uuid"
-                :label="item.uuid"
-                :value="item.id">
-              </el-option>
-            </el-select>
+            v-model="joinGroupArr"
+            style="width:100%"
+            multiple
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入关键词搜索成员"
+            :remote-method="querUer"
+            :loading="loading"
+          >
+            <el-option
+              v-for="item in userQueryList"
+              :key="item.uuid"
+              :label="item.uuid"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button :loading="actionLoading" :disabled="actionLoading" type="primary" @click="handleJoin">立即加入</el-button>
@@ -178,7 +179,7 @@
       </el-form>
     </el-dialog>
 
-<el-dialog
+    <el-dialog
       title="移除群成员群聊"
       :visible.sync="delGroupNumDig"
       width="400px"
@@ -194,14 +195,15 @@
             reserve-keyword
             placeholder="请输入关键词搜索成员"
             :remote-method="querUer"
-            :loading="loading">
+            :loading="loading"
+          >
             <el-option
               v-for="item in userQueryList"
               :key="item.uuid"
               :label="item.uuid"
-              :value="item.id">
-            </el-option>
-            </el-select>
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button :loading="actionLoading" :disabled="actionLoading" type="primary" @click="handleDelGroupNum">立即移除</el-button>
@@ -275,17 +277,17 @@ export default {
       uuid: undefined,
       userName: undefined,
       tabIndex: '1',
-      conversationType:1,
-      newGroupDig:false,
-      delGroupNumDig:false,
-      customerlist:[],
-      joinGroup:false,
-      joinGroupId:undefined,
-      joinGroupArr:[],
-      userQueryList:[],
-      delGroupNumArr:[],
-      groupChatList:[],
-      actionLoading:false
+      conversationType: 1,
+      newGroupDig: false,
+      delGroupNumDig: false,
+      customerlist: [],
+      joinGroup: false,
+      joinGroupId: undefined,
+      joinGroupArr: [],
+      userQueryList: [],
+      delGroupNumArr: [],
+      groupChatList: [],
+      actionLoading: false
     }
   },
   computed: {
@@ -304,44 +306,43 @@ export default {
     if (tab) {
       this.activeName = tab
     }
-    setTimeout(()=>{
-    this.initRongCloud()
-    },1000)
-
+    setTimeout(() => {
+      this.initRongCloud()
+    }, 1000)
   },
 
   mounted() {
     this.token = this.userInfo.principal.rcloudToken
-    this.uuid= this.userInfo.principal.rcloudUuid
-    this.userName=this.userInfo.name
-    if( this.token ){
+    this.uuid = this.userInfo.principal.rcloudUuid
+    this.userName = this.userInfo.name
+    if (this.token) {
       // this.getList()
       this.getGroupList()
-    }else{
-        this.$alert('请登录客服账号继续', '提示', {
+    } else {
+      this.$alert('请登录客服账号继续', '提示', {
         confirmButtonText: '确定',
         callback: action => {
           this.$message({
             type: 'info',
-            message: `action: ${ action }`
-          });
+            message: `action: ${action}`
+          })
         }
-      });
+      })
     }
   },
   methods: {
     handleClick(tab, event) {
-      console.log('handleClick',tab)
-      const index=tab.index;
+      console.log('handleClick', tab)
+      const index = tab.index
       const arr = [1, 3]
       this.conversationType = arr[tab.index]
-      const id=index==="1"?(this.groupList && this.groupList.length?this.groupList[0].uuid:undefined):(this.list.length ? this.list[0].targetId : undefined)
-      this.id=id
-      if(index==='1') {
+      const id = index === '1' ? (this.groupList && this.groupList.length ? this.groupList[0].uuid : undefined) : (this.list.length ? this.list[0].targetId : undefined)
+      this.id = id
+      if (index === '1') {
         this.getMessageList()
       }
-      console.log("targetId",id)
-      if(id){
+      console.log('targetId', id)
+      if (id) {
         this.getList()
       }
     },
@@ -351,8 +352,8 @@ export default {
       this.getList()
     },
 
-    addPromptInfo(prompt,status) {
-      console.log("连接状态", prompt, status)
+    addPromptInfo(prompt, status) {
+      console.log('连接状态', prompt, status)
       const _this = this
 
       const avatarList = [
@@ -366,7 +367,7 @@ export default {
       // 真实环境是通过登录 后台接口返回的 token 拿到的用户信息  我在这为为了模拟 所以给初始化后的用户随机生成一个头像
       // const avatar = avatarList[Math.floor(Math.random() * (3 + 1))]
       _this.showDatas.push(prompt)
-      if( status===0 )  {
+      if (status === 0) {
         this.getMessageList()
       }
       // this.getMessageList()
@@ -384,16 +385,16 @@ export default {
       // }, 500)
     },
 
-    //获取会后
-    getChat(id,type=1){
-      const _this=this;
-      RongIMClient.getInstance().getConversation(type, id||_this.id, {
+    // 获取会后
+    getChat(id, type = 1) {
+      const _this = this
+      RongIMClient.getInstance().getConversation(type, id || _this.id, {
         onSuccess: function(conversation) {
           if (conversation) {
-            console.log('获取指定会话成功', conversation);
+            console.log('获取指定会话成功', conversation)
           }
         }
-      });
+      })
     },
 
     // 获取ishi消息列表
@@ -404,26 +405,26 @@ export default {
         onSuccess: function(list) {
           console.log('list', list)
 
-          if(list.length) {
-            const userInfo = list[0].latestMessage.content.extra;
+          if (list.length) {
+            const userInfo = list[0].latestMessage.content.extra
             // console.log("userInfo",userInfo)
             // const userInfoObj = JSON.parse(userInfo)
             // console.log("userInfo",userInfoObj,userInfoObj.userName)
-          }else{
+          } else {
             return false
           }
-          if(_this.conversationType===1) {
+          if (_this.conversationType === 1) {
             _this.list = list
-          }else if(_this.conversationType===3) {
-            _this.groupChatLiat=list
+          } else if (_this.conversationType === 3) {
+            _this.groupChatLiat = list
           }
 
           if (list.length > 0 && _this.id === undefined) {
-            const id=list[0].targetId.toString();
-            console.log("id",id)
+            const id = list[0].targetId.toString()
+            console.log('id', id)
             _this.id = id
           }
-          
+
           _this.getList()
         // list => 会话列表集合
         },
@@ -448,70 +449,64 @@ export default {
       }
     },
     reviceMessage(message) {
-
       console.log('收到消息', message)
       this.getMessageList()
       this.getChat()
-      this.getList(new Date().getTime()-1000*60*60*24)
-
+      this.getList(new Date().getTime() - 1000 * 60 * 60 * 24)
     },
-    getList( timestrap = 0,) {
-      console.log("获取消息详情,对话",this.id,timestrap)
+    getList(timestrap = 0,) {
+      console.log('获取消息详情,对话', this.id, timestrap)
       const _this = this
 
       this.delChat()
       // 默认传 null, 若从头开始获取历史消息, 请赋值为 0
-      var count = 20;
+      var count = 20
       RongIMLib.RongIMClient.getInstance().getHistoryMessages(_this.conversationType, _this.id, timestrap, count, {
         onSuccess: function(list, hasMsg) {
-          /* 
+          /*
               list: 获取的历史消息列表
               hasMsg: 是否还有历史消息可以获取
             */
-          console.log('获取历史消息成功', list);
+          console.log('获取历史消息成功', list)
           _this.chatList = list
 
-          var clearUnreadCount = RongIMClient.getInstance().clearUnreadCount;
+          var clearUnreadCount = RongIMClient.getInstance().clearUnreadCount
           clearUnreadCount(_this.conversationType, _this.id, {
-              onSuccess: function () {},
-              onError: function (errorCode) {}
-          });
-          setTimeout(()=>{
-            var ele = document.getElementById('chatHistory');
-            ele.scrollTop = ele.scrollHeight;
+            onSuccess: function() {},
+            onError: function(errorCode) {}
+          })
+          setTimeout(() => {
+            var ele = document.getElementById('chatHistory')
+            ele.scrollTop = ele.scrollHeight
             _this.$previewRefresh()
-          },100)
-                      
+          }, 100)
         },
         onError: function(error) {
           // 请排查：单群聊消息云存储是否开通
-          console.log('获取历史消息失败', error);
+          console.log('获取历史消息失败', error)
         }
-      });
-
-
-
+      })
     },
 
     async upload(e) {
       const res = await uploadImage(e.raw)
       console.log('upload', res)
-      let extra = JSON.stringify({ userId: this.uuid, userName: this.userName ? this.userName : '游客' })
-      var msg = new RongIMLib.ImageMessage({content: '', imageUri: res, extra});
+      const extra = JSON.stringify({ userId: this.uuid, userName: this.userName ? this.userName : '游客' })
+      var msg = new RongIMLib.ImageMessage({ content: '', imageUri: res, extra })
       this.handleSend(msg)
     },
 
-    beforSend:_.throttle(function(){
+    beforSend: _.throttle(function() {
       console.log('hello')
       this.sendText()
-    },1000),
+    }, 1000),
     sendText() {
       const chat = this.chat.replace(/[\r\n]/g, '').replace(/(^\s*)|(\s*$)/g, '')
       if (!chat.length) {
         this.$message.error('请输入信息')
       } else {
         console.log('true')
-        let extra = JSON.stringify({ userId: this.uuid, userName: this.userName ? this.userName : '游客' })
+        const extra = JSON.stringify({ userId: this.uuid, userName: this.userName ? this.userName : '游客' })
         var msg = new RongIMLib.TextMessage({ content: chat, extra })
         this.handleSend(msg)
       }
@@ -521,12 +516,12 @@ export default {
       RongIMClient.getInstance().sendMessage(_this.conversationType, this.id.toString(), msg, {
         onSuccess: function(message) {
         // message 为发送的消息对象并且包含服务器返回的消息唯一 Id 和发送消息时间戳
-          const time= new Date().getTime()
-          console.log('Send successfully',time)
-          _this.chat=undefined
-          setTimeout(()=>{
-           _this.getList(0,1)
-          },500)
+          const time = new Date().getTime()
+          console.log('Send successfully', time)
+          _this.chat = undefined
+          setTimeout(() => {
+            _this.getList(0, 1)
+          }, 500)
         },
         onError: function(errorCode, message) {
           var info = ''
@@ -556,12 +551,11 @@ export default {
     },
     getGroupList() {
       chat_group_current().then(res => {
-        
         console.log('chat_group_current', res)
         if (res.code === 0) {
           this.groupList = res.data
-          if(!this.id&&res.data && this.conversationType===3){
-            this.id=res.data[0].uuid
+          if (!this.id && res.data && this.conversationType === 3) {
+            this.id = res.data[0].uuid
           }
         }
       })
@@ -570,7 +564,7 @@ export default {
       const data = {
         name: this.newGroup.name,
         // customerServicePeopleIds: this.newGroup.id
-        customerServicePeopleIds:this.newGroup.id
+        customerServicePeopleIds: this.newGroup.id
       }
 
       chat_group_create(data).then(res => {
@@ -587,95 +581,95 @@ export default {
     // 删除会话
     delChat() {
       var params = {
-        conversationType:this.conversationType,
+        conversationType: this.conversationType,
         targetId: '"1226843160513089537"',
         timestamp: new Date().getTime() // 可取 sentTime, 收发消息和历史消息中都有 sentTime 字段
-      };
+      }
       RongIMLib.RongIMClient.getInstance().clearRemoteHistoryMessages(params, {
         onSuccess: function() {
-          console.log('清除成功');
+          console.log('清除成功')
         },
         onError: function(error) {
-          console.log('清除失败', error);
+          console.log('清除失败', error)
         }
-      });
+      })
     },
     getCustomerList() {
-      customer_service_list({current:1,size:100}, {active:true}).then(res => {
+      customer_service_list({ current: 1, size: 100 }, { active: true }).then(res => {
         this.listLoading = false
         if (res.code === 0) {
           this.customerlist = res.data.records
         }
-      }).catch( () => {
+      }).catch(() => {
         this.listLoading = false
       })
     },
     handleNewGroup() {
-      console.log("新建群聊")
+      console.log('新建群聊')
       this.newGroupDig = true
       this.getCustomerList()
     },
     handleDropdown(command) {
-      console.log("command",command)
-      if(command==='1') {
+      console.log('command', command)
+      if (command === '1') {
         this.handleNewGroup()
-      }else if(command==='2'){
+      } else if (command === '2') {
         this.joinGroup = true
-      }else if(command==='3'){
-        this.delGroupNumDig=true
-      }else if(command==='4'){
+      } else if (command === '3') {
+        this.delGroupNumDig = true
+      } else if (command === '4') {
         this.delGroup()
       }
     },
     handleJoin() {
-      const group=(this.groupList).filter(item=>item.uuid==this.id)
-      const data={
+      const group = (this.groupList).filter(item => item.uuid == this.id)
+      const data = {
         groupId: group[0].id,
         userIds: this.joinGroupArr
       }
-      this.actionLoading=true
-      chat_group_add_user(data).then(res=>{
-        this.actionLoading=false
+      this.actionLoading = true
+      chat_group_add_user(data).then(res => {
+        this.actionLoading = false
         if (res.code === 0) {
           this.$message({
             type: 'success',
             message: '加入成功'
           })
-          this.joinGroup=false
+          this.joinGroup = false
           this.getGroupList()
         }
-      }).catch(()=>{
-        this.actionLoading=false
+      }).catch(() => {
+        this.actionLoading = false
       })
     },
     handleDelGroupNum() {
-      const group=(this.groupList).filter(item=>item.uuid==this.id)
-      const data={
+      const group = (this.groupList).filter(item => item.uuid == this.id)
+      const data = {
         groupId: group[0].id,
         userIds: this.delGroupNumArr
       }
-      this.actionLoading=true
-      chat_group_remove_user(data).then(res=>{
-        this.actionLoading=false
+      this.actionLoading = true
+      chat_group_remove_user(data).then(res => {
+        this.actionLoading = false
         if (res.code === 0) {
           this.$message({
             type: 'success',
             message: '移除成功'
           })
-          this.delGroupNumDig=false
+          this.delGroupNumDig = false
           this.getGroupList()
-        }else{
+        } else {
 
         }
-      }).catch(()=>{
-        this.actionLoading=false
+      }).catch(() => {
+        this.actionLoading = false
       })
     },
 
     querUer(data) {
-      chat_group_users({current:1,size:10},{query:data}).then(res=>{
-        if(res.code===0) {
-          this.userQueryList=res.data.records;
+      chat_group_users({ current: 1, size: 10 }, { query: data }).then(res => {
+        if (res.code === 0) {
+          this.userQueryList = res.data.records
         }
       })
     },
@@ -685,29 +679,27 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        const group=(this.groupList).filter(item=>item.uuid==this.id)
+        const group = (this.groupList).filter(item => item.uuid == this.id)
 
-        const data={
-          groupIds: [group[0].id],
+        const data = {
+          groupIds: [group[0].id]
         }
-        this.actionLoading=true
-        chat_group_delete(data).then( res => {
-        this.actionLoading=false
-          if(res.code===0) {
+        this.actionLoading = true
+        chat_group_delete(data).then(res => {
+          this.actionLoading = false
+          if (res.code === 0) {
             this.$message({
               type: 'success',
               message: '解散群组成功!'
-            });
-          this.id=undefined
-          this.getGroupList()
-
+            })
+            this.id = undefined
+            this.getGroupList()
           }
-        }).catch(()=>{
-        this.actionLoading=false
+        }).catch(() => {
+          this.actionLoading = false
+        })
       })
-
-      })
-    },
+    }
 
   }
 
@@ -829,11 +821,22 @@ export default {
 
   }
   .text-overflow{
-    overflow: hidden; 
+    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
   .chat-avatar{
     width: 40px;
   }
+  .el-tabs--border-card>.el-tabs__header .el-tabs__item {
+    -webkit-transition: all .3s cubic-bezier(.645,.045,.355,1);
+    transition: all .3s cubic-bezier(.645,.045,.355,1);
+    border: 1px solid transparent;
+    margin-top: -1px;
+    color: #9FA1A6;
+    width: 50% !important;
+}
+.el-tabs__nav {
+  width: 100% !important;
+}
 </style>

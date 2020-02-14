@@ -63,15 +63,17 @@
             </el-dropdown-menu>
           </el-dropdown>
           <div class="chat-history" id="chatHistory">
-            <div v-for="(item,index) in chatList" :key="index" class="chat-item " :class="item.senderUserId==id?'reviced':'send' ">
+            <div v-for="(item,index) in chatList" :key="index" class="chat-item " :class="item.senderUserId==uuid?'send':'reviced' ">
 
               <div class="chat-item-warp">
-                <div v-if="!item.senderUserId==id" class="chat-avatar ">
-                  <div class="avatar">{{ (item.targetId) }}</div>
+                <div v-if="item.senderUserId!==uuid" class="chat-avatar ">
+                  <div class="avatar">{{ JSON.parse(item.content.extra).userName}}</div>
                 </div>
                 <div>
                   <div class="massage-time">
-                    <div>{{JSON.parse(item.content.extra).userName}}</div>
+                    <div>{{JSON.parse(item.content.extra).userName}}  
+                      <span>{{JSON.parse(item.content.extra).userId}}</span>
+                    </div>
                     {{ item.sentTime|timestampFormat }}</div>
                   <div class="chat-text">
                     <span v-if="item.messageType==='TextMessage'">{{ item.content.content }}</span>
@@ -82,8 +84,8 @@
 
                 </div>
 
-                <div v-if="item.fromAdmin" class="chat-avatar ">
-                  <div class="avatar">管理员</div>
+                <div v-if="item.senderUserId==uuid" class="chat-avatar ">
+                  <div class="avatar">{{JSON.parse(item.content.extra).userName}}</div>
                 </div>
               </div>
 
@@ -109,11 +111,11 @@
               type="textarea"
               :autosize="{ minRows: 6, maxRows: 8}"
               placeholder="请输入内容"
-              @keyup.enter.native="sendText"
+              @keyup.enter.native="beforSend"
             />
           </div>
           <div class="chat-send">
-            <el-button type="primary" @click="sendText">发送</el-button>
+            <el-button type="primary" @click="beforSend">发送</el-button>
           </div>
         </el-col>
       </el-row>
@@ -139,7 +141,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleCreat">立即创建</el-button>
+          <el-button :loading="actionLoading" :disabled="actionLoading" type="primary" @click="handleCreat">立即创建</el-button>
           <el-button @click="newGroupDig = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -170,7 +172,7 @@
             </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleJoin">立即加入</el-button>
+          <el-button :loading="actionLoading" :disabled="actionLoading" type="primary" @click="handleJoin">立即加入</el-button>
           <el-button @click="joinGroup = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -202,7 +204,7 @@
             </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleDelGroupNum">立即移除</el-button>
+          <el-button :loading="actionLoading" :disabled="actionLoading" type="primary" @click="handleDelGroupNum">立即移除</el-button>
           <el-button @click="delGroupNumDig = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -218,7 +220,7 @@ import { message_detail, message_reply, chat_group_current, chat_group_create, c
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, PayType, OrderStatus, CounterParty } from '@/utils/enumeration'
 import { init } from '@/utils/rongcloudutils.js'
-
+import _ from 'lodash'
 
 export default {
   name: 'Tab',
@@ -259,7 +261,7 @@ export default {
       ],
       chatList: [],
       chat: undefined,
-      id: "",
+      id: undefined,
       token: '',
       appkey: 'p5tvi9dspqhm4', // 这是我们之前保存的 appkey *重要
       targetId: '', // 你要给谁发送消息 目标ID
@@ -283,6 +285,7 @@ export default {
       userQueryList:[],
       delGroupNumArr:[],
       groupChatList:[],
+      actionLoading:false
     }
   },
   computed: {
@@ -328,11 +331,11 @@ export default {
   },
   methods: {
     handleClick(tab, event) {
-      console.log(tab)
+      console.log('handleClick',tab)
       const index=tab.index;
       const arr = [1, 3]
       this.conversationType = arr[tab.index]
-      const id=index==="1"?(this.groupList && this.groupList.length?this.groupList[0].uuid:undefined):(this.chatList.length ? this.chatList[0].targetId : undefined)
+      const id=index==="1"?(this.groupList && this.groupList.length?this.groupList[0].uuid:undefined):(this.list.length ? this.list[0].targetId : undefined)
       this.id=id
       if(index==='1') {
         this.getMessageList()
@@ -415,7 +418,7 @@ export default {
             _this.groupChatLiat=list
           }
 
-          if (list.length > 0 && !this.id) {
+          if (list.length > 0 && _this.id === undefined) {
             const id=list[0].targetId.toString();
             console.log("id",id)
             _this.id = id
@@ -497,6 +500,11 @@ export default {
       var msg = new RongIMLib.ImageMessage({content: '', imageUri: res, extra});
       this.handleSend(msg)
     },
+
+    beforSend:_.throttle(function(){
+      console.log('hello')
+      this.sendText()
+    },1000),
     sendText() {
       const chat = this.chat.replace(/[\r\n]/g, '').replace(/(^\s*)|(\s*$)/g, '')
       if (!chat.length) {
@@ -516,7 +524,9 @@ export default {
           const time= new Date().getTime()
           console.log('Send successfully',time)
           _this.chat=undefined
-          _this.getList(0,1)
+          setTimeout(()=>{
+           _this.getList(0,1)
+          },500)
         },
         onError: function(errorCode, message) {
           var info = ''
@@ -550,7 +560,7 @@ export default {
         console.log('chat_group_current', res)
         if (res.code === 0) {
           this.groupList = res.data
-          if(!this.id&&res.data){
+          if(!this.id&&res.data && this.conversationType===3){
             this.id=res.data[0].uuid
           }
         }
@@ -619,38 +629,46 @@ export default {
     },
     handleJoin() {
       const group=(this.groupList).filter(item=>item.uuid==this.id)
-
       const data={
         groupId: group[0].id,
         userIds: this.joinGroupArr
       }
+      this.actionLoading=true
       chat_group_add_user(data).then(res=>{
+        this.actionLoading=false
         if (res.code === 0) {
           this.$message({
             type: 'success',
             message: '加入成功'
           })
+          this.joinGroup=false
           this.getGroupList()
         }
+      }).catch(()=>{
+        this.actionLoading=false
       })
     },
     handleDelGroupNum() {
       const group=(this.groupList).filter(item=>item.uuid==this.id)
-
       const data={
         groupId: group[0].id,
         userIds: this.delGroupNumArr
       }
+      this.actionLoading=true
       chat_group_remove_user(data).then(res=>{
+        this.actionLoading=false
         if (res.code === 0) {
           this.$message({
             type: 'success',
             message: '移除成功'
           })
+          this.delGroupNumDig=false
           this.getGroupList()
         }else{
 
         }
+      }).catch(()=>{
+        this.actionLoading=false
       })
     },
 
@@ -672,17 +690,21 @@ export default {
         const data={
           groupIds: [group[0].id],
         }
+        this.actionLoading=true
         chat_group_delete(data).then( res => {
+        this.actionLoading=false
           if(res.code===0) {
             this.$message({
               type: 'success',
               message: '解散群组成功!'
             });
-            this.id
+          this.id=undefined
           this.getGroupList()
 
           }
-        })
+        }).catch(()=>{
+        this.actionLoading=false
+      })
 
       })
     },
@@ -716,6 +738,7 @@ export default {
 
   .chat-item{
     margin: 10px;
+    margin-bottom: 20px;
     display: flex;
   }
   .chat-text{
@@ -773,17 +796,22 @@ export default {
   .chatImage{
     max-width: 300px;
   }
+  .el-tabs--border-card>.el-tabs__content {
+    padding: 0 !important
+}
   .chat-userList{
     display: flex;
     align-items: center;
     margin:4px 0;
+    padding:8px;
   }
  .userListactive{
-    background: #efefef;
+    background: #f2f8fe;
   }
   .chat-conact{
     display: flex;
     justify-content: space-between;
+    margin-bottom: 4px;
   }
   .chat-his{
     margin-left:8px;

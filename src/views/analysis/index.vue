@@ -138,13 +138,13 @@
           <span>匹配失败订单数  |  占比</span>
         </el-col>
         <el-col :span="6">
-          <span>{{ statics.today.matchFailedAmount }} | {{ statics.today.matchFailedPercent }}</span>
+          <span>{{ statics.today.matchFailed }} | {{ statics.today.matchFailedPercent }}</span>
         </el-col>
         <el-col :span="6">
-          <span>{{ statics.yesterday.matchFailedAmount }} | {{ statics.yesterday.matchFailedPercent }}</span>
+          <span>{{ statics.yesterday.matchFailed }} | {{ statics.yesterday.matchFailedPercent }}</span>
         </el-col>
         <el-col :span="6">
-          <span>{{ statics.all.matchFailedAmount }} | {{ statics.all.matchFailedPercent }}</span>
+          <span>{{ statics.all.matchFailed }} | {{ statics.all.matchFailedPercent }}</span>
         </el-col>
       </el-row>
       <el-row class="staticRow" :gutter="10">
@@ -288,13 +288,14 @@ export default {
       const fliterQuery = this.fliterQuery
       console.log('fliterQuery', this.fliterQuery)
       const data = {
-        ...this.fliterQuery,
+        ...this.fliterQuery
       }
       if (fliterQuery.date) {
         data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
         // data.start = '2019-10-16 12:11:11'
         data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
       }
+      data.date = undefined
       const meta = this.meta
       meta.current = 1
       this.get_merchant_statics(meta, data)

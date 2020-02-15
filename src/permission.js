@@ -8,7 +8,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login','/message/chatList'] // no redirect whitelist
+const whiteList = ['/login'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   console.log('before router')
@@ -63,10 +63,8 @@ router.beforeEach(async(to, from, next) => {
     }
   } else {
     /* has no token*/
-    next()
-    console.log('12',to.path)
 
-    if (whiteList.indexOf(to.path) !== -1||true) {
+    if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly
       next()
     } else {

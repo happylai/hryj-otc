@@ -2,7 +2,7 @@
   <div class="tab-container">
     <div class="chat-container">
       <el-row :gutter="20">
-        <el-col :span="8">
+        <el-col :span="8" class="leftArea">
           <div>
             <el-tabs v-model="tabIndex" @tab-click="handleClick">
               <el-tab-pane label="进行中的会话" name="1">
@@ -48,7 +48,8 @@
               </el-tab-pane>
             </el-tabs>
             <div />
-          </div></el-col>
+          </div>
+        </el-col>
 
         <el-col :span="16">
           <el-dropdown v-if="tabIndex==='3'" @command="handleDropdown">
@@ -452,7 +453,7 @@ export default {
       console.log('收到消息', message)
       this.getMessageList()
       this.getChat()
-      this.getList(new Date().getTime() - 1000 * 60 * 60 * 24)
+      // this.getList(new Date().getTime() - 1000 * 60 * 60 * 24)
     },
     getList(timestrap = 0,) {
       console.log('获取消息详情,对话', this.id, timestrap)
@@ -798,7 +799,7 @@ export default {
     padding:8px;
   }
  .userListactive{
-    background: #f2f8fe;
+    background: #292B2E;
   }
   .chat-conact{
     display: flex;
@@ -838,5 +839,9 @@ export default {
 }
 .el-tabs__nav {
   width: 100% !important;
+}
+.leftArea{
+  background-color: #36343C;
+  color:#999999;
 }
 </style>

@@ -144,6 +144,7 @@ export default {
         total: 10
       },
       list: [],
+      reason: undefined,
       dialogVisible: false,
       applyId: undefined
     }

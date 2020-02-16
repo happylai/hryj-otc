@@ -63,7 +63,10 @@
 
           <el-table-column align="center" label="发起人证据" min-width="120">
             <template slot-scope="scope">
-              <img v-if="scope.row.sourceProof" v-lazy="scope.row.sourceProof" class="appealImage" :preview="scope.row.id+'apple0'">
+              <span v-if="scope.row.sourceProof">
+                <img v-for="(item,index) in (scope.row.sourceProof).split(',')" :key="scope.row.uuid+'-'+index" v-lazy="item" class="appealImage" :preview="scope.row.uuid">
+
+              </span>
               <span v-else>无</span>
             </template>
           </el-table-column>

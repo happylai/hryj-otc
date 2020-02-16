@@ -205,9 +205,8 @@ export default {
         date: undefined
       }
       if (this.fliterQuery.date) {
-        data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
-        // data.start = '2019-10-16 12:11:11'
-        data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
+        data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD')
+        data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD')
       }
 
       this.getList(this.meta, data)
@@ -234,9 +233,8 @@ export default {
         date: undefined
       }
       if (fliterQuery.date) {
-        data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
-        // data.start = '2019-10-16 12:11:11'
-        data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
+        data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD')
+        data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD')
       }
       const meta = this.meta
       meta.current = 1

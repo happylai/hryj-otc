@@ -130,7 +130,7 @@
 
       <el-table-column align="center" label="时间" min-width="60px">
         <template slot-scope="scope">
-          <span>{{ scope.row.date|timesArrayFormat }}</span>
+          <span>{{ scope.row.date }}</span>
         </template>
       </el-table-column>
 

@@ -1,125 +1,132 @@
 <template>
   <div class="tab-container">
     <div class="chat-container">
-      <el-row :gutter="20">
-        <el-col :span="8" class="leftArea">
-          <div>
-            <el-tabs v-model="tabIndex" @tab-click="handleClick">
-              <el-tab-pane label="进行中的会话" name="1">
-                <div v-for="(item,index) in list" :key="index+'user'" class="chat-userList" :class="item.targetId==id?'userListactive':'' " @click="changeCurrentChat(item.targetId)">
-                  <div class="chat-avatar">
-                    <el-badge :value="item.unreadMessageCount" class="item" :hidden="item.unreadMessageCount==0">
-                      <el-avatar> user </el-avatar>
-                    </el-badge>
-                  </div>
-                  <div class="chat-his">
-                    <div class="chat-conact">
-                      <div class="chat-user-name">{{ item.targetId }}</div>
-                      <div>{{ item.latestMessage.sentTime|timestampFormat }}</div>
-                    </div>
-                    <div class="chat-des text-overflow">
-                      <div v-if="item.latestMessage.messageType==='TextMessage'" class="text-overflow">{{ item.latestMessage.content.content }}</div>
-                      <span v-else>[图片]</span>
-                    </div>
-                  </div>
-
-                </div>
-              </el-tab-pane>
-              <el-tab-pane label="群聊会话" name="3">
-                <div v-for="(item,index) in groupList" :key="index+'user'" class="chat-userList" :class="item.uuid==id?'userListactive':'' " @click="changeCurrentChat(item.uuid)">
-                  <div class="chat-avatar">
-                    <el-badge :value="0" class="item" :hidden="false">
-                      <el-avatar> {{ item.name }} </el-avatar>
-                    </el-badge>
-                  </div>
-                  <div class="chat-his">
-                    <div class="chat-conact">
-                      <div class="chat-user-name">{{ item.name }}</div>
-                      <div>{{ item.createTime }}</div>
-                    </div>
-                    <div class="chat-des text-overflow">
-                      <!-- <div class="text-overflow" v-if="item.latestMessage.messageType==='TextMessage'">{{ item.latestMessage.content.content }}</div>
-                      <span v-else>[图片]</span> -->
-                    </div>
-                  </div>
-                  <!-- <span v-if="item.latestMessage.messageType==='TextMessage'">{{ item.latestMessage.content.content }}</span>
-                  <span v-else>[图片]</span> -->
-                </div>
-              </el-tab-pane>
-            </el-tabs>
-            <div />
+      <div class="leftArea">
+        <div>
+          <div class="tabs-box">
+            <div class="tab-item " :class="conversationType===1?'active':'' " @click="handleClick(1)">进行中的会话</div>
+            <div class="tab-item " :class="conversationType===3?'active':'' " @click="handleClick(3)">群聊会话</div>
           </div>
-        </el-col>
-
-        <el-col :span="16">
-          <el-dropdown v-if="tabIndex==='3'" @command="handleDropdown">
-            <span class="el-dropdown-link">
-              群聊管理<i class="el-icon-arrow-down el-icon--right" />
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="1">新建群聊</el-dropdown-item>
-              <el-dropdown-item command="2">新增成员</el-dropdown-item>
-              <el-dropdown-item command="3">移除成员</el-dropdown-item>
-              <el-dropdown-item command="4">解散群组</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-          <div id="chatHistory" class="chat-history">
-            <div v-for="(item,index) in chatList" :key="index" class="chat-item " :class="item.senderUserId==uuid?'send':'reviced' ">
-
-              <div class="chat-item-warp">
-                <div v-if="item.senderUserId!==uuid" class="chat-avatar ">
-                  <div class="avatar">{{ JSON.parse(item.content.extra).userName }}</div>
+          <div v-show="conversationType===1">
+            <div v-for="(item,index) in list" :key="index+'user'" class="chat-userList" :class="item.targetId==id?'userListactive':'' " @click="changeCurrentChat(item.targetId)">
+              <div class="chat-avatar">
+                <el-badge :value="item.unreadMessageCount" class="item" :hidden="item.unreadMessageCount==0">
+                  <el-avatar size="40"> user </el-avatar>
+                </el-badge>
+              </div>
+              <div class="chat-his">
+                <div class="chat-conact">
+                  <div class="chat-user-name">{{ item.targetId }}</div>
                 </div>
-                <div>
-                  <div class="massage-time">
-                    <div>{{ JSON.parse(item.content.extra).userName }}
-                      <span>{{ JSON.parse(item.content.extra).userId }}</span>
-                    </div>
-                    {{ item.sentTime|timestampFormat }}</div>
-                  <div class="chat-text">
-                    <span v-if="item.messageType==='TextMessage'">{{ item.content.content }}</span>
+                <div style="text-align:right">{{ item.latestMessage.sentTime|timestampFormat }}</div>
 
-                    <img v-else v-lazy="item.content.imageUri" :preview="'chat'" class="chatImage">
-
-                  </div>
-
-                </div>
-
-                <div v-if="item.senderUserId==uuid" class="chat-avatar ">
-                  <div class="avatar">{{ JSON.parse(item.content.extra).userName }}</div>
+                <div class="chat-des text-overflow">
+                  <div v-if="item.latestMessage.messageType==='TextMessage'" class="text-overflow">{{ item.latestMessage.content.content }}</div>
+                  <span v-else>[图片]</span>
                 </div>
               </div>
+            </div>
+          </div>
+          <div v-show="conversationType===3">
+            <div v-for="(item,index) in groupList" :key="index+'user'" class="chat-userList" :class="item.uuid==id?'userListactive':'' " @click="changeCurrentChat(item.uuid)">
+              <div class="chat-avatar">
+                <el-badge :value="0" class="item" :hidden="true">
+                  <el-avatar size="40"> {{ item.name }} </el-avatar>
+                </el-badge>
+              </div>
+              <div class="chat-his">
+                <div class="chat-conact">
+                  <div class="chat-user-name">{{ item.name }}</div>
+                  <div class="chat-user-time">{{ item.createTime }}</div>
+                </div>
+                <div class="chat-des text-overflow">
+                  <!-- <div class="text-overflow" v-if="item.latestMessage.messageType==='TextMessage'">{{ item.latestMessage.content.content }}</div>
+                  <span v-else>[图片]</span> -->
+                </div>
+              </div>
+              <!-- <span v-if="item.latestMessage.messageType==='TextMessage'">{{ item.latestMessage.content.content }}</span>
+              <span v-else>[图片]</span> -->
+            </div>
+          </div>
+        </div>
 
+      </div>
+      <div class="rightArea">
+        <div class="chat-header">
+          <div class="chat-name">{{ this.id }}</div>
+          <div>
+            <el-dropdown v-if="conversationType===3" @command="handleDropdown">
+              <span class="el-dropdown-link">
+                管理<i class="el-icon-s-tools " />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="1">新建群聊</el-dropdown-item>
+                <el-dropdown-item command="2">新增成员</el-dropdown-item>
+                <el-dropdown-item command="3">移除成员</el-dropdown-item>
+                <el-dropdown-item command="4">解散群组</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+        </div>
+
+        <div id="chatHistory" class="chat-history">
+          <div v-for="(item,index) in chatList" :key="index" class="chat-item " :class="item.senderUserId==uuid?'send':'reviced' ">
+
+            <div class="chat-item-warp">
+              <div v-if="item.senderUserId!==uuid" class="chat-avatar ">
+                <div class="avatar">{{ JSON.parse(item.content.extra).userName }}</div>
+              </div>
+              <div>
+                <div class="massage-time">
+                  <div>{{ JSON.parse(item.content.extra).userName }}
+                    <span>{{ JSON.parse(item.content.extra).userId }}</span>
+                  </div>
+                  {{ item.sentTime|timestampFormat }}</div>
+                <div class="chat-text">
+                  <span v-if="item.messageType==='TextMessage'">{{ item.content.content }}</span>
+
+                  <img v-else v-lazy="item.content.imageUri" :preview="'chat'" class="chatImage">
+
+                </div>
+
+              </div>
+
+              <div v-if="item.senderUserId==uuid" class="chat-avatar ">
+                <div class="avatar">{{ JSON.parse(item.content.extra).userName }}</div>
+              </div>
             </div>
+
           </div>
-          <div class="chat-tip">
-            <div>
-              <el-upload
-                action="null"
-                class="upload-demo"
-                :show-file-list="false"
-                :auto-upload="false"
-                :on-change="upload"
-              >
-                <i class="el-icon-picture" />
-              </el-upload>
-            </div>
-            <div>按Enter键发送</div>
+        </div>
+        <div class="chat-tip">
+          <div>
+            <el-upload
+              action="null"
+              class="upload-demo"
+              :show-file-list="false"
+              :auto-upload="false"
+              :on-change="upload"
+            >
+              <i class="el-icon-picture" />
+            </el-upload>
           </div>
-          <div class="chat-input">
-            <el-input
-              v-model="chat"
-              type="textarea"
-              :autosize="{ minRows: 6, maxRows: 8}"
-              placeholder="请输入内容"
-              @keyup.enter.native="beforSend"
-            />
-          </div>
-          <div class="chat-send">
-            <el-button type="primary" @click="beforSend">发送</el-button>
-          </div>
-        </el-col>
-      </el-row>
+          <div class="tip-text">按Enter键发送</div>
+        </div>
+        <div class="chat-input">
+          <!-- <textarea v-model="chat" class="chat-input-text" @keyup.enter.native="beforSend" /> -->
+          <el-input
+            v-model="chat"
+            type="textarea"
+            :rows="4"
+            style="background-color:#f4f4f5;border:none"
+            placeholder="请输入内容"
+            @keyup.enter.native="beforSend"
+          />
+        </div>
+        <div class="chat-send">
+          <el-button size="small" @click="beforSend">发送</el-button>
+        </div>
+      </div>
 
     </div>
     <el-dialog
@@ -332,7 +339,7 @@ export default {
     }
   },
   methods: {
-    handleClick(tab, event) {
+    handleClick2(tab, event) {
       console.log('handleClick', tab)
       const index = tab.index
       const arr = [1, 3]
@@ -345,6 +352,20 @@ export default {
       console.log('targetId', id)
       if (id) {
         this.getList()
+      }
+    },
+    handleClick(conversationType) {
+      if (conversationType !== this.conversationType) {
+        this.conversationType = conversationType
+        const id = conversationType === 3 ? (this.groupList && this.groupList.length ? this.groupList[0].uuid : undefined) : (this.list.length ? this.list[0].targetId : undefined)
+        this.id = id
+        if (conversationType === 3) {
+          this.getMessageList()
+        }
+        console.log('targetId', id)
+        if (id) {
+          this.getList()
+        }
       }
     },
     changeCurrentChat(id) {
@@ -707,24 +728,51 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .tab-container {
     margin: 30px;
     display: flex;
     flex-direction: column;
   }
   .chat-container{
-    margin-top: 40px;
       display: flex;
-    min-height: 600px;
-    flex-direction: column;
+    height: 750px;
+    width: 1160px;
+    border-radius:10px;
+    flex-direction: row;
+    overflow: hidden;
+  }
+  .tabs-box{
+    height: 17px;
+    margin-top: 20px;
+    margin-bottom: 13px;
+    display: flex;
+  }
+  .tab-item{
+    display: flex;
+    flex:1;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  .tab-item.active{
+    color: #FFFFFF;
+  }
+  .tab-item:first-child{
+    border-right: 1px solid #5C5E63;
+  }
+  .chat-container .leftArea{
+    flex:2
+  }
+  .chat-container .rightArea{
+    flex:5;
+    background-color: #f3f3f5
   }
     .chat-history{
     padding:20px;
-    max-height: 700px;
-    min-height: 400px;
+    height: 500px;
     overflow-y:auto;
-    background-color: #efefef;
+    background-color: #EFEEF1;
     border-radius: 10px;
     flex:1;
   }
@@ -751,6 +799,10 @@ export default {
     border-radius: 50%;
     overflow: hidden;
   }
+  .chat-user-time{
+    font-size: 10px;
+    color: #515555
+  }
   .reviced .chat-text{
       background-color: #f4f7f9;
       color:#263238;
@@ -772,12 +824,14 @@ export default {
     justify-content: flex-end
   }
   .chat-tip{
-    margin: 20px 0;
+   border-top:  1px solid #DCDFE6;
+    padding: 10px 20px;
     display: flex;
     justify-content: space-between
   }
   .chat-send{
-    margin: 10px 0;
+    margin-right: 20px;
+    margin-top: 10px;
     display: flex;
     justify-content: flex-end;
   }
@@ -793,10 +847,10 @@ export default {
     padding: 0 !important
 }
   .chat-userList{
+    height: 86px;
     display: flex;
     align-items: center;
-    margin:4px 0;
-    padding:8px;
+    padding:0 20px;
   }
  .userListactive{
     background: #292B2E;
@@ -815,10 +869,11 @@ export default {
   }
   .chat-user-name{
     font-size:14px;
+    color:#fff;
   }
   .chat-des{
-    font-size: 12px;
-    width: 100%;
+    font-size: 14px;
+    max-width: 210px;
 
   }
   .text-overflow{
@@ -843,5 +898,44 @@ export default {
 .leftArea{
   background-color: #36343C;
   color:#999999;
+}
+.chat-header{
+  height: 50px;
+  padding:0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #F3F3F5;
+  border-bottom:  1px solid #DCDFE6;
+}
+.tip-text{
+  color:#A3A7AE
+}
+.chat-input-text{
+      border:none !important;
+    background-color: #F3F3F5 !important;
+    width: 100%;
+    height: 100px;
+    padding:0 20px;
+    &:focus{
+      border:none
+    }
+}
+.chat-input-text:focus{
+  border:none
+}
+.chat-input{
+  padding:0 20px 10px;
+
+}
+  .el-textarea__inner{
+    border:none !important;
+    background-color: #F3F3F5 !important;
+  }
+textarea{
+    border:none !important;
+
+    background-color: #F3F3F5 !important;
+
 }
 </style>

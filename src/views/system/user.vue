@@ -1,9 +1,9 @@
 <template>
   <div class="tab-container">
     <div class="filter-container" style="margin-bottom: 10px;">
-      <el-input v-model="querymeta.query" placeholder="用户名/账户/IP地址" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="querymeta.roleId" placeholder="选择权限" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in adminRolesConst" :key="item.label+'srole'" :label="item.zhName" :value="item.id" />
+      <el-input v-model="query.query" placeholder="用户名/账户/IP地址" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="query.roleId" placeholder="选择权限" clearable style="width: 140px" class="filter-item">
+        <el-option v-for="(item,index) in adminRolesConst" :key="index+'srole'" :label="item.zhName" :value="item.id" />
       </el-select>
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
@@ -13,7 +13,8 @@
       </el-button>
     </div>
     <tab-pane :data="list" @freeze="handleFreeze" @edit="handleEdit" />
-    <pagination :total="meta.total" :page.sync="meta.pages" :limit.sync="meta.size" @pagination="paginationChange" />
+    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
+
     <el-dialog :visible.sync="dialogVisible" title="后台用户编辑">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户名：</el-col>
@@ -86,7 +87,7 @@ import { mapState, mapGetters } from 'vuex' // 先要引入
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves'
-import { freeze, save } from '@/api/admin'
+import { freeze, save, admins as listApi } from '@/api/admin'
 import { Auths, Roles } from '@/utils/enumeration'
 import { validateUsername, validateEamil, validatePassword } from '@/utils/validate'
 
@@ -122,10 +123,13 @@ export default {
       },
       dialogVisible: false,
       showAddUser: false,
-      querymeta: {
-        roleId: '',
-        query: ''
+      meta: {
+        current: 1,
+        size: 10
+
       },
+      query: { roleId: undefined,
+        query: undefined },
       isfreeze: false,
       ipOnly: false,
       newAuth: '',
@@ -138,14 +142,18 @@ export default {
         password: '',
         reapatPassword: ''
       },
-      passwordType: 'password'
+      passwordType: 'password',
+      paginationMeta: {
+        total: 10,
+        pages: 1
+      },
+      list: []
 
     }
   },
   computed: {
     ...mapState({
-      list: state => state.admin.admins,
-      meta: state => state.admin.meta
+
     }),
     ...mapGetters([
       'groupsConst',
@@ -166,7 +174,7 @@ export default {
     }
   },
   mounted() {
-    this.getAdmins()
+    this.getList()
   },
   methods: {
     showPwd() {
@@ -196,25 +204,39 @@ export default {
     },
     paginationChange(e) {
       console.log('paginationChange', e)
-      const data = {
-        size: e.limit,
-        current: e.page
+      this.meta.size = e.limit
+      this.meta.current = e.page
+      this.getList()
+    },
+    getList(meta, data) {
+      this.listLoading = true
+
+      listApi(meta || this.meta, data || this.query).then(res => {
+        this.listLoading = false
+        if (res.code === 0) {
+          this.list = res.data.records
+          this.meta.current = res.data.current
+          this.paginationMeta.total = res.data.total
+          this.paginationMeta.pages = res.data.pages
+        }
+      }).catch(() => {
+        this.listLoading = false
+      })
+    },
+    handleFilter(data) {
+      const newMeta = {
+        ...this.meta,
+        ...data,
+        current: 1
       }
-      this.handleFilter(data)
+      console.log('searchMeat', newMeta)
+      this.getList(newMeta)
     },
     getAdmins() {
       this.listLoading = true
       this.$store.dispatch('admin/getAdmins')
     },
-    handleFilter(data) {
-      const newMeta = {
-        ...this.querymeta,
-        ...data,
-        current: 1
-      }
-      // console.log('searchMeat', this.querymeta)
-      this.$store.dispatch('admin/changeMeta', newMeta)
-    },
+
     handleEdit(data) {
       console.log('data', data)
       this.editData = data

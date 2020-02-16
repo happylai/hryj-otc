@@ -366,11 +366,9 @@ export function groupsConstName(id, arr) {
 }
 
 export function adminRolesConstName(id, arr) {
-  console.log('adminRolesConstName', id, arr)
   if (id) {
     id = id * 1
-    const data = arr.filter((item) => { console.log('item', item.id, id); if (item.id == id) { return item } })
-    console.log(' adminRolesConstName data', data)
+    const data = arr.filter((item) => { if (item.id == id) { return item } })
     if (has({ foo: { bar: data }}, 'foo.bar')) {
       return data[0].zhName
     } else {

@@ -64,10 +64,10 @@
       </el-table-column>
 
       <el-table-column align="center" label="身份证照片" width="150">
-        <template slot-scope="scope" >
-          <img  v-lazy="scope.row.identityImageFront" class="identityImage" :preview="scope.row.identityImageFront">
-          <img  v-lazy="scope.row.identityImageBack" class="identityImage" :preview="scope.row.identityImageBack">
-          <img  v-lazy="scope.row.identityImageHand" class="identityImage" :preview="scope.row.identityImageHand">
+        <template slot-scope="scope">
+          <img v-lazy="scope.row.identityImageFront" class="identityImage" :preview="scope.row.identityImageFront">
+          <img v-lazy="scope.row.identityImageBack" class="identityImage" :preview="scope.row.identityImageBack">
+          <img v-lazy="scope.row.identityImageHand" class="identityImage" :preview="scope.row.identityImageHand">
         </template>
       </el-table-column>
 
@@ -208,7 +208,6 @@ export default {
       })
     }
 
-    }
   }
 }
 </script>

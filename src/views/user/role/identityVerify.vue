@@ -64,10 +64,10 @@
       </el-table-column>
 
       <el-table-column align="center" label="身份证照片" width="150">
-        <template slot-scope="scope" >
-          <img  v-lazy="scope.row.identityImageFront" class="identityImage" :preview="scope.row.identityImageFront">
-          <img  v-lazy="scope.row.identityImageBack" class="identityImage" :preview="scope.row.identityImageBack">
-          <img  v-lazy="scope.row.identityImageHand" class="identityImage" :preview="scope.row.identityImageHand">
+        <template slot-scope="scope">
+          <img v-lazy="scope.row.identityImageFront" class="identityImage" :preview="scope.row.identityImageFront">
+          <img v-lazy="scope.row.identityImageBack" class="identityImage" :preview="scope.row.identityImageBack">
+          <img v-lazy="scope.row.identityImageHand" class="identityImage" :preview="scope.row.identityImageHand">
         </template>
       </el-table-column>
 
@@ -85,13 +85,22 @@
       <el-table-column class-name="status-col" align="center" label="操作" min-width="150">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="toDetail(scope.row)">查看</el-button>
-          <el-button type="primary" size="small" @click="verifyIdentify(scope.row.applyId, true)">通过</el-button>
-          <el-button type="primary" size="small" @click="verifyIdentify(scope.row.applyId, false)">不通过</el-button>
+          <el-button type="primary" size="small" @click="()=>{applyId=scope.row.applyId; dialogVisible=true}">通过</el-button>
+          <el-button type="primary" size="small" @click="()=>{applyId=scope.row.applyId; dialogVisible=true}">不通过</el-button>
         </template>
       </el-table-column>
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="paginationMeta.current" :limit.sync="meta.size" @pagination="paginationChange" />
-
+    <el-dialog v-loading="orderLoading" :visible.sync="dialogVisible" title="提示">
+      <div>是否通过该用户身份审核？</div>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="24"><el-input v-model="reason" placeholder="通过/不通过原因" /></el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click=" handleAudit(1) ">通过</el-button>
+        <el-button @click="handleAudit(2)">不通过</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -134,7 +143,9 @@ export default {
         pages: 1,
         total: 10
       },
-      list: []
+      list: [],
+      dialogVisible: false,
+      applyId: undefined
     }
   },
   created() {
@@ -180,11 +191,33 @@ export default {
       this.getList(this.meta, param)
     },
     toDetail(data) {
-
+      this.$router.push(`/role/identity/${data.userId}?applyId=${data.applyId}`)
     },
-    verifyIdentity(applyId, status) {
-
+    handleAudit(status) {
+      if (!this.reason) {
+        this.$message.error('请输入通过/不通过原因')
+        return false
+      }
+      const data = {
+        applyId: this.applyId,
+        status: status,
+        reason: this.reason
+      }
+      verify_identity(data).then(res => {
+        if (res.code === 0) {
+          this.$message({
+            type: 'success',
+            message: '操作成功'
+          })
+          this.dialogVisible = false
+        } else {
+          this.$message.error(res.message || '操作失败')
+        }
+      }).catch(err => {
+        this.$message.error(err.message || '操作失败')
+      })
     }
+
   }
 }
 </script>

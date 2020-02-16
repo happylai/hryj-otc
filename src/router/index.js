@@ -251,6 +251,18 @@ export const asyncRoutes = [{
           }
         },
         {
+          path: '/role/identity/:id',
+          hidden: true,
+          name: 'roleIdentity',
+          component: () => import('@/views/user/role/identity'),
+          meta: {
+            title: '身份审核详情',
+            icon: '',
+            authName: ['user_role_apply']
+
+          }
+        },
+        {
           path: '/role/:id',
           hidden: true,
           name: 'roleApplyDetail',

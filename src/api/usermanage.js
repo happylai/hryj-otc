@@ -307,6 +307,6 @@ export function verify_identity(data) {
   return request({
     url: '/admin/user/user_identity/apply',
     method: 'post',
-    params: data
+    data: data
   })
 }

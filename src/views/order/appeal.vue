@@ -45,13 +45,13 @@
 
           <el-table-column min-width="120" align="center" label="申诉类型">
             <template slot-scope="scope">
-              <span>{{ scope.row.isMatch|appealeType }}</span>
+              <span>{{ scope.row.type|appealeType }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column min-width="120" align="center" label="订单类型">
+          <el-table-column min-width="80" align="center" label="订单类型">
             <template slot-scope="scope">
-              <span>{{ scope.row.PriceTread|PriceTreadName }}</span>
+              <span>{{ scope.row.isMatch|isOrderMatch }}</span>
             </template>
           </el-table-column>
 

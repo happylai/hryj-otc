@@ -216,6 +216,18 @@ export function PriceTreadName(id) {
   return res
 }
 
+export function isOrderMatch(isMatch) {
+  let res = '-'
+  const matchId = isMatch ? 1 : 0
+  if (has({ foo: matchId }, 'foo')) {
+    const data = PriceTread.filter((item) => { if (item.id === matchId) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+
 /**
  * OrderStatusTagName
  * @param {number} num

@@ -42,7 +42,7 @@
 
       <el-table-column min-width="60px" align="center" label="接口调用总金额（CNY)">
         <template slot-scope="scope">
-          <span>{{ scope.row.balance }}</span>
+          <span>{{ scope.row.totalAmount }}</span>
         </template>
       </el-table-column>
 
@@ -118,7 +118,7 @@
       </el-table-column>
       <el-table-column align="center" label="支付方式" min-width="60px">
         <template slot-scope="scope">
-          <span>{{ scope.row.payType | payTypeName }}</span>
+          <span>{{ scope.row.payType | payTypeNameForStatistics }}</span>
         </template>
       </el-table-column>
 

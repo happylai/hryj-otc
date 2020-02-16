@@ -185,6 +185,22 @@ export function payTypeName(id) {
   return res
 }
 
+// 入金订单详细统计
+export function payTypeNameForStatistics(id) {
+  if (id === null) {
+    return '所有支付方式'
+  } else if (has({ foo: { bar: id }}, 'foo.bar')) {
+    const data = PayTypeExtent.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: { bar: data }}, 'foo.bar')) {
+      return data[0].label
+    } else {
+      return '-'
+    }
+  } else {
+    return '-'
+  }
+}
+
 /**
  * PriceTreadName
  * @param {number} num
@@ -193,6 +209,18 @@ export function PriceTreadName(id) {
   let res = '-'
   if (has({ foo: id }, 'foo')) {
     const data = PriceTread.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+
+export function isOrderMatch(isMatch) {
+  let res = '-'
+  const matchId = isMatch ? 1 : 0
+  if (has({ foo: matchId }, 'foo')) {
+    const data = PriceTread.filter((item) => { if (item.id === matchId) { return item } })
     if (has({ foo: data }, 'foo')) {
       res = data[0].label
     }

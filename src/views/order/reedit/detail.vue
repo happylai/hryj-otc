@@ -17,7 +17,7 @@
           <el-col :xs="12" :sm="8"><div class="cardItem">广告编号：{{ modals.advertiseNo }}</div></el-col>
           <el-col :xs="12" :sm="8"><div class="cardItem">卖方UID：{{ modals.newSellerUid }}</div></el-col>
           <el-col :xs="12" :sm="8"><div class="cardItem">买方UID：{{ modals.newBuyerUid }}</div></el-col>
-          <el-col :xs="12" :sm="8"><div class="cardItem">交易类型：{{ modals.nickName }}</div></el-col>
+          <el-col :xs="12" :sm="8"><div class="cardItem">交易类型：TOB售币</div></el-col>
           <el-col :xs="12" :sm="8"><div class="cardItem">交易单价：{{ modals.newPrice }}</div></el-col>
           <el-col :xs="12" :sm="8"><div class="cardItem">交易数量(PQC)：{{ modals.newAmount }}</div></el-col>
           <el-col :xs="12" :sm="8"><div class="cardItem">交易总价(CNY)：{{ modals.newLegalAmount }}</div></el-col>
@@ -32,7 +32,7 @@
           <el-col :xs="12" :sm="8"><div class="cardItem">支付方式：{{ modals.payType|payTypeName }}</div></el-col>
           <el-col :xs="12" :sm="8"><div class="cardItem">支付账号：{{ modals.account }}</div></el-col>
           <el-col :xs="12" :sm="8"><div class="cardItem">真实姓名：{{ modals.realName }}</div></el-col>
-          <el-col :xs="12" :sm="8"><div class="cardItem">支付备注：{{ modals.meno }}</div></el-col>
+          <el-col :xs="12" :sm="8"><div class="cardItem">支付备注：{{ modals.memo }}</div></el-col>
           <el-col :xs="12" :sm="8"><div class="cardItem">原订单编号：{{ modals.orderNo }}</div></el-col>
 
           <el-col :xs="12" :sm="8"><div class="cardItem">支付码：

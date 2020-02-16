@@ -28,8 +28,9 @@
         <el-row :gutter="10" class="card-row">
           <el-col :span="12"><div>身份证照片：
             <img v-if="modals.identityImageFront" v-lazy="modals.identityImageFront" :preview="'idcard'" class="idImage" alt="身份证正面" @click="dialogVisible=false">
-
             <img v-if="modals.identityImageBack" v-lazy="modals.identityImageBack" :preview="'idcard'" class="idImage" alt="身份证反面" @click="dialogVisible=false">
+            <img v-if="modals.identityImageHand" v-lazy="modals.identityImageHand" :preview="'idcard'" class="idImage" alt="手持身份证" @click="dialogVisible=false">
+
           </div></el-col>
 
         </el-row>

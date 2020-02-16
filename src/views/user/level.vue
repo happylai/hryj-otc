@@ -13,14 +13,13 @@
     </div>
 
     <el-table
-      v-if="!isSearch"
       ref="table"
       :data="list"
       style="width: 100%"
       row-key="userId"
       border
       lazy
-      :row-class-name="setCurrent"
+      :row-class-name="currentClass"
       :load="load"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
@@ -48,86 +47,6 @@
       <el-table-column align="center" label="交易总额(To B)" min-width="120" prop="orderTob" />
 
     </el-table>
-    <div>
-      <el-table
-        ref="table2"
-        :data="searchList"
-        style="width: 100%"
-        row-key="userId"
-        border
-        default-expand-all
-        :row-class-name="setCurrent"
-        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-      >
-
-        <el-table-column
-          align="center"
-          label="注册账号"
-          min-width="180"
-          prop="account"
-          element-loading-text="请给我点时间！"
-        />
-        <el-table-column
-          align="center"
-          min-width="120"
-          label="-"
-          element-loading-text="请给我点时间！"
-        >
-          <template slot-scope="scope">
-            <span>{{ scope.row.isSearch?'当前搜索':'-' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column min-width="120px" align="center" label="手机号" prop="phone" />
-
-        <el-table-column min-width="120px" align="center" label="邮箱" prop="email" />
-
-        <el-table-column min-width="120px" align="center" label="用户UID" prop="userUid" />
-
-        <el-table-column min-width="120px" align="center" label="注册时间">
-          <template slot-scope="scope">
-            <span>{{ scope.row.createTime }}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column align="center" label="交易总额(To B)" min-width="120" prop="orderTob" />
-
-      </el-table>
-    </div>
-
-    <tree-table
-      ref="table"
-      :data="searchList"
-      :columns="columns"
-      selection-type="false"
-      :expand-type="false"
-    >
-      <!-- <tree-table
-        :columns="columns"
-        :expand-type="false"
-        :selection-type="false"
-        :data="data"> -->
-
-      <template slot-scope="scope">
-        {{ scope.row.account }}
-      </template>
-      <template slot-scope="scope">
-        {{ scope.row.phone }}
-      </template>
-      <template slot-scope="scope">
-        {{ scope.row.email }}
-      </template>
-      <template slot-scope="scope">
-        {{ scope.row.userUid }}
-      </template>
-      <template slot-scope="scope">
-        {{ scope.row.createTime }}
-      </template>
-      <template slot-scope="scope">
-        {{ scope.row.orderTob }}
-      </template>
-
-      <!-- <el-table-column min-width="120px" align="center" label="手机号" prop="phone" /> -->
-    </tree-table>
 
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
 
@@ -139,7 +58,6 @@
 import waves from '@/directive/waves' // waves directive
 import { user_web_children, user_web_init } from '@/api/usermanage'
 import pagination from '@/components/Pagination'
-
 export default {
   name: 'UserInstation',
   directives: { waves },
@@ -165,6 +83,7 @@ export default {
         pages: 1
       },
       isSearch: false,
+      searchUserId: undefined,
       columns: [
         {
           title: '注册账号',
@@ -190,33 +109,26 @@ export default {
           title: '交易总额(To B)',
           key: 'orderTob'
         }
-
       ]
-
     }
   },
-
   computed: {
-
   },
-
   async mounted() {
     this.init()
   },
-
   methods: {
     init() {
       this.isSearch = false
+      this.searchUserId = undefined
       this.getList(0)
     },
     async load(tree, treeNode, resolve) {
       console.log('tree', tree)
       const data = await this.getList(tree.userId)
       this.paginationMeta.total = 0
-
       resolve(data)
     },
-
     async getList(id, meta) {
       this.loading = true
       const responeData = await user_web_children(id, meta).then(res => {
@@ -224,7 +136,6 @@ export default {
         console.log('res', res)
         if (res.code === 0) {
           var resData = res.data.records
-
           if (id === 0) {
             this.list = res.data.records
             this.meta.current = res.data.current
@@ -236,7 +147,6 @@ export default {
       })
       return responeData
     },
-
     handleFilter() {
       this.loading = true
       user_web_init(this.fliterQuery).then(res => {
@@ -245,7 +155,7 @@ export default {
         console.log('res', res)
         if (res.code === 0) {
           this.setCurrentSearch(res.data)
-          this.searchList = res.data
+          this.list = res.data
         }
       })
     },
@@ -269,7 +179,6 @@ export default {
         return 'current'
       }
     },
-
     goDetail(id) {
       this.$router.push({ path: `/user/instation/${id}` })
     },
@@ -290,8 +199,13 @@ export default {
       const resData = await this.getList(meta, data)
       console.log('childrenData', resData)
       return (resData)
+    },
+    currentClass({ row, rowIndex }) {
+      if (row.userId === this.searchUserId) {
+        return 'current-row'
+      }
+      return ''
     }
-
   }
 }
 </script>
@@ -314,5 +228,4 @@ export default {
 .current{
   background-color: aqua
 }
-
 </style>

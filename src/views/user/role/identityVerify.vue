@@ -35,13 +35,14 @@
 
       <el-table-column width="100px" align="center" label="当前角色">
         <template slot-scope="scope">
-          <span>{{ userRolesConstName(scope.row.currentRoleId,userRolesConst) }}</span>
+          <span v-if="scope.row.roleId"> {{ userRolesConstName(scope.row.roleId,userRolesConst) }} </span>
+          <span v-else>无 </span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="分组" width="100">
         <template slot-scope="scope">
-          <span>{{ groupsConstName(scope.row.pricingGroupId,groupsConst) }}</span>
+          <span>{{ groupsConstName(scope.row.groupId,groupsConst) }}</span>
         </template>
       </el-table-column>
 
@@ -91,7 +92,7 @@
       </el-table-column>
     </el-table>
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="paginationMeta.current" :limit.sync="meta.size" @pagination="paginationChange" />
-    <el-dialog v-loading="orderLoading" :visible.sync="dialogVisible" title="提示">
+    <el-dialog :visible.sync="dialogVisible" title="提示">
       <div>是否通过该用户身份审核？</div>
       <el-row :gutter="20" class="userRow">
         <el-col :span="24"><el-input v-model="reason" placeholder="通过/不通过原因" /></el-col>
@@ -159,6 +160,7 @@ export default {
         if (res.code === 0) {
           this.listLoading = false
           this.list = res.data.records
+          console.log('list', this.list)
           this.meta.current = res.data.current
           this.paginationMeta.total = res.data.total
           this.paginationMeta.pages = res.data.pages

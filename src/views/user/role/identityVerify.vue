@@ -211,6 +211,7 @@ export default {
             message: '操作成功'
           })
           this.dialogVisible = false
+          this.getList()
         } else {
           this.$message.error(res.message || '操作失败')
         }

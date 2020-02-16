@@ -584,7 +584,7 @@ export const asyncRoutes = [{
   meta: {
     title: '系统设置',
     icon: 'setting',
-    authName: ['system_roles_manage', 'system_permission', 'system_admin_user', 'system_services_user']
+    authName: ['system_roles_manage', 'system_permission', 'system_admin_user', 'system_services']
 
   },
   children: [
@@ -626,9 +626,9 @@ export const asyncRoutes = [{
       name: 'system_services',
       component: () => import('@/views/system/services'),
       meta: {
-        title: '后台客服列表',
+        title: '客服管理',
         icon: '',
-        authName: ['system_services_user']
+        authName: ['system_services']
 
       }
     },

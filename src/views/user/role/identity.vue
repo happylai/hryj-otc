@@ -18,7 +18,7 @@
         <el-row :gutter="10" class="card-row">
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>真实姓名：{{ modals.realName }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>手机号：{{ modals.mobileContact }}</div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="7" :xl="7"><div class="card-info-text">身份证：{{ modals.idNumber }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="7" :xl="7"><div class="card-info-text">身份证号：{{ modals.idNumber }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="7" :xl="7"><div class="card-info-text">邮箱：{{ modals.emailContact }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
@@ -27,9 +27,9 @@
         </el-row>
         <el-row :gutter="10" class="card-row">
           <el-col :span="12"><div>身份证照片：
-            <img v-if="editData.identityImageFront" v-lazy="editData.identityImageFront" :preview="'idcard'" class="idImage" alt="身份证正面" @click="dialogVisible=false">
+            <img v-if="modals.identityImageFront" v-lazy="modals.identityImageFront" :preview="'idcard'" class="idImage" alt="身份证正面" @click="dialogVisible=false">
 
-            <img v-if="editData.identityImageBack" v-lazy="editData.identityImageBack" :preview="'idcard'" class="idImage" alt="身份证反面" @click="dialogVisible=false">
+            <img v-if="modals.identityImageBack" v-lazy="modals.identityImageBack" :preview="'idcard'" class="idImage" alt="身份证反面" @click="dialogVisible=false">
           </div></el-col>
 
         </el-row>

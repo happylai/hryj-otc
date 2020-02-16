@@ -289,3 +289,24 @@ export function system_transfer(data) {
     data
   })
 }
+
+// 身份审核列表
+export function identity_verify_list(meta, query) {
+  return request({
+    url: '/admin/user/user_identity',
+    method: 'get',
+    headers: {
+      ...meta
+    },
+    params: query
+  })
+}
+
+// 身份审核
+export function verify_identity(data) {
+  return request({
+    url: '/admin/user/user_identity/apply',
+    method: 'post',
+    params: data
+  })
+}

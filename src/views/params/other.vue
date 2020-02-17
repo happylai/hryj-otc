@@ -45,9 +45,14 @@
             </template>
           </el-table-column>
 
-          <el-table-column min-width="180px" align="center" label="分组人数">
+          <el-table-column min-width="120px" align="center" label="分组人数">
             <template slot-scope="scope">
               <span>{{ scope.row.userNum }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column min-width="60px" align="center" label="操作">
+            <template slot-scope="scope">
+              <el-button type="danger" size="small" @click="handleRemoveGroup(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -84,6 +89,11 @@
           <el-table-column min-width="180px" align="center" label="交易角色">
             <template slot-scope="scope">
               <span>{{ scope.row.dealType|counterParty }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column min-width="60px" align="center" label="操作">
+            <template slot-scope="scope">
+              <el-button type="danger" size="small" @click="handleRemoveScope(scope.row.id,scope.row.groupId)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -241,7 +251,9 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { TokenType, FiatType, DealType, PriceTread } from '@/utils/enumeration'
-import { deposits, deposit_save, active_golds, active_gold_save, cancel_nums, cancel_num_save, groups, group_save, groups_scopes, get_group_scopes_add, scopes_add, app_version_save, app_versions } from '@/api/params'
+import { deposits, deposit_save, active_golds, active_gold_save, cancel_nums, cancel_num_save,
+  groups, group_save, groups_scopes, get_group_scopes_add, scopes_add,
+  app_version_save, app_versions, group_del, del_scopes } from '@/api/params'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 export default {
   name: 'Tab',
@@ -507,8 +519,59 @@ export default {
         })
       }
       console.log('result', result)
+    },
+    handleRemoveGroup(id) {
+      this.$confirm('是否解散分组?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        group_del({ id: id }).then(res => {
+          if (res.code === 0) {
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+            this.getList()
+          } else {
+            this.$message.error(res.message || '操作失败')
+          }
+        }).catch(err => {
+          console.log('err', err)
+          this.$message.error(err || '操作失败')
+          this.loading = false
+        })
+      })
+    },
+    handleRemoveScope(scopeId, groupId) {
+      const postData = {
+        groupId: groupId,
+        scopeIds: scopeId
+      }
+      this.$confirm('是否移除接单范围?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        del_scopes(postData).then(res => {
+          if (res.code === 0) {
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+            this.getList()
+          } else {
+            this.$message.error(res.message || '操作失败')
+          }
+        }).catch(err => {
+          console.log('err', err)
+          this.$message.error(err || '操作失败')
+          this.loading = false
+        })
+      })
     }
   }
+
 }
 </script>
 

@@ -124,14 +124,14 @@ export function groups_scopes(data) {
   })
 }
 
-// 解散分组，系统分组不能解散
-export function group_del(data) {
-  return request({
-    url: `/admin/dictionary/group_save`,
-    method: 'post',
-    data: data
-  })
-}
+// // 解散分组，系统分组不能解散
+// export function group_del(data) {
+//   return request({
+//     url: `/admin/dictionary/group_save`,
+//     method: 'post',
+//     data: data
+//   })
+// }
 
 // 查询补贴类参数列
 export function subsidies(data, meta) {
@@ -252,3 +252,29 @@ export function app_version_save(data) {
   })
 }
 
+// 解散分组，系统分组不能解散
+
+export function group_del(data) {
+  return request({
+    url: `/admin/dictionary/group_del`,
+    method: 'post',
+    data: qs.stringify(data),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
+// admin/dictionary/group/del_scopes
+// 从分组中移除接单范
+
+export function del_scopes(data) {
+  return request({
+    url: `/admin/dictionary/group/del_scopes`,
+    method: 'post',
+    data: qs.stringify(data),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}

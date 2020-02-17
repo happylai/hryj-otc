@@ -2,12 +2,12 @@
   <div class="tab-container">
     <el-tabs v-model="activeType" style="margin-top:15px;">
       <el-tab-pane :key="tabMapOptions[0].key" :label="tabMapOptions[0].label" :name="tabMapOptions[0].key">
-                  <el-row>
+        <el-row>
           <el-col style="text-align:center">
-            <el-link  type="info">更新时间： {{modals.updateTime}}</el-link>
+            <el-link type="info">更新时间： {{ modals.updateTime }}</el-link>
           </el-col>
         </el-row>
-        
+
         <el-card class="box-card marginT20">
           <div slot="header" class="clearfix">
             <span class="card-title">资产总计（所有交易所用户资产/保证金）</span>
@@ -80,13 +80,14 @@
             <el-radio-button :label="14">最近两周</el-radio-button>
             <el-radio-button :label="30">最近30天</el-radio-button>
           </el-radio-group>
-          <el-date-picker class="filter-item" 
+          <el-date-picker
             v-model="fliterQuery.date"
+            class="filter-item"
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            @change='dateChange'
+            @change="dateChange"
           />
 
         </div>
@@ -128,15 +129,15 @@
           </el-table-column>
         </el-table>
         <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
-        
+
       </el-tab-pane>
       <el-tab-pane :key="tabMapOptions[1].key" :label="tabMapOptions[1].label" :name="tabMapOptions[1].key">
         <el-row>
           <el-col style="text-align:center">
-            <el-link  type="info">更新时间： {{modals2.updateTime}}</el-link>
+            <el-link type="info">更新时间： {{ modals2.updateTime }}</el-link>
           </el-col>
         </el-row>
-        
+
         <el-card class="box-card marginT20">
           <div slot="header" class="clearfix">
             <span class="card-title">资产总计（余额）</span>
@@ -144,7 +145,7 @@
           </div>
           <div class="text item">
             <el-row :gutter="10">
-              <el-col :span="24" >
+              <el-col :span="24">
                 <div class="card-item ">
                   <div class="cart-i-t">累计资产 </div>
                   <div class="cart-i-v">{{ modals2.balance }}</div>
@@ -163,13 +164,14 @@
             <el-radio-button :label="14">最近两周</el-radio-button>
             <el-radio-button :label="30">最近30天</el-radio-button>
           </el-radio-group>
-          <el-date-picker class="filter-item" 
+          <el-date-picker
             v-model="fliterQuery.date"
+            class="filter-item"
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            @change='dateChange'
+            @change="dateChange"
           />
 
         </div>
@@ -211,7 +213,7 @@
           </el-table-column>
         </el-table>
         <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
-        
+
       </el-tab-pane>
     </el-tabs>
 
@@ -225,10 +227,9 @@ import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect } from '@/utils/enumeration'
 import { finance_user_b, finance_user_web } from '@/api/finance'
 
-
 export default {
   name: 'Tab',
-  components: {  pagination },
+  components: { pagination },
   directives: { waves },
   data() {
     return {
@@ -240,7 +241,7 @@ export default {
       Groups: [emptySelect, ...Groups],
       tabMapOptions: [
         { label: '站内用户', key: '0' },
-        { label: 'B端商户', key: '1' },
+        { label: 'B端商户', key: '1' }
       ],
       fliterQuery: {
         page: 1,
@@ -254,7 +255,7 @@ export default {
         current: 1,
         size: 10
       },
-      activeType:'0',
+      activeType: '0',
       loading: false,
       list: [],
       paginationMeta: {
@@ -266,8 +267,7 @@ export default {
       modals: {},
       modals2: {},
       editData: {},
-      dateBucket:7,
-
+      dateBucket: 7
 
     }
   },
@@ -284,7 +284,7 @@ export default {
     detail() {
       this.listLoading = true
       finance_user_web().then(res => {
-        if (res.code === 0) {
+        if (res.code === 0 && res.data) {
           this.modals = res.data
         }
         console.log('res')
@@ -293,7 +293,7 @@ export default {
     detail2() {
       this.listLoading = true
       finance_user_b().then(res => {
-        if (res.code === 0) {
+        if (res.code === 0 && res.data) {
           this.modals2 = res.data
         }
         console.log('res')
@@ -325,21 +325,21 @@ export default {
       this.getList(meta, data)
     },
     getList() {
-      this.$message('暂未统计');
+      this.$message('暂未统计')
     },
     dateBucketChange(e) {
-      console.log("e",e)
-      const start=this.$moment().subtract(e, 'days')
-      const end=this.$moment(new Date())
-      
-      this.fliterQuery.date=[start,end];
+      console.log('e', e)
+      const start = this.$moment().subtract(e, 'days')
+      const end = this.$moment(new Date())
+
+      this.fliterQuery.date = [start, end]
       this.handleFilter()
     },
     dateChange(e) {
-      console.log('datachange',e)
-      this.dateBucket=undefined;
+      console.log('datachange', e)
+      this.dateBucket = undefined
       this.handleFilter()
-    },
+    }
 
   }
 }

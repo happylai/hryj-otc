@@ -11,7 +11,7 @@
             <div v-for="(item,index) in list" :key="index+'user'" class="chat-userList" :class="item.targetId==id?'userListactive':'' " @click="changeCurrentChat(item.targetId)">
               <div class="chat-avatar">
                 <el-badge :value="item.unreadMessageCount" class="item" :hidden="item.unreadMessageCount==0">
-                  <el-avatar size="40"> user </el-avatar>
+                  <el-avatar> user </el-avatar>
                 </el-badge>
               </div>
               <div class="chat-his">
@@ -31,7 +31,7 @@
             <div v-for="(item,index) in groupList" :key="index+'user'" class="chat-userList" :class="item.uuid==id?'userListactive':'' " @click="changeCurrentChat(item.uuid)">
               <div class="chat-avatar">
                 <el-badge :value="0" class="item" :hidden="true">
-                  <el-avatar size="40"> {{ item.name }} </el-avatar>
+                  <el-avatar> {{ item.name }} </el-avatar>
                 </el-badge>
               </div>
               <div class="chat-his">
@@ -70,6 +70,10 @@
         </div>
 
         <div id="chatHistory" class="chat-history">
+          <div class="loadMore">
+            <el-button v-if="hasMsg&&chatList.length" type="text" :disabled="!hasMsg||historyLoading" :loading="historyLoading" @click="loadMoreHistory">点击加载更多</el-button>
+            <span v-else>暂无更多记录</span>
+          </div>
           <div v-for="(item,index) in chatList" :key="index" class="chat-item " :class="item.senderUserId==uuid?'send':'reviced' ">
 
             <div class="chat-item-warp">
@@ -295,7 +299,9 @@ export default {
       userQueryList: [],
       delGroupNumArr: [],
       groupChatList: [],
-      actionLoading: false
+      actionLoading: false,
+      hasMsg: false,
+      historyLoading: false
     }
   },
   computed: {
@@ -480,17 +486,20 @@ export default {
       console.log('获取消息详情,对话', this.id, timestrap)
       const _this = this
 
-      this.delChat()
+      // this.delChat()
+      this.historyLoading = true
       // 默认传 null, 若从头开始获取历史消息, 请赋值为 0
       var count = 20
       RongIMLib.RongIMClient.getInstance().getHistoryMessages(_this.conversationType, _this.id, timestrap, count, {
         onSuccess: function(list, hasMsg) {
           /*
-              list: 获取的历史消息列表
-              hasMsg: 是否还有历史消息可以获取
-            */
+            list: 获取的历史消息列表
+            hasMsg: 是否还有历史消息可以获取
+          */
           console.log('获取历史消息成功', list)
+          _this.historyLoading = false
           _this.chatList = list
+          _this.hasMsg = hasMsg
 
           var clearUnreadCount = RongIMClient.getInstance().clearUnreadCount
           clearUnreadCount(_this.conversationType, _this.id, {
@@ -505,6 +514,8 @@ export default {
         },
         onError: function(error) {
           // 请排查：单群聊消息云存储是否开通
+          _this.historyLoading = false
+          _this.$message.error(error || '获取历史消息失败')
           console.log('获取历史消息失败', error)
         }
       })
@@ -720,6 +731,46 @@ export default {
         }).catch(() => {
           this.actionLoading = false
         })
+      })
+    },
+    loadMoreHistory() {
+      const _this = this
+
+      // this.delChat()
+      this.historyLoading = true
+      // 默认传 null, 若从头开始获取历史消息, 请赋值为 0
+      var count = 20
+      const timestrap = this.chatList[0].sentTime
+      RongIMLib.RongIMClient.getInstance().getHistoryMessages(_this.conversationType, _this.id, timestrap, count, {
+        onSuccess: function(list, hasMsg) {
+          /*
+            list: 获取的历史消息列表
+            hasMsg: 是否还有历史消息可以获取
+          */
+          console.log('获取历史消息成功', list, hasMsg)
+          var temp = _this.chatList
+          temp.unshift(...list)
+          // const data = { ...list, ..._this.chatList }
+          console.log('data', temp)
+          _this.historyLoading = false
+          _this.chatList = temp
+          _this.hasMsg = hasMsg
+
+          var clearUnreadCount = RongIMClient.getInstance().clearUnreadCount
+          clearUnreadCount(_this.conversationType, _this.id, {
+            onSuccess: function() {},
+            onError: function(errorCode) {}
+          })
+          setTimeout(() => {
+            _this.$previewRefresh()
+          }, 100)
+        },
+        onError: function(error) {
+          // 请排查：单群聊消息云存储是否开通
+          _this.historyLoading = false
+          _this.$message.error(error || '获取历史消息失败')
+          console.log('获取历史消息失败', error)
+        }
       })
     }
 
@@ -937,5 +988,12 @@ textarea{
 
     background-color: #F3F3F5 !important;
 
+}
+.loadMore{
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: #aaa;
+  margin-top:-10px;
 }
 </style>

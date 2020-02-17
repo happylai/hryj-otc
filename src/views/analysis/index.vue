@@ -235,9 +235,9 @@ export default {
       id: undefined,
       dialogVisible: false,
       modals: {
-        balance: 128,
-        deposit: 43,
-        activeGold: 423
+        balance: undefined,
+        deposit: undefined,
+        activeGold: undefined
 
       },
       statics: {

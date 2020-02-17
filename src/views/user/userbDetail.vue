@@ -129,7 +129,7 @@
         v-loading="loading"
         align="center"
         label="订单ID"
-        width="65"
+        min-width="125"
         element-loading-text="请给我点时间！"
       >
         <template slot-scope="scope">

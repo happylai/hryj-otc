@@ -20,6 +20,7 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>邮箱：{{ modals.emailContact }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="5" :xl="5"><div>申诉数：{{ modals.appealNum }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>被申诉数：{{ modals.appealedNum }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4"><div>放行奖励： {{ modals.confirmAward?'启用':'未启用' }}</div></el-col>
         </el-row>
       </div>
     </el-card>
@@ -240,6 +241,15 @@
           />{{ newData.active?'正常/激活':'冻结/未激活' }}
           <el-link type="danger" :underline="false">当前状态： {{ editData.active?'正常/激活':'冻结/未激活' }}</el-link></el-col>
       </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">放行奖励：</el-col>
+        <el-col :span="16">
+          <el-switch
+            v-model="newData.confirmAward"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+          />{{ newData.confirmAward?'启用':'未启用' }}
+          <el-link type="danger" :underline="false">当前状态： {{ editData.confirmAward?'启用':'未启用' }}</el-link></el-col>   </el-row>
 
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click=" handleAudit() ">保存</el-button>
@@ -459,6 +469,7 @@ export default {
       },
       newData: {
         active: false,
+        confirmAward: false,
         payTypes: [],
         rebate: undefined,
         groupId: undefined
@@ -551,11 +562,13 @@ export default {
       this.editDialogVisible = true
       this.editData = this.modals
       this.newData.active = this.editData.active
+      this.newData.confirmAward = this.editData.confirmAward
       this.editData.password = undefined
     },
     handleAudit() {
       const data = {
         active: this.newData.active,
+        confirmAward: this.newData.confirmAward,
         id: this.id,
         password: this.newPassword ? this.newPassword : undefined
       }

@@ -277,7 +277,7 @@ export default {
       chat: undefined,
       id: undefined,
       token: '',
-      appkey: '24wBTSA6Z9V3N', // 这是我们之前保存的 appkey *重要
+      appkey: 'n19jmcy5n0sl9', // 这是我们之前保存的 appkey *重要
       targetId: '', // 你要给谁发送消息 目标ID
       showDatas: [], // 初始化信息
       groupList: [],

@@ -4,9 +4,14 @@
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
       <tip />
       <div class="filter-container" style="margin-bottom: 10px;">
-        <el-input v-model="fliterQuery.query" placeholder="订单ID/广告ID/收付款昵称/卖家/卖家" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        <el-select v-model="fliterQuery.payType" placeholder="支付方式" clearable style="width: 140px" class="filter-item">
-          <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
+        <el-input v-model="fliterQuery.orderUid" clearable placeholder="订单ID" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-input v-model="fliterQuery.merchantOrder" clearable placeholder="第三方单号" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-input v-model="fliterQuery.advertiseUid" clearable placeholder="广告ID" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-input v-model="fliterQuery.nick" clearable placeholder="收付款昵称" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-input v-model="fliterQuery.buyer" clearable placeholder="买家" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-input v-model="fliterQuery.seller" clearable placeholder="卖家" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-select v-model="fliterQuery.payType"  placeholder="支付方式" clearable style="width: 140px" class="filter-item">
+          <el-option v-for="item in PayType"  :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
         <el-select v-model="fliterQuery.type" placeholder="交易类型" clearable style="width: 140px" class="filter-item">
           <el-option v-for="item in CounterParty" :key="item.id" :label="item.label" :value="item.id" />
@@ -123,11 +128,18 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="打款备注" min-width="120">
+        <el-table-column width="60px" align="center" label="币种">
           <template slot-scope="scope">
-            <span>{{ scope.row.memo }}</span>
+            <span>{{ scope.row.token }}</span>
           </template>
         </el-table-column>
+
+        <el-table-column align="center" label="第三方订单号" min-width="120">
+          <template slot-scope="scope">
+            <span>{{ scope.row.merchantOrderNo||'无' }}</span>
+          </template>
+        </el-table-column>
+
         <el-table-column align="center" label="二维码" min-width="80">
           <template slot-scope="scope">
             <img v-if="scope.row.qrCode" v-lazy="scope.row.qrCode" class="appealImage" :preview="scope.row.id+'qrCode'">
@@ -461,7 +473,7 @@ import pagination from '@/components/Pagination'
 import { order_list, order_detail, order_cancel, order_confirm, pro_odrder_rematch, export_excel } from '@/api/order'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, PayType, OrderStatus, CounterParty } from '@/utils/enumeration'
-import {exportExcel} from "../../api/order";
+import { exportExcel } from '../../api/order'
 export default {
   name: 'Tab',
   components: { tabPane, pagination, tip },
@@ -485,7 +497,12 @@ export default {
         page: 1,
         size: 10,
         payType: undefined,
-        query: undefined,
+        orderUid: undefined,
+        merchantOrder: undefined,
+        advertiseUid: undefined,
+        nick: undefined,
+        buyer: undefined,
+        seller: undefined,
         status: undefined,
         creatDate: undefined,
         complateDate: undefined
@@ -578,8 +595,13 @@ export default {
       const data = {
         isMatch: this.activeType === '2',
         type: fliterQuery.type,
+        orderUid: fliterQuery.orderUid,
+        merchantOrder: fliterQuery.merchantOrder,
+        advertiseUid: fliterQuery.advertiseUid,
+        nick: fliterQuery.nick,
+        buyer: fliterQuery.buyer,
+        seller: fliterQuery.seller,
         payType: fliterQuery.payType,
-        query: fliterQuery.query,
         status: fliterQuery.status,
         userId: this.userId
       }

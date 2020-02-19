@@ -56,7 +56,7 @@
           </el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4">
             <div class="card-item borderR">
-              <div class="cart-i-t">退还激活金 </div>
+              <div class="cart-i-t">退还保证金 </div>
               <div class="cart-i-v">{{ modals.depositBack }}</div>
             </div>
           </el-col>
@@ -316,7 +316,7 @@ export default {
         // data.start = '2019-10-16 12:11:11'
         data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
       }
-      this.getList(this.meta,data)
+      this.getList(this.meta, data)
     },
     handleFilter() {
       const fliterQuery = this.fliterQuery

@@ -21,14 +21,29 @@ export const PayType = [{
 ]
 
 export const PayChannel = [{
-  name: 'CASHIER_DESK',
+  name: 'ALI_PAY',
   id: 0,
-  label: '收银台'
+  label: '支付宝'
 },
 {
-  name: 'CALL_API',
+  name: 'WEI_XIN',
   id: 1,
-  label: 'API'
+  label: '微信支付'
+},
+{
+  nama: 'BANK',
+  id: 2,
+  label: '银行卡'
+},
+{
+  name: 'CLOUD_PAY',
+  id: 3,
+  label: '云闪付'
+},
+{
+  name: 'CASHIER_DESK',
+  id: 88,
+  label: '收银台'
 }
 ]
 

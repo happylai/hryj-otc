@@ -8,8 +8,8 @@
       </div>
       <div class="text item">
         <el-row :gutter="10">
-          <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8">
-            <div class="card-item borderR">
+          <el-col :span="24">
+            <div class="card-item ">
               <div class="cart-i-t">总额 </div>
               <div class="cart-i-v">{{ totalAward }}</div>
             </div>

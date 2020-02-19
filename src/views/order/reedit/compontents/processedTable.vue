@@ -107,6 +107,12 @@
       </template>
     </el-table-column>
 
+    <el-table-column align="center" label="回调状态" width="70">
+      <template slot-scope="scope">
+        <span>{{ scope.row.callbackStatus?'成功':"失败" }}</span>
+      </template>
+    </el-table-column>
+
     <el-table-column align="center" class-name="status-col" label="操作" min-width="210">
       <template slot-scope="scope">
         <el-button :loading="actionLoading" :disabled="actionLoading" type="primary" size="small" @click="goDetail(scope.row.preId)">详情</el-button>

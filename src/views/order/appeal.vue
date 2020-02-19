@@ -11,9 +11,10 @@
           <el-select v-model="fliterQuery.PriceTread" placeholder="订单类型" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in PriceTread" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
-          <!-- <el-select v-model="fliterQuery.status" placeholder="申诉状态" clearable style="width: 140px" class="filter-item">
+          <el-select v-model="fliterQuery.status" placeholder="申诉状态" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeStatus" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
+          <!--
           <el-select v-model="fliterQuery.result" placeholder="处理结果" clearable style="width: 140px" class="filter-item">
             <el-option v-for="item in AppealeResult" :key="item.id" :label="item.label" :value="item.id" />
           </el-select> -->

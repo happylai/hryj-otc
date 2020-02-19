@@ -21,14 +21,29 @@ export const PayType = [{
 ]
 
 export const PayChannel = [{
-  name: 'CASHIER_DESK',
+  name: 'ALI_PAY',
   id: 0,
-  label: '收银台'
+  label: '支付宝'
 },
 {
-  name: 'CALL_API',
+  name: 'WEI_XIN',
   id: 1,
-  label: 'API'
+  label: '微信支付'
+},
+{
+  nama: 'BANK',
+  id: 2,
+  label: '银行卡'
+},
+{
+  name: 'CLOUD_PAY',
+  id: 3,
+  label: '云闪付'
+},
+{
+  name: 'CASHIER_DESK',
+  id: 88,
+  label: '收银台'
 }
 ]
 
@@ -520,11 +535,19 @@ export const OrderAuditStatus = [
 export const AppealeStatus = [
   {
     id: 0,
-    label: '待处理 '
+    label: '待处理'
   },
   {
     id: 1,
-    label: '已处理'
+    label: '订单已完结'
+  },
+  {
+    id: 2,
+    label: '订单已取消'
+  },
+  {
+    id: 3,
+    label: '申述被驳回'
   }
 ]
 
@@ -671,27 +694,27 @@ export const AwardType = [
     id: 7,
     name: 'DEAL_SUBSIDY',
     label: '交易补贴'
-  },{
+  }, {
     id: 8,
     name: 'NIGHT_SUBSIDY',
     label: '夜间补贴'
-  },{
+  }, {
     id: 9,
     name: 'AMOUNT_SUBSIDY',
     label: '达量补贴'
-  },{
+  }, {
     id: 10,
     name: 'SHARE_SUBSIDY',
     label: '邀请奖励'
-  },{
+  }, {
     id: 13,
     name: 'AGENT_SUBSIDY',
     label: '代理商补贴'
-  },{
+  }, {
     id: 15,
     name: 'JUNIOR_DEAL_SUBSIDY',
     label: '下级交易贡献'
-  },{
+  }, {
     id: 18,
     name: 'RELEASE_REWARD',
     label: '放行奖励'

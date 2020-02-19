@@ -277,7 +277,7 @@ export default {
       chat: undefined,
       id: undefined,
       token: '',
-      appkey: 'n19jmcy5n0sl9', // 这是我们之前保存的 appkey *重要
+      appkey: '', // 这是我们之前保存的 appkey *重要
       targetId: '', // 你要给谁发送消息 目标ID
       showDatas: [], // 初始化信息
       groupList: [],
@@ -464,10 +464,11 @@ export default {
     },
 
     initRongCloud() {
-      var appkey = this.appkey
+      const _this = this
+      var appkey = process.env.VUE_APP_RCappkey
       var token = this.token
       if (!appkey || !token) {
-        alert('appkey 和 token 不能为空')
+        _this.$message.error('appkey 和 token 不能为空')
       } else {
         // 这个init 是我们之前撸的 `utils.js`
         init({

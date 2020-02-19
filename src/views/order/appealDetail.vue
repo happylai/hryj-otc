@@ -333,6 +333,9 @@ export default {
               message: '操作成功',
               type: 'success'
             })
+            setTimeout(() => {
+              this.$router.go(-1)
+            }, 1500)
           } else {
             this.$message.error(res.message || '操作失败')
           }

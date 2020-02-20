@@ -10,8 +10,8 @@
         <el-input v-model="fliterQuery.nick" clearable placeholder="收付款昵称" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
         <el-input v-model="fliterQuery.buyer" clearable placeholder="买家" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
         <el-input v-model="fliterQuery.seller" clearable placeholder="卖家" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        <el-select v-model="fliterQuery.payType"  placeholder="支付方式" clearable style="width: 140px" class="filter-item">
-          <el-option v-for="item in PayType"  :key="item.id" :label="item.label" :value="item.id" />
+        <el-select v-model="fliterQuery.payType" placeholder="支付方式" clearable style="width: 140px" class="filter-item">
+          <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
         <el-select v-model="fliterQuery.type" placeholder="交易类型" clearable style="width: 140px" class="filter-item">
           <el-option v-for="item in CounterParty" :key="item.id" :label="item.label" :value="item.id" />
@@ -104,6 +104,18 @@
           </template>
         </el-table-column>
 
+        <el-table-column align="center" label="收款账号" width="60">
+          <template slot-scope="scope">
+            <span>{{ scope.row.payInfo.account }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="收款昵称" width="60">
+          <template slot-scope="scope">
+            <span>{{ scope.row.payInfo.nick }}</span>
+          </template>
+        </el-table-column>
+
         <el-table-column v-if="activeType==='2'" align="center" label="手续费" width="60">
           <template slot-scope="scope">
             <span>{{ scope.row.fee }}</span>
@@ -131,12 +143,6 @@
         <el-table-column width="60px" align="center" label="币种">
           <template slot-scope="scope">
             <span>{{ scope.row.token }}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column align="center" label="第三方订单号" min-width="120">
-          <template slot-scope="scope">
-            <span>{{ scope.row.merchantOrderNo||'无' }}</span>
           </template>
         </el-table-column>
 
@@ -179,7 +185,6 @@
         <el-table-column min-width="120px" align="center" label="第三方订单号">
           <template slot-scope="scope">
             <span>{{ scope.row.merchantOrderNo }}</span>
-            <span v-if="scope.row.invokeCount">({{ scope.row.invokeCount }})</span>
           </template>
         </el-table-column>
 
@@ -240,6 +245,18 @@
               <div> <el-link :underline="false"><i class="el-icon-info" /> {{ scope.row.payInfo.payType|payTypeName }} </el-link>  </div>
             </el-tooltip>
           <!-- <span>{{ scope.row.remainAmount }}</span> -->
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="收款账号" width="60">
+          <template slot-scope="scope">
+            <span>{{ scope.row.payInfo.account }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="收款昵称" width="60">
+          <template slot-scope="scope">
+            <span>{{ scope.row.payInfo.nick }}</span>
           </template>
         </el-table-column>
 

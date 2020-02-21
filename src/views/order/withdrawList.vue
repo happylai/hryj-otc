@@ -407,4 +407,8 @@ export default {
 .orderInfoItem{
   margin:8px 4px;
 }
+.DetailvoucherImage{
+  max-width: 40px;
+  max-height: 60px;
+}
 </style>

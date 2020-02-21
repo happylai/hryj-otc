@@ -98,6 +98,9 @@ export default {
             type: 'success',
             message: `${didPublish ? '保存并发布' : '保存'}成功`
           })
+          setTimeout(() => {
+            this.$router.go(-1)
+          }, 1500)
         } else {
           this.$message.error(res.message || '操作失败,请重试')
         }

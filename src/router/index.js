@@ -543,9 +543,9 @@ export const asyncRoutes = [{
     path: 'commission',
     name: 'parameter_commission',
 
-    component: () => import('@/views/params/allowance'),
+    component: () => import('@/views/params/serviceChange'),
     meta: {
-      title: 'B端手续费',
+      title: '通道管理',
       icon: '',
       type: 2,
       authName: ['parameter_commission']

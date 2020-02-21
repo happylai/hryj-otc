@@ -47,6 +47,48 @@ export const PayChannel = [{
 }
 ]
 
+export const PaySchema = [{
+  name: 'ALI_QR_CODE',
+  id: 0,
+  label: '支付宝扫码'
+},
+{
+  name: 'WX_QR_CODE',
+  id: 1,
+  label: '微信扫码'
+},
+{
+  nama: 'BANK_SCAN_NUM',
+  id: 2,
+  label: '银行卡'
+},
+{
+  name: 'CLOUD_QR_CODE',
+  id: 3,
+  label: '云闪付'
+},
+{
+  name: 'DESK_ALI',
+  id: 4,
+  label: '支付宝收银台'
+},
+{
+  name: 'DESK_WX',
+  id: 5,
+  label: '微信收银台'
+}, {
+  name: 'DESK_BANK',
+  id: 6,
+  label: '银行卡收银台'
+},
+{
+  name: 'DESK_CLOUD',
+  id: 7,
+  label: '云闪付收银台'
+}
+
+]
+
 export const PayTypeExtent = [{
   name: 'ALI_PAY',
   id: 0,

@@ -87,9 +87,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" align="center" label="操作" width="120">
+      <el-table-column class-name="status-col" align="center" label="操作" min-width="140">
         <template slot-scope="scope">
-          <el-button v-if="activeType=='1'||activeType=='2'" type="primary" size="small" @click="handlDel(scope.row.id)">删除</el-button>
+          <el-button v-if="activeType=='1'||activeType=='2'" type="danger" size="small" @click="handlDel(scope.row.id)">删除</el-button>
 
           <el-button type="primary" size="small" @click="handlEdit(scope.row)">详情</el-button>
         </template>
@@ -394,20 +394,28 @@ export default {
       })
     },
     handlDel(id) {
-      subsidy_del({ id: id, type: this.activeType }).then(res => {
-        if (res.code === 0) {
-          this.$message({
-            message: '删除',
-            type: 'success'
-          })
-          this.getList()
-        } else {
-          this.$message.error(res.message || '操作失败')
-        }
-      }).catch(err => {
-        console.log('err', err)
-        this.$message.error(err || '操作失败')
-        this.loading = false
+      this.$confirm('确认删除当前项?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        subsidy_del({ id: id, type: this.activeType }).then(res => {
+          if (res.code === 0) {
+            this.$message({
+              message: '删除',
+              type: 'success'
+            })
+            this.getList()
+          } else {
+            this.$message.error(res.message || '操作失败')
+          }
+        }).catch(err => {
+          console.log('err', err)
+          this.$message.error(err || '操作失败')
+          this.loading = false
+        })
+      }).catch(() => {
+
       })
     }
   }

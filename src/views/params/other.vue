@@ -22,7 +22,20 @@
         <el-input v-model="addData.addNewData" :placeholder="ParamsTypePlaceHolder[ParamsType]" style="width: 200px;" class="filter-item" />
 
         <el-input v-show="ParamsType==='2'" v-model="addData.minVolume" placeholder="达标交易量(如：300000)" style="width: 200px;" class="filter-item" />
-
+        <el-select v-if="ParamsType==='5'" v-model="addData.system" placeholder="选择操作系统" clearable style="width: 140px" class="filter-item">
+          <el-option
+            v-for="item in OperatingSystem"
+            :key="item.id"
+            :label="item.label"
+            :value="item.id"
+          />
+        </el-select>
+        <el-switch
+          v-show="ParamsType==='5'"
+          v-model="addData.forceUpdate"
+          active-color="#13ce66"
+          active-text="强制更新"
+        />
         <el-input v-show="ParamsType==='5'" v-model="addData.downUrl" placeholder="下载链接" style="width: 200px;" class="filter-item" />
         <el-input v-show="ParamsType==='5'" v-model="addData.versionDesc" type="textarea" :rows="3" placeholder="版本描述" style="width: 320px;" class="filter-item" />
 
@@ -132,6 +145,16 @@
       <el-table-column v-if="ParamsType==='5'" prop="androidVersion" min-width="120px" align="center" label="App版本">
         <template slot-scope="scope">
           <span>{{ scope.row.androidVersion }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="ParamsType==='5'" min-width="100px" align="center" label="App操作系统">
+        <template slot-scope="scope">
+          <span>{{ scope.row.system|operatingSystem }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="ParamsType==='5'" min-width="100px" align="center" label="强制更新">
+        <template slot-scope="scope">
+          <span>{{ scope.row.forceUpdate?"是":'否' }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="ParamsType==='5'" prop="downUrl" min-width="180px" align="center" label="下载链接">
@@ -250,7 +273,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
-import { TokenType, FiatType, DealType, PriceTread } from '@/utils/enumeration'
+import { TokenType, FiatType, DealType, PriceTread, OperatingSystem } from '@/utils/enumeration'
 import { deposits, deposit_save, active_golds, active_gold_save, cancel_nums, cancel_num_save,
   groups, group_save, groups_scopes, get_group_scopes_add, scopes_add,
   app_version_save, app_versions, group_del, del_scopes } from '@/api/params'
@@ -266,6 +289,7 @@ export default {
       FiatType,
       DealType,
       PriceTread,
+      OperatingSystem,
       tabMapOptions: [
         { label: '保证金', key: '1', name: 'deposit' },
         { label: '激活金', key: '2', mame: 'activeGold' },
@@ -304,7 +328,9 @@ export default {
         addNewData: '',
         androidVersion: undefined,
         versionDesc: undefined,
-        downUrl: undefined
+        downUrl: undefined,
+        system: undefined,
+        forceUpdate: false
       },
       list: [{
 
@@ -444,6 +470,8 @@ export default {
         this.save(data)
       } else if (!this.addData.roleId && this.ParamsType !== '2' && this.ParamsType !== '5') {
         this.$message.error('请选择角色')
+      } else if (this.ParamsType === '5' && (this.addData.system === undefined || this.addData.system === '')) {
+        this.$message.error('请选择app操作系统')
       } else if (this.ParamsType === '5' && !this.addData.downUrl) {
         this.$message.error('请填写下载URl')
       } else if (this.ParamsType === '5' && !this.addData.versionDesc) {

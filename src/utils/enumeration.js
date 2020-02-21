@@ -721,3 +721,15 @@ export const AwardType = [
   }
 ]
 
+export const OperatingSystem = [
+  {
+    id: 0,
+    name: 'Android',
+    label: '安卓系统'
+  },
+  {
+    id: 1,
+    name: 'Apple',
+    label: '苹果系统'
+  }
+]

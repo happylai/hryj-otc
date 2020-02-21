@@ -25,7 +25,8 @@ import {
   SystemMessageStatus,
   WithdrawStatus,
   PayChannel,
-  AwardType
+  AwardType,
+  OperatingSystem
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -551,6 +552,21 @@ export function awardType(id) {
   let res = '-'
   if (has({ foo: id }, 'foo')) {
     const data = AwardType.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+
+/**
+ * awardType
+ * @param {number} num
+ */
+export function operatingSystem(id) {
+  let res = '-'
+  if (has({ foo: id }, 'foo')) {
+    const data = OperatingSystem.filter((item) => { if (item.id === id) { return item } })
     if (has({ foo: data }, 'foo')) {
       res = data[0].label
     }

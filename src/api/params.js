@@ -278,3 +278,12 @@ export function del_scopes(data) {
     }
   })
 }
+
+// 删除补贴参数配置
+export function subsidy_del(data) {
+  return request({
+    url: `/admin/dictionary/subsidy_del`,
+    method: 'post',
+    data: data
+  })
+}

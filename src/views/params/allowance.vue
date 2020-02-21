@@ -89,6 +89,8 @@
 
       <el-table-column class-name="status-col" align="center" label="操作" width="120">
         <template slot-scope="scope">
+          <el-button v-if="activeType=='1'||activeType=='2'" type="primary" size="small" @click="handlDel(scope.row.id)">删除</el-button>
+
           <el-button type="primary" size="small" @click="handlEdit(scope.row)">详情</el-button>
         </template>
       </el-table-column>
@@ -164,7 +166,7 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { UserType, TimeParamsType, PayType, PayTypeUstd, CounterParty } from '@/utils/enumeration'
-import { subsidies, subsidy_save } from '@/api/params'
+import { subsidies, subsidy_save, subsidy_del } from '@/api/params'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 export default {
   name: 'Tab',
@@ -315,7 +317,7 @@ export default {
     handleAdd() {
       const data = this.addData
       console.log('data', data)
-      if (!data.roleId && (this.activeType !== '5' && this.activeType !== '3' && this.activeType !== '4'&& this.activeType !== '6')) {
+      if (!data.roleId && (this.activeType !== '5' && this.activeType !== '3' && this.activeType !== '4' && this.activeType !== '6')) {
         this.$message.error('请选择角色')
       } else if (((data.payType === '' || data.payType === undefined) && this.activeType !== '3' && this.activeType !== '6')) {
         this.$message.error('请选择支付方式')
@@ -334,7 +336,7 @@ export default {
       } else {
         const postData = {
           roleId: this.activeType !== '5' || this.activeType !== '3' ? data.roleId : undefined,
-          levelDiffer: this.activeType === '0' || this.activeType === '3'|| this.activeType === '6' ? data.levelDiffer : undefined,
+          levelDiffer: this.activeType === '0' || this.activeType === '3' || this.activeType === '6' ? data.levelDiffer : undefined,
           payType: this.activeType !== '3' ? data.payType : undefined,
           counterParty: this.activeType === '0' || this.activeType === '1' ? data.counterParty : undefined,
           ratio: data.ratio,
@@ -379,6 +381,23 @@ export default {
         if (res.code === 0) {
           this.$message({
             message: '保存成功',
+            type: 'success'
+          })
+          this.getList()
+        } else {
+          this.$message.error(res.message || '操作失败')
+        }
+      }).catch(err => {
+        console.log('err', err)
+        this.$message.error(err || '操作失败')
+        this.loading = false
+      })
+    },
+    handlDel(id) {
+      subsidy_del({ id: id, type: this.activeType }).then(res => {
+        if (res.code === 0) {
+          this.$message({
+            message: '删除',
             type: 'success'
           })
           this.getList()

@@ -532,6 +532,29 @@ export const OrderAuditStatus = [
   }
 ]
 
+export const PaymentStatus = [
+  {
+    id: 0,
+    label: '待审核'
+  },
+  {
+    id: 1,
+    label: '正常'
+  },
+  {
+    id: 2,
+    label: '驳回'
+  },
+  {
+    id: 3,
+    label: '冻结'
+  },
+  {
+    id: 4,
+    label: '删除'
+  }
+]
+
 export const AppealeStatus = [
   {
     id: 0,

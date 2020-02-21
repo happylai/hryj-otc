@@ -106,6 +106,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column min-width="120px" label="状态" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.paymentStatus|userpaymentStatus }} </span>
+        </template>
+      </el-table-column>
+
       <!-- <el-table-column align="center" label="交易提成" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.royalty }}</span>

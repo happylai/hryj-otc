@@ -144,7 +144,7 @@
       </el-table-column> -->
       <el-table-column v-if="ParamsType==='5'" prop="androidVersion" min-width="120px" align="center" label="App版本">
         <template slot-scope="scope">
-          <span>{{ scope.row.androidVersion }}</span>
+          <span>{{ scope.row.version }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="ParamsType==='5'" min-width="100px" align="center" label="App操作系统">
@@ -489,7 +489,7 @@ export default {
         }
         if (this.ParamsType === '5') {
           data = {
-            androidVersion: this.addData.addNewData,
+            version: this.addData.addNewData,
             downUrl: this.addData.downUrl,
             versionDesc: this.addData.versionDesc
           }

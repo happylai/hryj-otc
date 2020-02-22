@@ -61,7 +61,7 @@
             </div>
           </el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="4" :xl="4">
-            <div class="card-item ">
+            <div class="card-item borderR">
               <div class="cart-i-t">邀请奖励</div>
               <div class="cart-i-v">{{ modals.shareSubsidy }}</div>
             </div>
@@ -78,6 +78,23 @@
 
     <h2>流水统计</h2>
     <div class="filter-container" style="margin-bottom: 10px;">
+      <el-select v-model="type" placeholder="支付通道" clearable style="width: 160px" class="filter-item" @change="handleFilter">
+        <el-option
+          v-for="item in [{
+                            name: 'CLOUD_PAY',
+                            id: 0,
+                            label: '入金'
+                          },
+                          {
+                            name: 'CASHIER_DESK',
+                            id: 1,
+                            label: '出金'
+                          }]"
+          :key="item.id"
+          :label="item.label"
+          :value="item.id"
+        />
+      </el-select>
       <el-radio-group v-model="dateBucket" @change="dateBucketChange">
         <el-radio-button :label="7">最近一周</el-radio-button>
         <el-radio-button :label="14">最近两周</el-radio-button>
@@ -276,7 +293,8 @@ export default {
         activeGold: 423
       },
       dateBucket: 7,
-      editData: {}
+      editData: {},
+      type: 0
 
     }
   },
@@ -322,10 +340,7 @@ export default {
       const fliterQuery = this.fliterQuery
       console.log('fliterQuery', this.fliterQuery)
       const data = {
-        authent: fliterQuery.authent,
-        groupId: fliterQuery.groupId,
-        query: fliterQuery.query,
-        roleId: fliterQuery.roleId
+        type: this.type
       }
       if (fliterQuery.date) {
         data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
@@ -337,7 +352,7 @@ export default {
       this.getList(meta, data)
     },
     getList(meta, data) {
-      finance_central_flow(meta, data).then(res => {
+      finance_central_flow(meta, data || { type: this.type }).then(res => {
         if (res.code === 0) {
           this.list = res.data.records
           this.meta.current = res.data.current

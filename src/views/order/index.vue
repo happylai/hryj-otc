@@ -87,19 +87,9 @@
 
         <el-table-column min-width="80px" align="left" label="支付方式">
           <template slot-scope="scope">
-            <el-tooltip placement="right">
-              <div v-if="scope.row.payInfo.payType===2" slot="content">
-                <div>卡号：{{ scope.row.payInfo.account }} </div>
-                <div>真实姓名：{{ scope.row.payInfo.real }} </div>
-                <div>银行：{{ scope.row.payInfo.bank }} </div>
-                <div>开户行{{ scope.row.payInfo.bankBranch }}</div>
-              </div>
-              <div v-else slot="content">
-                <div>支付账号：{{ scope.row.payInfo.account }} </div>
-                <div>支付昵称：{{ scope.row.payInfo.nick }}</div>
-              </div>
-              <div> <el-link :underline="false"><i class="el-icon-info" /> {{ scope.row.payInfo.payType|payTypeName }} </el-link>  </div>
-            </el-tooltip>
+     
+            <el-link v-if="scope.row.payInfo.payType!==null" :underline="false" @click="handleShowPaymentInfo(scope.row.payInfo)"><i class="el-icon-info" /> {{ scope.row.payInfo.payType|payTypeName }} </el-link>
+            <span v-else>无</span>
           <!-- <span>{{ scope.row.remainAmount }}</span> -->
           </template>
         </el-table-column>
@@ -479,6 +469,7 @@
         <el-button type="info" @click="dialogVisible=false">取消</el-button>
       </span>
     </el-dialog>
+    <paymentInfo :dialog-visible="showPaymentInfo" :pay-info="digPayInfo" @handleClose="showPaymentInfo=false" />
   </div>
 </template>
 
@@ -487,13 +478,15 @@ import tabPane from './components/TabPane'
 import tip from '@/components/Tip'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
+import paymentInfo from '@/components/PaymentInfo'
 import { order_list, order_detail, order_cancel, order_confirm, pro_odrder_rematch, export_excel } from '@/api/order'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, PayType, OrderStatus, CounterParty } from '@/utils/enumeration'
 import { exportExcel } from '../../api/order'
+
 export default {
   name: 'Tab',
-  components: { tabPane, pagination, tip },
+  components: { tabPane, pagination, tip, paymentInfo },
   directives: { waves },
   data() {
     return {
@@ -541,7 +534,9 @@ export default {
           payInfo: {}
         },
         orderC: {}
-      }
+      },
+      showPaymentInfo: false,
+      digPayInfo: {}
     }
   },
   watch: {
@@ -566,6 +561,10 @@ export default {
     this.getList()
   },
   methods: {
+    handleShowPaymentInfo(data) {
+      this.digPayInfo = data
+      this.showPaymentInfo = true
+    },
     handleTabClick(tab, event) {
       console.log('tab', tab)
       this.meta.current = 1

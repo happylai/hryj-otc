@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-container" :class="type==='1'?'digbox':null">
+  <div class="tab-container">
     <el-tabs v-model="filterQuery.type" style="margin-top:15px;" @tab-click="handleTabClick">
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
     </el-tabs>
@@ -58,15 +58,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column
-        v-if="filterQuery.type==='0'&&type==='0'"
-        align="center"
-        label="通道说明"
-        min-width="180"
-      >
-        <template slot-scope="scope">
-          <span>{{ scope.row.schemaDesc }}</span>
-        </template>
+      <template slot-scope="scope">
+        <span>{{ scope.row.schemaDesc }}</span>
+      </template>
       </el-table-column>
 
       <el-table-column
@@ -108,20 +102,11 @@ import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { UserType, TimeParamsType, PayType, PayTypeUstd, CounterParty, PayChannel, PaySchema } from '@/utils/enumeration'
 import { subsidies, subsidy_save, subsidy_del, merchant_rates, merchant_rate_save } from '@/api/params'
-import { merchant_rates as current_merchant_rates, merchant_rate_save as current_merchant_rate_save } from '@/api/usermanage'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 export default {
   name: 'Tab',
   components: { tabPane, pagination },
   directives: { waves },
-  props: {
-    userid: {
-      default: undefined
-    },
-    type: {
-      default: '0'
-    }
-  },
   data() {
     return {
       PayTypeUstd,
@@ -131,6 +116,8 @@ export default {
       CounterParty,
       PayChannel,
       PaySchema,
+      type: 0,
+
       tabMapOptions: [
         { label: '入金手续费', key: '0' },
         { label: '出金手续费', key: '1' }
@@ -204,8 +191,8 @@ export default {
     },
     getList(meta, data) {
       this.loading = true
-      const apiList = [merchant_rates, current_merchant_rates]
-      apiList[this.type](meta || this.meta, data || { ...this.filterQuery, userId: this.userid }).then(res => {
+
+      merchant_rates(meta || this.meta, data || this.filterQuery).then(res => {
         console.log('res', res)
         this.loading = false
         if (res.code === 0) {
@@ -234,13 +221,11 @@ export default {
       console.log('handleSave', data)
       const postData = {
         rates: this.list,
-        userId: this.userid
+        userId: this.adminId
       }
-      const apiList = [merchant_rate_save, current_merchant_rate_save]
-      apiList[this.type](postData).then(res => {
+      merchant_rate_save(postData).then(res => {
         console.log('res', res)
         this.loading = false
-        this.editAbled = false
         this.dialogVisible = false
         if (res.code === 0) {
           this.$message({
@@ -285,9 +270,6 @@ export default {
 <style scoped>
 .tab-container {
   margin: 30px;
-}
-.digbox{
-  margin:0 !important
 }
 
 </style>

@@ -310,3 +310,25 @@ export function verify_identity(data) {
     data: data
   })
 }
+
+// 查询B端出入金费率
+export function merchant_rates(meta, data) {
+  return request({
+    url: `/admin/user/merchant_rates`,
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta
+    }
+  })
+}
+
+// B端出入金费率保存
+export function merchant_rate_save(data) {
+  return request({
+    url: '/admin/user/merchant_rate_save',
+    method: 'post',
+    data: data
+  })
+}
+

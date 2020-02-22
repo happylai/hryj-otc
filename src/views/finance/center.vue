@@ -154,7 +154,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="系统补贴" min-width="120">
+      <el-table-column align="center" label="系统支出" min-width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.systemSubsidy }}</span>
         </template>

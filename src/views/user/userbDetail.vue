@@ -309,66 +309,13 @@
     </el-dialog>
 
     <el-dialog :visible.sync="dialogVisibleApply" title="手续费比例">
-      <el-row :gutter="10" class="supplyRow">
-        <el-col :offset="4" :span="5">支付宝</el-col>
-        <el-col :span="5">微信</el-col>
-        <el-col :span="5">银行卡</el-col>
-        <el-col :span="5">云闪付</el-col>
-      </el-row>
-      <el-row :gutter="10" class="supplyRow">
-        <el-col :span="4" class="textAlingR supplyType">入金</el-col>
-        <el-col :span="5">
-          <el-input v-model="modals.buyAli" v-float type="number" min="0" max="100" placeholder="支付宝">
-            <template slot="append">%</template>
-          </el-input>
-        </el-col>
-        <el-col :span="5">
-          <el-input v-model="modals.buyWeixin" v-float type="number" min="0" max="100" placeholder="微信">
-            <template slot="append">%</template>
-          </el-input>
-        </el-col>
-        <el-col :span="5">
-          <el-input v-model="modals.buyBank" v-float type="number" min="0" max="100" placeholder="银行卡">
-            <template slot="append">%</template>
-          </el-input>
-        </el-col>
-        <el-col :span="5">
-          <el-input v-model="modals.buyCloud" v-float type="number" min="0" max="100" placeholder="云闪付">
-            <template slot="append">%</template>
-          </el-input>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10" class="supplyRow">
-        <el-col :span="4" class="textAlingR supplyType">
-          出金</el-col>
-        <el-col :span="5">
-          <el-input v-model="modals.sellAli" v-float type="number" min="0" max="100" placeholder="支付宝">
-            <template slot="append">%</template>
-          </el-input>
-        </el-col>
-        <el-col :span="5">
-          <el-input v-model="modals.sellWeixin" v-float type="number" min="0" max="100" placeholder="微信">
-            <template slot="append">%</template>
-          </el-input>
-        </el-col>
-        <el-col :span="5">
-          <el-input v-model="modals.sellBank" v-float type="number" min="0" max="100" placeholder="银行卡">
-            <template slot="append">%</template>
-          </el-input>
-        </el-col>
-        <el-col :span="5">
-          <el-input v-model="modals.sellCloud" v-float type="number" min="0" max="100" placeholder="云闪付">
-            <template slot="append">%</template>
-          </el-input>
-        </el-col>
-      </el-row>
+      <serviceChange :userid="id" type="1" />
       <span slot="footer" class="dialog-footer">
-        <el-button :loading="saveLoading" :disabled="saveLoading" type="primary" @click=" handleEditApply() ">保存</el-button>
-        <el-button @click="dialogVisibleApply=false">取消</el-button>
+        <el-button type="primary" @click=" dialogVisibleApply=false">确定</el-button>
       </span>
     </el-dialog>
 
-    <el-dialog :visible.sync="showEditAssets" title="修改资产" width="650px">
+    <el-dialog :visible.sync="showEditAssets" title="修改资产" min-width="850px">
       <el-tabs v-model="assetsEditTab" type="border-card">
         <el-tab-pane label="增加资产" name="0">
           <div class="text_red" style="margin-bottom:20px">说明：增加资产操作是将扣款账户中的资产减少，并划转增加到当前账户中请谨慎操作！</div>
@@ -423,10 +370,11 @@ import { Groups, UserType, Authents, emptySelect, OrderStatus, CounterParty, Pay
 import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, royalty_save, system_transfer } from '@/api/usermanage'
 import { order_details } from '@/api/order'
 import float from '@/directive/float' // float Number directive
+import serviceChange from '@/views/params/serviceChange'
 
 export default {
   name: 'Tab',
-  components: { pagination },
+  components: { pagination, serviceChange },
   directives: { waves, float },
   data() {
     return {

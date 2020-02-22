@@ -326,7 +326,7 @@ export default {
       addData: {
         roleId: '',
         addNewData: '',
-        androidVersion: undefined,
+        version: undefined,
         versionDesc: undefined,
         downUrl: undefined,
         system: undefined,
@@ -491,7 +491,9 @@ export default {
           data = {
             version: this.addData.addNewData,
             downUrl: this.addData.downUrl,
-            versionDesc: this.addData.versionDesc
+            versionDesc: this.addData.versionDesc,
+            system: this.addData.system,
+            forceUpdate: this.addData.forceUpdate
           }
         }
         console.log('data', data)

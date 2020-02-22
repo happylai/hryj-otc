@@ -11,10 +11,10 @@
       </el-select>
 
       <el-select v-model="filterQuery.schemaCode" placeholder="收款方式" clearable style="width: 160px" class="filter-item">
-        <el-option v-for="item in PaySchema" :key="item.id" :label="item.label" :value="item.id" />
+        <el-option v-for="item in PaySchema" :key="item.id" :disabled="(filterQuery.channelCode!==undefined&&filterQuery.channelCode!=='')&&filterQuery.channelCode!==item.parentId" :label="item.label" :value="item.id" />
       </el-select>
 
-      <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" @click="handleFilter">
+      <el-button v-show="filterQuery.type==='0'" v-waves class="filter-item" style="margin-left: 40px" type="primary" @click="handleFilter">
         查询
       </el-button>
       <el-button v-if="!editAbled" v-waves class="filter-item" style="margin-left: 40px" type="primary" @click="editAbled=true">
@@ -28,7 +28,7 @@
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
         align="center"
-        label="通道名称"
+        :label="filterQuery.type==='1'?'支付方式':'通道名称'"
         width="120"
         element-loading-text="请给我点时间！"
       >
@@ -48,19 +48,21 @@
       </el-table-column>
 
       <el-table-column
+        v-if="filterQuery.type==='0'"
         align="center"
         label="收款方式"
         width="120"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.schemaName }}</span>
+          <span>{{ scope.row.channelCode }}</span>
         </template>
       </el-table-column>
 
       <el-table-column
+        v-if="filterQuery.type==='0'"
         align="center"
         label="通道说明"
-        min-width="120"
+        min-width="180"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.schemaDesc }}</span>
@@ -70,7 +72,7 @@
       <el-table-column
         align="center"
         label="手续费费率"
-        width="180"
+        min-width="120"
       >
         <template slot-scope="scope">
           <el-input v-if="editAbled" v-model="scope.row.rate" placeholder="请编辑手续费率" style="width: 120px;" class="filter-item" />
@@ -133,7 +135,6 @@ export default {
         2: [5, 6, 7, 8]
 
       },
-      activeType: '0',
       list: [],
       loading: false,
       dialogVisible: false,
@@ -156,8 +157,12 @@ export default {
     }
   },
   watch: {
-    activeType(val) {
-      this.$router.push(`${this.$route.path}?tab=${val}`)
+    filterQuery(val) {
+      // if (val === undefined) {
+      //   val = 0
+      // }
+      const type = val.type
+      this.$router.push(`${this.$route.path}?tab=${type}`)
     }
   },
   computed: {
@@ -173,12 +178,7 @@ export default {
   created() {
     // init the default selected tab
     const tab = this.$route.query.tab
-
-    const name = this.$route.name
-    if (name === 'parameter_commission') {
-      this.activeType = '4'
-    } else if (tab) {
-    }
+    tab === undefined ? this.filterQuery.type === 0 : this.filterQuery.type = tab.toString()
   },
   mounted() {
     this.getList()
@@ -186,7 +186,8 @@ export default {
   methods: {
     handleTabClick(tab, event) {
       this.meta.current = 1
-      this.activeType = tab.name
+      console.log('tab', tab, event)
+      this.$router.push(`${this.$route.path}?tab=${tab.name}`)
       this.getList()
     },
     metaChange(e) {
@@ -220,16 +221,6 @@ export default {
       this.editData = data
       this.dialogVisible = true
     },
-    // handleSave() {
-    //   const data = this.editData
-    //   const postData = {
-    //     id: data.id,
-    //     roleId: data.roleId,
-    //     time: data.time * 1,
-    //     type: data.type
-    //   }
-    //   this.save(postData)
-    // },
 
     handleSave() {
       const data = this.editData
@@ -276,32 +267,8 @@ export default {
         this.$message.error(err || '操作失败')
         this.loading = false
       })
-    },
-    handlDel(id) {
-      this.$confirm('确认删除当前项?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        subsidy_del({ id: id, type: this.activeType }).then(res => {
-          if (res.code === 0) {
-            this.$message({
-              message: '删除',
-              type: 'success'
-            })
-            this.getList()
-          } else {
-            this.$message.error(res.message || '操作失败')
-          }
-        }).catch(err => {
-          console.log('err', err)
-          this.$message.error(err || '操作失败')
-          this.loading = false
-        })
-      }).catch(() => {
-
-      })
     }
+
   }
 }
 </script>

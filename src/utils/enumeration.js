@@ -41,6 +41,11 @@ export const PayChannel = [{
   label: '云闪付'
 },
 {
+  name: 'CLOUD_PAY',
+  id: 4,
+  label: 'USDT提现'
+},
+{
   name: 'CASHIER_DESK',
   id: 88,
   label: '收银台'
@@ -50,40 +55,55 @@ export const PayChannel = [{
 export const PaySchema = [{
   name: 'ALI_QR_CODE',
   id: 0,
+  parentId: 0,
   label: '支付宝扫码'
 },
 {
   name: 'WX_QR_CODE',
   id: 1,
+  parentId: 1,
   label: '微信扫码'
 },
 {
   nama: 'BANK_SCAN_NUM',
   id: 2,
+  parentId: 2,
   label: '银行卡'
 },
 {
   name: 'CLOUD_QR_CODE',
   id: 3,
+  parentId: 3,
   label: '云闪付'
 },
 {
-  name: 'DESK_ALI',
+  name: 'USDT',
   id: 4,
+  parentId: 4,
+  label: 'USDT提现'
+},
+
+{
+  name: 'DESK_ALI',
+  id: 880,
+  parentId: 88,
   label: '支付宝收银台'
 },
 {
   name: 'DESK_WX',
-  id: 5,
+  id: 881,
+  parentId: 88,
   label: '微信收银台'
 }, {
   name: 'DESK_BANK',
-  id: 6,
+  id: 882,
+  parentId: 88,
   label: '银行卡收银台'
 },
 {
   name: 'DESK_CLOUD',
-  id: 7,
+  id: 883,
+  parentId: 88,
   label: '云闪付收银台'
 }
 

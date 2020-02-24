@@ -221,19 +221,8 @@
         </el-table-column>
         <el-table-column min-width="80px" align="left" label="支付方式">
           <template slot-scope="scope">
-            <el-tooltip placement="right">
-              <div v-if="scope.row.payInfo.payType===2" slot="content">
-                <div>卡号：{{ scope.row.payInfo.account }} </div>
-                <div>真实姓名：{{ scope.row.payInfo.real }} </div>
-                <div>银行：{{ scope.row.payInfo.bank }} </div>
-                <div>开户行{{ scope.row.payInfo.bankBranch }}</div>
-              </div>
-              <div v-else slot="content">
-                <div>支付账号：{{ scope.row.payInfo.account }} </div>
-                <div>支付昵称：{{ scope.row.payInfo.nick }}</div>
-              </div>
-              <div> <el-link :underline="false"><i class="el-icon-info" /> {{ scope.row.payInfo.payType|payTypeName }} </el-link>  </div>
-            </el-tooltip>
+            <el-link v-if="scope.row.payInfo.payType!==null" :underline="false" @click="handleShowPaymentInfo(scope.row.payInfo)"><i class="el-icon-info" /> {{ scope.row.payInfo.payType|payTypeName }} </el-link>
+            <span v-else>无</span>
           <!-- <span>{{ scope.row.remainAmount }}</span> -->
           </template>
         </el-table-column>

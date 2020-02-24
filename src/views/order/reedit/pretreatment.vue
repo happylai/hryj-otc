@@ -31,9 +31,9 @@
         <el-form-item label="原站内订单编号" class="addUserItem" prop="username">
           <el-input ref="orderNo" v-model="newOrder.orderNo" autocomplete="off" placeholder="请输入原站内订单编号" name="orderNo" type="text" tabindex="1" auto-complete="on" />
         </el-form-item>
-        <el-form-item label="原B端订单编号" class="addUserItem" prop="email">
+        <!-- <el-form-item label="原B端订单编号" class="addUserItem" prop="email">
           <el-input ref="merchantOrderNo" v-model="newOrder.merchantOrderNo" autocomplete="off" placeholder="请输原B端订单编号" name="merchantOrderNo" type="text" tabindex="1" auto-complete="on" />
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item label="" class="addUserItem">
           <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handleNewOrder">添加</el-button>

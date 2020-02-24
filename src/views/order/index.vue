@@ -87,7 +87,7 @@
 
         <el-table-column min-width="80px" align="left" label="支付方式">
           <template slot-scope="scope">
-     
+
             <el-link v-if="scope.row.payInfo.payType!==null" :underline="false" @click="handleShowPaymentInfo(scope.row.payInfo)"><i class="el-icon-info" /> {{ scope.row.payInfo.payType|payTypeName }} </el-link>
             <span v-else>无</span>
           <!-- <span>{{ scope.row.remainAmount }}</span> -->
@@ -174,7 +174,7 @@
 
         <el-table-column min-width="120px" align="center" label="第三方订单号">
           <template slot-scope="scope">
-            <span>{{ scope.row.merchantOrderNo }}</span>
+            <span>{{ scope.row.merchantOrderNo }}</span> <span v-if="scope.row.invokeCount&&scope.row.invokeCount>=2">({{ scope.row.invokeCount }})</span>
           </template>
         </el-table-column>
 

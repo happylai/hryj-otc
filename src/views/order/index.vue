@@ -629,8 +629,13 @@ export default {
       const data = {
         isMatch: this.activeType === '2',
         type: fliterQuery.type,
+        orderUid: fliterQuery.orderUid,
+        merchantOrder: fliterQuery.merchantOrder,
+        advertiseUid: fliterQuery.advertiseUid,
+        nick: fliterQuery.nick,
+        buyer: fliterQuery.buyer,
+        seller: fliterQuery.seller,
         payType: fliterQuery.payType,
-        query: fliterQuery.query,
         status: fliterQuery.status,
         userId: this.userId
       }

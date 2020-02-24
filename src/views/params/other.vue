@@ -326,18 +326,18 @@ export default {
       addData: {
         roleId: '',
         addNewData: '',
+        forceUpdate: false,
         version: undefined,
         versionDesc: undefined,
         downUrl: undefined,
-        system: undefined,
-        forceUpdate: false
+        system: undefined
       },
       list: [{
 
       }],
       groupDetail: [],
       editData: {
-        roleId: 1
+
       },
       editDataQuery: {
 
@@ -393,7 +393,12 @@ export default {
       this.ParamsType = tab.name
       this.addData = {
         roleId: undefined,
-        addNewData: undefined
+        addNewData: undefined,
+        forceUpdate: false,
+        version: undefined,
+        versionDesc: undefined,
+        downUrl: undefined,
+        system: undefined
       }
       this.getList()
       console.log(tab.name)

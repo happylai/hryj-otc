@@ -21,9 +21,9 @@
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-add" @click="showAdd=true">
+      <!-- <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-add" @click="showAdd=true">
         创建预处理
-      </el-button>
+      </el-button> -->
     </div>
     <listtable style="width:100%" :data="list" type="2" @del="handleDel" @refresh="handleFilter()" />
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />

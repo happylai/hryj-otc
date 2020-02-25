@@ -3,7 +3,7 @@
     title="支付方式详情"
     :visible.sync="dialogVisible"
     width="600px"
-    :show-close="false"
+    @close="handleClose"
   >
     <div>
       <el-row :gutter="20" class="rowHeiht">

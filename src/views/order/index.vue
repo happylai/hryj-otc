@@ -88,7 +88,7 @@
         <el-table-column min-width="80px" align="left" label="支付方式">
           <template slot-scope="scope">
 
-            <el-link v-if="scope.row.payInfo.payType!==null" :underline="false" @click="handleShowPaymentInfo(scope.row.payInfo)"><i class="el-icon-info" /> {{ scope.row.payInfo.payType|payTypeName }} </el-link>
+            <el-link v-if="scope.row.payType!==null" :underline="false" @click="handleShowPaymentInfo(scope.row.payInfo)"><i class="el-icon-info" /> {{ scope.row.payType|payTypeName }} </el-link>
             <span v-else>无</span>
           <!-- <span>{{ scope.row.remainAmount }}</span> -->
           </template>
@@ -221,7 +221,7 @@
         </el-table-column>
         <el-table-column min-width="80px" align="left" label="支付方式">
           <template slot-scope="scope">
-            <el-link v-if="scope.row.payInfo.payType!==null" :underline="false" @click="handleShowPaymentInfo(scope.row.payInfo)"><i class="el-icon-info" /> {{ scope.row.payInfo.payType|payTypeName }} </el-link>
+            <el-link v-if="scope.row.payType!==null" :underline="false" @click="handleShowPaymentInfo(scope.row.payInfo)"><i class="el-icon-info" /> {{ scope.row.payType|payTypeName }} </el-link>
             <span v-else>无</span>
           <!-- <span>{{ scope.row.remainAmount }}</span> -->
           </template>

@@ -101,12 +101,6 @@
       </template>
     </el-table-column>
 
-    <el-table-column align="center" label="状态" width="70">
-      <template slot-scope="scope">
-        <el-link :underline="false" type="success">已处理</el-link>
-      </template>
-    </el-table-column>
-
     <el-table-column align="center" label="回调状态" width="70">
       <template slot-scope="scope">
         <span>{{ scope.row.callbackStatus?'成功':"失败" }}</span>

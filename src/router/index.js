@@ -119,7 +119,7 @@ export const asyncRoutes = [{
     // redirect: '/order/appeal/list',
 
     meta: {
-      title: '提现列表',
+      title: '提现委托',
       icon: '',
       authName: ['order_appeal']
 

@@ -178,10 +178,10 @@
         <el-col :span="8" class="textAlingR">身份证号：</el-col>
         <el-col :span="8">{{ editData.idNumber }}</el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageFront" v-lazy="editData.identityImageFront" @click="dialogVisible=false" :preview="id+'Idcard'" class="idImage" alt="身份证正面">
+          <img v-if="editData.identityImageFront" v-lazy="editData.identityImageFront" :preview="id+'Idcard'" class="idImage" alt="身份证正面" @click="dialogVisible=false">
         </el-col>
         <el-col :span="4">
-          <img v-if="editData.identityImageBack" v-lazy="editData.identityImageBack" @click="dialogVisible=false" :preview="id+'Idcard'" class="idImage" alt="身份证反面">
+          <img v-if="editData.identityImageBack" v-lazy="editData.identityImageBack" :preview="id+'Idcard'" class="idImage" alt="身份证反面" @click="dialogVisible=false">
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
@@ -215,8 +215,7 @@
       <el-row v-else-if="type===2" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户角色：</el-col>
         <el-col :span="16">
-          <el-link type="success" :underline="false">超级</el-link>
-
+          <el-link type="success" :underline="false">{{ userRolesConstName(editData.applyRoleId,userRolesConst) }}</el-link>
           <el-link type="danger" :underline="false">当前登录角色：{{ userRolesConstName(editData.currentRoleId,userRolesConst) }}</el-link>
         </el-col>
       </el-row>

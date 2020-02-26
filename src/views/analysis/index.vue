@@ -55,11 +55,11 @@
     <h3>整体统计</h3>
     <div class="filter-container" style="margin-bottom: 10px;">
       <el-input v-model="fliterQuery.userUid" clearable placeholder="B端UID" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="fliterQuery.payChannel" clearable placeholder="支付通道" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in PayChannel" :key="item.id" :label="item.label" :value="item.id" />
+      <el-select v-model="fliterQuery.payChannel" clearable placeholder="支付通道" style="width: 140px" class="filter-item">
+        <el-option v-for="item in PayChannel" :key="item.id" :disabled="item.id===3||item.id===4" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-model="fliterQuery.payType" clearable placeholder="支付方式" clearable style="width: 140px" class="filter-item">
-        <el-option v-for="item in PayType" :key="item.id" :label="item.label" :value="item.id" />
+      <el-select v-model="fliterQuery.payType" clearable placeholder="支付方式" style="width: 140px" class="filter-item">
+        <el-option v-for="item in PayType" :key="item.id" :disabled="item.id===3" :label="item.label" :value="item.id" />
       </el-select>
       <el-date-picker
         v-model="fliterQuery.date"

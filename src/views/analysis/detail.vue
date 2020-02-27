@@ -6,7 +6,7 @@
       <el-select v-model="filterQuery.payChannel" clearable placeholder="支付通道" yle="width: 140px" class="filter-item">
         <el-option v-for="item in PayChannel" :key="item.id" :disabled="item.id===3||item.id===4" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-model="filterQuery.paySchema" clearable placeholder="支付模式" style="width: 140px" class="filter-item">
+      <el-select v-model="filterQuery.schema" clearable placeholder="支付模式" style="width: 140px" class="filter-item">
         <el-option v-for="item in PaySchema" :key="item.id" :disabled="(filterQuery.payChannel!==undefined&&filterQuery.payChannel!=='')&&filterQuery.payChannel!==item.parentId" :label="item.label" :value="item.id" />
       </el-select>
       <el-date-picker
@@ -118,7 +118,7 @@
       </el-table-column>
       <el-table-column align="center" label="支付模式" min-width="60px">
         <template slot-scope="scope">
-          <span>{{ scope.row.paySchema | payTypeNameForStatistics }}</span>
+          <span>{{ scope.row.paySchema | PaySchemaName }}</span>
         </template>
       </el-table-column>
 
@@ -164,7 +164,8 @@ export default {
         payChannel: undefined,
         channelCode: undefined,
         userUid: undefined,
-        payType: undefined
+        payType: undefined,
+        schema: undefined
 
       },
       meta: {

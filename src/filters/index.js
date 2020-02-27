@@ -27,7 +27,8 @@ import {
   PayChannel,
   AwardType,
   OperatingSystem,
-  PaymentStatus
+  PaymentStatus,
+  PaySchema
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -589,3 +590,21 @@ export function userpaymentStatus(id) {
   }
   return res
 }
+
+/**
+ * awardType
+ * @param {number} num
+ */
+export function PaySchemaName(id) {
+  let res = '-'
+  if (id === null) {
+    res = '全部'
+  } else if (has({ foo: id }, 'foo')) {
+    const data = PaySchema.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+

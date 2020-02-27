@@ -2,15 +2,15 @@
   <div>
     <h3>详细数据</h3>
     <div class="filter-container" style="margin-bottom: 10px;">
-      <el-input v-model="fliterQuery.userUid" clearable placeholder="B端UID" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="fliterQuery.payChannel" clearable placeholder="支付通道" yle="width: 140px" class="filter-item">
+      <el-input v-model="filterQuery.userUid" clearable placeholder="B端UID" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="filterQuery.payChannel" clearable placeholder="支付通道" yle="width: 140px" class="filter-item">
         <el-option v-for="item in PayChannel" :key="item.id" :disabled="item.id===3||item.id===4" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-model="fliterQuery.payType" clearable placeholder="支付方式" yle="width: 140px" class="filter-item">
-        <el-option v-for="item in PayType" :key="item.id" :disabled="item.id===3" :label="item.label" :value="item.id" />
+      <el-select v-model="filterQuery.paySchema" clearable placeholder="支付模式" style="width: 140px" class="filter-item">
+        <el-option v-for="item in PaySchema" :key="item.id" :disabled="(filterQuery.payChannel!==undefined&&filterQuery.payChannel!=='')&&filterQuery.payChannel!==item.parentId" :label="item.label" :value="item.id" />
       </el-select>
       <el-date-picker
-        v-model="fliterQuery.date"
+        v-model="filterQuery.date"
         class="filter-item"
         type="daterange"
         range-separator="至"
@@ -116,9 +116,9 @@
           <span>{{ scope.row.noMatchPercent }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="支付方式" min-width="60px">
+      <el-table-column align="center" label="支付模式" min-width="60px">
         <template slot-scope="scope">
-          <span>{{ scope.row.payType | payTypeNameForStatistics }}</span>
+          <span>{{ scope.row.paySchema | payTypeNameForStatistics }}</span>
         </template>
       </el-table-column>
 
@@ -146,7 +146,7 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import tip from '@/components/Tip'
 import waves from '@/directive/waves' // waves directive
-import { PayChannel, PayType } from '@/utils/enumeration'
+import { PayChannel, PayType, PaySchema } from '@/utils/enumeration'
 import { merchant_statics_day as listApi } from '@/api/statistic'
 
 export default {
@@ -158,10 +158,11 @@ export default {
     return {
       PayChannel,
       PayType,
-
-      fliterQuery: {
+      PaySchema,
+      filterQuery: {
         date: null,
         payChannel: undefined,
+        channelCode: undefined,
         userUid: undefined,
         payType: undefined
 
@@ -199,14 +200,14 @@ export default {
       this.meta.size = e.limit
       this.meta.current = e.page
 
-      const fliterQuery = this.fliterQuery
+      const filterQuery = this.filterQuery
       const data = {
-        ...this.fliterQuery,
+        ...this.filterQuery,
         date: undefined
       }
-      if (this.fliterQuery.date) {
-        data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD')
-        data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD')
+      if (this.filterQuery.date) {
+        data.start = this.$moment(filterQuery.date[0]).format('YYYY-MM-DD')
+        data.end = this.$moment(filterQuery.date[1]).format('YYYY-MM-DD')
       }
 
       this.getList(this.meta, data)
@@ -226,15 +227,15 @@ export default {
       })
     },
     handleFilter() {
-      const fliterQuery = this.fliterQuery
-      console.log('fliterQuery', this.fliterQuery)
+      const filterQuery = this.filterQuery
+      console.log('filterQuery', this.filterQuery)
       const data = {
-        ...this.fliterQuery,
+        ...this.filterQuery,
         date: undefined
       }
-      if (fliterQuery.date) {
-        data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD')
-        data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD')
+      if (filterQuery.date) {
+        data.start = this.$moment(filterQuery.date[0]).format('YYYY-MM-DD')
+        data.end = this.$moment(filterQuery.date[1]).format('YYYY-MM-DD')
       }
       const meta = this.meta
       meta.current = 1

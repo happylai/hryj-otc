@@ -54,15 +54,15 @@
     </el-card>
     <h3>整体统计</h3>
     <div class="filter-container" style="margin-bottom: 10px;">
-      <el-input v-model="fliterQuery.userUid" clearable placeholder="B端UID" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="fliterQuery.payChannel" clearable placeholder="支付通道" style="width: 140px" class="filter-item">
+      <el-input v-model="filterQuery.userUid" clearable placeholder="B端UID" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="filterQuery.payChannel" clearable placeholder="支付通道" style="width: 140px" class="filter-item">
         <el-option v-for="item in PayChannel" :key="item.id" :disabled="item.id===3||item.id===4" :label="item.label" :value="item.id" />
       </el-select>
-      <el-select v-model="fliterQuery.payType" clearable placeholder="支付方式" style="width: 140px" class="filter-item">
-        <el-option v-for="item in PayType" :key="item.id" :disabled="item.id===3" :label="item.label" :value="item.id" />
+      <el-select v-model="filterQuery.schemaCode" clearable placeholder="支付模式" style="width: 140px" class="filter-item">
+        <el-option v-for="item in PaySchema" :key="item.id" :disabled="(filterQuery.payChannel!==undefined&&filterQuery.payChannel!=='')&&filterQuery.payChannel!==item.parentId" :label="item.label" :value="item.id" />
       </el-select>
       <el-date-picker
-        v-model="fliterQuery.date"
+        v-model="filterQuery.date"
         class="filter-item"
         type="daterange"
         range-separator="至"
@@ -201,7 +201,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
-import { PayChannel, PayType } from '@/utils/enumeration'
+import { PayChannel, PayType, PaySchema } from '@/utils/enumeration'
 import { data_center, merchant_statics_total, merchant_statics_day } from '@/api/statistic'
 import staticDetail from './detail'
 
@@ -213,12 +213,13 @@ export default {
     return {
       PayChannel,
       PayType,
-
-      fliterQuery: {
+      PaySchema,
+      filterQuery: {
         date: null,
         payChannel: undefined,
         userUid: undefined,
-        payType: undefined
+        payType: undefined,
+        schemaCode: undefined
 
       },
       meta: {
@@ -285,15 +286,15 @@ export default {
       this.get_merchant_statics()
     },
     handleFilter() {
-      const fliterQuery = this.fliterQuery
-      console.log('fliterQuery', this.fliterQuery)
+      const filterQuery = this.filterQuery
+      console.log('filterQuery', this.filterQuery)
       const data = {
-        ...this.fliterQuery
+        ...this.filterQuery
       }
-      if (fliterQuery.date) {
-        data.start = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
+      if (filterQuery.date) {
+        data.start = this.$moment(filterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
         // data.start = '2019-10-16 12:11:11'
-        data.end = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
+        data.end = this.$moment(filterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
       }
       data.date = undefined
       const meta = this.meta

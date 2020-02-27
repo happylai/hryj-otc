@@ -10,7 +10,7 @@
         <el-option v-for="item in PayChannel" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
 
-      <el-select v-model="filterQuery.schemaCode" placeholder="收款方式" clearable style="width: 160px" class="filter-item">
+      <el-select v-model="filterQuery.schemaCode" placeholder="支付模式" clearable style="width: 160px" class="filter-item">
         <el-option v-for="item in PaySchema" :key="item.id" :disabled="(filterQuery.channelCode!==undefined&&filterQuery.channelCode!=='')&&filterQuery.channelCode!==item.parentId" :label="item.label" :value="item.id" />
       </el-select>
 
@@ -71,7 +71,7 @@
 
       <el-table-column
         align="center"
-        label="手续费费率"
+        label="手续费费率%"
         min-width="120"
       >
         <template slot-scope="scope">

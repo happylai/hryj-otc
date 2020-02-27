@@ -54,7 +54,7 @@
         width="120"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.channelCode }}</span>
+          <span>{{ scope.row.schemaName }}</span>
         </template>
       </el-table-column>
 
@@ -83,7 +83,7 @@
 
       <el-table-column
         align="center"
-        label="全局开关"
+        :label="type==='1'?'开关':'全局开关'"
         width="120"
       >
         <template slot-scope="scope">

@@ -96,13 +96,13 @@
 
         <el-table-column align="center" label="收款账号" width="60">
           <template slot-scope="scope">
-            <span>{{ scope.row.payInfo.account }}</span>
+            <span>{{ scope.row.payInfo.account||'无' }}</span>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="收款昵称" width="60">
           <template slot-scope="scope">
-            <span>{{ scope.row.payInfo.nick }}</span>
+            <span>{{ scope.row.payInfo.nick||'无' }}</span>
           </template>
         </el-table-column>
 
@@ -120,13 +120,13 @@
 
         <el-table-column align="center" label="取消时间" min-width="100">
           <template slot-scope="scope">
-            <span>{{ scope.row.payCancelTime }}</span>
+            <span>{{ scope.row.payCancelTime||'无' }}</span>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="完成时间" min-width="100">
           <template slot-scope="scope">
-            <span>{{ scope.row.receiveConfirmTime }}</span>
+            <span>{{ scope.row.receiveConfirmTime||'无' }}</span>
           </template>
         </el-table-column>
 
@@ -253,13 +253,13 @@
 
         <el-table-column align="center" label="取消时间" min-width="100">
           <template slot-scope="scope">
-            <span>{{ scope.row.payCancelTime }}</span>
+            <span>{{ scope.row.payCancelTime||'无' }}</span>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="完成时间" min-width="100">
           <template slot-scope="scope">
-            <span>{{ scope.row.receiveConfirmTime }}</span>
+            <span>{{ scope.row.receiveConfirmTime||'无' }}</span>
           </template>
         </el-table-column>
 

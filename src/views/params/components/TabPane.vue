@@ -1,12 +1,25 @@
 <template>
+
   <el-table v-loading="loading" :data="data" border fit highlight-current-row style="width: 800px">
-    <el-table-column align="center" label="角色" width="100" element-loading-text="请给我点时间！">
+    <el-table-column v-if="type==='5'" min-width="180px" align="center" label="支付方式">
+      <template slot-scope="scope">
+        <span>{{ scope.row.payType|payTypeName }}</span>
+      </template>
+    </el-table-column>
+
+    <el-table-column v-if="type!=='5'" align="center" label="角色" width="100" element-loading-text="请给我点时间！">
       <template slot-scope="scope">
         <span>{{ userRolesConstName( scope.row.roleId,userRolesConst) }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column min-width="180px" align="center" label="有效时间">
+    <el-table-column v-if="type==='5'" min-width="180px" align="center" label="联系失败次数">
+      <template slot-scope="scope">
+        <span>{{ scope.row.times }}</span>
+      </template>
+    </el-table-column>
+
+    <el-table-column min-width="180px" align="center" :label="type==='5'?'冻结时间':'有效时间'">
       <template slot-scope="scope">
         <span>{{ scope.row.time }}分钟</span>
       </template>

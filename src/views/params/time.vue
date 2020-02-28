@@ -1,10 +1,10 @@
 <template>
   <div class="tab-container">
-  <el-tabs v-model="TimeParamsType" style="margin-top:15px;" @tab-click="handleTabClick">
-      <div class="filter-container" style="margin-bottom: 10px;">
+    <el-tabs v-model="TimeParamsType" style="margin-top:15px;" @tab-click="handleTabClick">
+      <div v-if="TimeParamsType!=='5'" class="filter-container" style="margin-bottom: 10px;">
         <el-input v-model="addData.time" :placeholder="TimeParamsTypePlaceHolder[TimeParamsType]+'(分钟)'" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
         <el-select v-model="addData.roleId" placeholder="选择角色" clearable style="width: 140px" class="filter-item">
-          <el-option v-for="item in userRolesConst" :disabled="!addUserType[TimeParamsType].includes(item.id)" :key="item.id" :label="item.zhName" :value="item.id" />
+          <el-option v-for="item in userRolesConst" :key="item.id" :disabled="!addUserType[TimeParamsType].includes(item.id)" :label="item.zhName" :value="item.id" />
         </el-select>
 
         <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" @click="handleAdd">
@@ -12,18 +12,29 @@
         </el-button>
 
       </div>
-      <el-tab-pane v-for="item in tabMapOptions" :key="item.key" v-if="item.visible" :label="item.label" :name="item.key" />
+      <el-tab-pane v-for="item in tabMapOptions" v-if="item.visible" :key="item.key" :label="item.label" :name="item.key" />
     </el-tabs>
-    <tab-pane :loading="loading" :data="list" @edit="handlEdit" />
+    <tab-pane :loading="loading" :data="list" :type="TimeParamsType" @edit="handlEdit" />
     <!-- <pagination v-show="meta.total>0" :total="meta.total" :page.sync="meta.pages" :limit.sync="meta.size" @pagination="getList" /> -->
 
     <el-dialog :visible.sync="dialogVisible" :title="TimeParamsTypePlaceHolder[TimeParamsType]+'设置'">
-      <el-row :gutter="20" class="userRow">
+      <el-row v-if="TimeParamsType!=='5'" :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">当前角色：</el-col>
         <el-col :span="16">{{ userRolesConstName(editData.roleId,userRolesConst) }} </el-col>
       </el-row>
+      <el-row v-if="TimeParamsType==='5'" :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">支付方式：</el-col>
+        <el-col :span="16">{{ editData.payType|payTypeName }} </el-col>
+      </el-row>
       <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">倒计时：</el-col>
+        <el-col :span="8" class="textAlingR">冻结次数：</el-col>
+        <el-col :span="16">
+          <el-input v-model="editData.newtimes" style="width: 150px;height:30px" placeholder="请输入冻结次数" />
+          <el-link type="danger" :underline="false">当前冻结次数：{{ editData.times }}</el-link>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">{{ TimeParamsType==='5'?'冻结时间':'有效时间' }}</el-col>
         <el-col :span="16">
           <el-input v-model="editData.newtime" style="width: 150px;height:30px" placeholder="请输入时间参数(如:15)" />
           <el-link type="danger" :underline="false">当前时间参数：{{ editData.time }}</el-link>
@@ -57,24 +68,26 @@ export default {
       adminRolesConstName,
       UserType,
       tabMapOptions: [
-        { label: '买家付款超时', key: '0' ,visible:true },
-        { label: '卖家确认超时', key: '1' ,visible:true},
-        { label: '触发申诉时间', key: '2' ,visible:false},
-        { label: '解冻货币时间', key: '3' ,visible:true},
-        { label: '一键接单时间', key: '4' ,visible:true}
+        { label: '买家付款超时', key: '0', visible: true },
+        { label: '卖家确认超时', key: '1', visible: true },
+        { label: '触发申诉时间', key: '2', visible: false },
+        { label: '解冻货币时间', key: '3', visible: true },
+        { label: '一键接单时间', key: '4', visible: true },
+        { label: '账号冻结', key: '5', visible: true }
       ],
       TimeParamsTypePlaceHolder: {
         0: '超时参数',
         1: '超时参数',
         2: '申诉激活时间',
         3: '自动解冻时间',
-        4: '一键接单时间'
+        4: '一键接单时间',
+        5: '账号冻结'
       },
-      addUserType:{
-        0:[4,5,6,7,8],
-        1:[4,5,6,7,8],
-        3:[6,7,8],
-        4:[5,6,7,8]
+      addUserType: {
+        0: [4, 5, 6, 7, 8],
+        1: [4, 5, 6, 7, 8],
+        3: [6, 7, 8],
+        4: [5, 6, 7, 8]
       },
       TimeParamsType: '0',
       loading: false,
@@ -149,8 +162,9 @@ export default {
       const data = this.editData
       const postData = {
         id: data.id,
-        roleId: data.roleId,
+        roleId: data.roleId === null ? undefined : data.roleId,
         time: data.newtime ? data.newtime * 1 : data.time * 1,
+        times: data.newtimes ? data.newtimes * 1 : data.times * 1,
         type: data.type
       }
       this.save(postData)

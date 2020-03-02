@@ -818,3 +818,18 @@ export const OperatingSystem = [
     label: '苹果系统'
   }
 ]
+
+export const MatchStatus = [
+  {
+    id: 0,
+    label: '正常'
+  },
+  {
+    id: 1,
+    label: '异常'
+  },
+  {
+    id: 2,
+    label: '冻结'
+  }
+]

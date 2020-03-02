@@ -28,7 +28,8 @@ import {
   AwardType,
   OperatingSystem,
   PaymentStatus,
-  PaySchema
+  PaySchema,
+  MatchStatus
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -608,3 +609,21 @@ export function PaySchemaName(id) {
   return res
 }
 
+/**
+ * awardType
+ * @param {number} num
+ */
+export function matchStatusName(id) {
+  let res = '-'
+  if (id === null) {
+    res = '全部'
+  } else if (has({ foo: id }, 'foo')) {
+    const data = MatchStatus.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}
+
+MatchStatus

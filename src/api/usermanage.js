@@ -187,6 +187,17 @@ export function freeze_deal(data) {
   })
 }
 
+// 用户支付方式解冻
+
+export function unfrozen_payType(data) {
+  return request({
+    url: `/admin/user/pay_type/unfrozen`,
+    method: 'post',
+    data
+
+  })
+}
+
 // 代理商列表
 export function users_agent(meta, data) {
   return request({

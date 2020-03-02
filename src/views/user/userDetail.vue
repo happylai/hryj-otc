@@ -112,6 +112,25 @@
         </template>
       </el-table-column>
 
+      <el-table-column min-width="120px" label="接单状态" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.matchStatus|matchStatusName }} </span>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="120px" label="成功/失败次数" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.matchCount>=0">成功{{ scope.row.matchCount }} </span>
+          <span v-else>失败{{ -scope.row.matchCount }} </span>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="120px" label="成功/失败次数" align="center">
+        <template slot-scope="scope">
+          <el-button :disabled="scope.row.matchStatus!==2" type="primary" size="small" @click="handleUnfreeze(scope.row)">解冻</el-button>
+        </template>
+      </el-table-column>
+
       <!-- <el-table-column align="center" label="交易提成" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.royalty }}</span>
@@ -460,7 +479,7 @@ import pagination from '@/components/Pagination'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect, OrderStatus, CounterParty, PayType } from '@/utils/enumeration'
-import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, get_deal_subsidy, deal_subsidy, system_transfer } from '@/api/usermanage'
+import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, user_b_save, pay_types, role_apply_audit, get_deal_subsidy, deal_subsidy, system_transfer, unfrozen_payType } from '@/api/usermanage'
 import { order_details } from '@/api/order'
 import float from '@/directive/float' // float Number directive
 export default {
@@ -561,6 +580,7 @@ export default {
 
     this.type = this.$route.meta.type
     this.detail(this.id)
+    this.getPayType(this.id)
     this.getList(null, { userId: this.id })
     this.get_subsidy()
   },
@@ -580,6 +600,8 @@ export default {
         this.detailLoading = false
       })
       this.payTypeLoading = true
+    },
+    getPayType(id) {
       pay_types({ userId: id || this.id }).then(res => {
         this.payTypeLoading = false
 
@@ -746,6 +768,25 @@ export default {
           })
           this.get_subsidy()
         }
+      })
+    },
+    handleUnfreeze(data) {
+      unfrozen_payType({
+        'payId': data.id,
+        'payType': data.payType,
+        'userId': data.userId
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message({
+            type: 'success',
+            message: '操作成功'
+          })
+          this.getPayType()
+        } else {
+          this.$message.error('操作失败')
+        }
+      }).catch(err => {
+        this.$message.error(err || '操作失败')
       })
     },
     editAssets() {

@@ -125,7 +125,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="120px" label="成功/失败次数" align="center">
+      <el-table-column min-width="120px" label="操作" align="center">
         <template slot-scope="scope">
           <el-button :disabled="scope.row.matchStatus!==2" type="primary" size="small" @click="handleUnfreeze(scope.row)">解冻</el-button>
         </template>

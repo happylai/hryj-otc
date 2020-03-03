@@ -10,9 +10,10 @@
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>订单ID：{{ modals.orderUuid }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>下单时间：{{ modals.orderTime }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>申诉时间：{{ modals.creatTime }}</div></el-col>
+          <el-col v-if="modals.result>0" :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>申诉状态：{{ modals.result|appealeStatus }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>订单状态：{{ modals.appealOrderStatus }}</div></el-col>
+          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>订单状态：{{ modals.appealOrderStatus|orderStatus }}</div></el-col>
           <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="6"><div>交易额：{{ modals.amount }}</div></el-col>
         </el-row>
         <el-row :gutter="10" class="card-row">
@@ -274,6 +275,9 @@ export default {
             data.sourceProofArr = data.sourceProof.split(',')
           }
           this.modals = data
+          if (this.modals.result === 1 || this.modals.result === 2) {
+            this.resultReason = this.modals.resultReason
+          }
         }
         this.$previewRefresh()
         console.log('res')

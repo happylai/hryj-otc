@@ -29,7 +29,8 @@ import {
   OperatingSystem,
   PaymentStatus,
   PaySchema,
-  MatchStatus
+  MatchStatus,
+  AppealeStatus
 } from '@/utils/enumeration'
 /**
  * Show plural label if time is plural number
@@ -626,4 +627,19 @@ export function matchStatusName(id) {
   return res
 }
 
-MatchStatus
+/**
+ * awardType
+ * @param {number} num
+ */
+export function appealeStatus(id) {
+  let res = '-'
+  if (id === null) {
+    res = '全部'
+  } else if (has({ foo: id }, 'foo')) {
+    const data = AppealeStatus.filter((item) => { if (item.id === id) { return item } })
+    if (has({ foo: data }, 'foo')) {
+      res = data[0].label
+    }
+  }
+  return res
+}

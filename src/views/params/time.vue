@@ -26,7 +26,7 @@
         <el-col :span="8" class="textAlingR">支付方式：</el-col>
         <el-col :span="16">{{ editData.payType|payTypeName }} </el-col>
       </el-row>
-      <el-row :gutter="20" class="userRow">
+      <el-row :gutter="20" v-if="TimeParamsType==='5'" class="userRow">
         <el-col :span="8" class="textAlingR">冻结次数：</el-col>
         <el-col :span="16">
           <el-input v-model="editData.newtimes" style="width: 150px;height:30px" placeholder="请输入冻结次数" />
@@ -34,7 +34,7 @@
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">{{ TimeParamsType==='5'?'冻结时间':'有效时间' }}</el-col>
+        <el-col :span="8" class="textAlingR">{{ TimeParamsType==='5'?'冻结时间：':'有效时间：' }}</el-col>
         <el-col :span="16">
           <el-input v-model="editData.newtime" style="width: 150px;height:30px" placeholder="请输入时间参数(如:15)" />
           <el-link type="danger" :underline="false">当前时间参数：{{ editData.time }}</el-link>

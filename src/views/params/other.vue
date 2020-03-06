@@ -21,7 +21,7 @@
         </el-select>
         <el-input v-model="addData.addNewData" :placeholder="ParamsTypePlaceHolder[ParamsType]" style="width: 200px;" class="filter-item" />
 
-        <el-input v-show="ParamsType==='2'" v-model="addData.minVolume" placeholder="达标交易量(如：300000)" style="width: 200px;" class="filter-item" />
+        <el-input v-show="ParamsType==='2'||ParamsType==='3'" v-model="addData.minVolume" :placeholder="ParamsType==='2'?`达标交易量(如：300000)`:'冻结时间(分钟)' " style="width: 200px;" class="filter-item" />
         <el-select v-if="ParamsType==='5'" v-model="addData.system" placeholder="选择操作系统" clearable style="width: 140px" class="filter-item">
           <el-option
             v-for="item in OperatingSystem"
@@ -131,7 +131,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="ParamsType==='2'" min-width="180px" :prop="minVolume" align="center" label="退还条件(交易量达标)">
+      <el-table-column v-if="ParamsType==='2'||ParamsType==='3'" min-width="180px" :prop="minVolume" align="center" :label="ParamsType==='2'?'退还条件(交易量达标)':'冻结时间(分钟)'">
         <template slot-scope="scope">
           <span>{{ scope.row.minVolume }}</span>
         </template>
@@ -253,11 +253,11 @@
             <span v-if="ParamsType==3">{{ editData.num }}</span></el-link> -->
           </el-link></el-col>
       </el-row>
-      <el-row v-if="ParamsType==='2'" :gutter="20" class="userRow">
-        <el-col :span="8" class="textAlingR">达标交易量：</el-col>
+      <el-row v-if="ParamsType==='2'||ParamsType==='3'" :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">{{ ParamsType==='2'?'达标交易量：':'冻结时间(分钟)' }}：</el-col>
         <el-col :span="16">
-          <el-input v-model="editData.newminVolume" style="width: 150px;height:30px" :placeholder="`请输入达标交易量`" />
-          <el-link type="danger" :underline="false">当前达标交易量参数： <span>{{ editData.minVolume }}</span>
+          <el-input v-model="editData.newminVolume" style="width: 150px;height:30px" :placeholder="ParamsType==='2'?`请输入达标交易量`:'请输入冻结时间(分钟)'" />
+          <el-link type="danger" :underline="false">{{ ParamsType==='2'?'当前达标交易量参数：':'当前冻结时间(分钟)' }} <span>{{ editData.minVolume }}</span>
 
           </el-link></el-col>
       </el-row>
@@ -458,7 +458,7 @@ export default {
         id: data.id,
         roleId: data.roleId,
         money: data.newData * 1,
-        minVolume: this.ParamsType === '2' ? data.newminVolume : undefined,
+        minVolume: (this.ParamsType === '2' || this.ParamsType === '3') ? data.newminVolume : undefined,
         type: data.type
       }
       this.save(postData)
@@ -489,6 +489,11 @@ export default {
         }
         if (this.ParamsType === '2') {
           if (!this.addData.minVolume) { this.$message.error('请填写达标交易量'); return false } else {
+            data.minVolume = this.addData.minVolume
+          }
+        }
+        if (this.ParamsType === '3') {
+          if (!this.addData.minVolume) { this.$message.error('请填写冻结时间'); return false } else {
             data.minVolume = this.addData.minVolume
           }
         }

@@ -833,3 +833,106 @@ export const MatchStatus = [
     label: '冻结'
   }
 ]
+
+export const billType = [
+  {
+    id: 1,
+    name: 'BUY_IN',
+    label: '交易购入'
+  },
+  {
+    id: 2,
+    name: 'SELL_OUT',
+    label: '交易卖出 '
+  },
+  {
+    id: 3,
+    name: '普通商家申请',
+    label: '其他'
+  },
+  {
+    id: 4,
+    name: 'TRUST_APPLY',
+    label: '信任商家申请'
+  },
+  {
+    id: 5,
+    name: 'STAPLE_APPLY',
+    label: '大宗商家申请 '
+  },
+  {
+    id: 6,
+    name: 'DEAL_FEE',
+    label: '交易手续费'
+  },
+  {
+    id: 7,
+    name: 'DEAL_SUBSIDY',
+    label: '交易补贴'
+  },
+  {
+    id: 8,
+    name: 'NIGHT_SUBSIDY',
+    label: '夜间补贴 '
+  },
+  {
+    id: 9,
+    name: 'AMOUNT_SUBSIDY',
+    label: '达量补贴'
+  },
+  {
+    id: 10,
+    name: 'SHARE_SUBSIDY',
+    label: '邀请奖励'
+  },
+  {
+    id: 11,
+    name: 'BACK_ACTIVE_BALANCE',
+    label: '退还激活金 '
+  },
+  {
+    id: 12,
+    name: 'BACK_DEPOSIT',
+    label: '退还保证金'
+  },
+  {
+    id: 13,
+    name: 'BACK_DEPOSIT',
+    label: '代理商补贴'
+  },
+  {
+    id: 14,
+    name: 'SHARE_SUBSIDY',
+    label: '邀请奖励'
+  },
+  {
+    id: 15,
+    name: 'BACK_ACTIVE_BALANCE',
+    label: '退还激活金 '
+  },
+  {
+    id: 16,
+    name: 'REORDER_BUY_IN',
+    label: '补单买入 '
+  },
+  {
+    id: 17,
+    name: 'REORDER_SELL_OUT',
+    label: '补单卖出 '
+  },
+  {
+    id: 18,
+    name: 'RELEASE_REWARD',
+    label: '放行奖励'
+  },
+  {
+    id: 21,
+    name: 'SYSTEM_TRANSFER_IN',
+    label: '系统打款'
+  },
+  {
+    id: 22,
+    name: 'SYSTEM_TRANSFER_OUT',
+    label: '系统扣款'
+  }
+]

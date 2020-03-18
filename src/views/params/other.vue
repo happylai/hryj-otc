@@ -1,7 +1,7 @@
 <template>
   <div class="tab-container">
     <el-tabs v-model="ParamsType" style="margin-top:15px;" @tab-click="handleTabClick">
-      <div class="filter-container" style="margin-bottom: 10px;">
+      <div class="filter-container" v-if="ParamsType!=='6'" style="margin-bottom: 10px;">
         <!-- <el-select v-if="ParamsType!=='4'&&ParamsType!=='2'" v-model="addData.roleId" :placeholder="'选择'+roleName[ParamsType]" clearable style="width: 140px" class="filter-item">
           <el-option v-for="item in UserType" :key="item.id" :disabled="ParamsType==1&&(item.id===1||item.id===4)" :label="item.label" :value="item.id" />
         </el-select> -->
@@ -49,7 +49,9 @@
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key" />
     </el-tabs>
     <!-- <tab-pane :loading="loading" :data="list" @edit="handlEdit" /> -->
-    <el-row v-if="ParamsType==='4'" :gutter="20" class="tableRow">
+    <blacklist v-if="ParamsType==='6'" />
+
+    <el-row v-else-if="ParamsType==='4'" :gutter="20" class="tableRow">
       <el-col :span="8" class="textAlingR">
         <el-table ref="groupsTable" v-loading="loading" :data="list" border fit highlight-current-row style="width: 800px" @current-change="handleCurrentChange">
           <el-table-column align="center" label="分组名称" width="100" element-loading-text="请给我点时间！">
@@ -278,9 +280,10 @@ import { deposits, deposit_save, active_golds, active_gold_save, cancel_nums, ca
   groups, group_save, groups_scopes, get_group_scopes_add, scopes_add,
   app_version_save, app_versions, group_del, del_scopes } from '@/api/params'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
+import blacklist from './components/blacklist'
 export default {
   name: 'Tab',
-  components: { pagination },
+  components: { pagination,blacklist },
   directives: { waves },
   data() {
     return {
@@ -295,7 +298,8 @@ export default {
         { label: '激活金', key: '2', mame: 'activeGold' },
         { label: '每日可取消单数', key: '3', name: 'num' },
         { label: '分组设置', key: '4', name: 'num' },
-        { label: '系统版本', key: '5', name: 'version' }
+        { label: '系统版本', key: '5', name: 'version' },
+        { label: '拉单设置', key: '6', name: 'restrict' }
 
       ],
       addUserType: {
@@ -307,7 +311,9 @@ export default {
         2: '激活金',
         3: '每日可取消单数',
         4: '分组名称',
-        5: 'APP系统版本'
+        5: 'APP系统版本',
+        6: 'APP系统版本'
+
 
       },
       roleName: ['', '升级角色', '角色', '角色', '角色'],

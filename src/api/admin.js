@@ -53,3 +53,20 @@ export function operate_logs(meta, data) {
   })
 }
 
+// 修改本账号密码
+export function change_password(data) {
+  return request({
+    url: `/admin/change_password`,
+    method: 'post',
+    data: data
+  })
+}
+
+// 发送修改账号密码的短息
+export function send_change_msg(data) {
+  return request({
+    url: `/admin/send_change_msg`,
+    method: 'post',
+    data: data
+  })
+}

@@ -300,11 +300,41 @@ export function merchant_rates(meta, data) {
   })
 }
 
-// B端出入金费率保存
-export function merchant_rate_save(data) {
+// 获取黑名单ip列表
+export function restrict_ip(data) {
   return request({
-    url: `/admin/dictionary/merchant_rate_save`,
+    url: `/admin/dictionary/restrict/ip`,
+    method: 'get',
+    query: data
+  })
+}
+
+// 移除ip黑名单
+export function restrict_ip_remove(data) {
+  return request({
+    url: `/admin/dictionary/restrict/ip/remove`,
+    method: 'post',
+    query: data
+  })
+}
+
+// 获取防拉单配置
+export function restrict_time_param(data) {
+  return request({
+    url: `/admin/dictionary/restrict/time_param`,
+    method: 'get',
+    query: data
+  })
+}
+
+
+
+// 修改防拉单配置
+export function restrict_time_param_update(data) {
+  return request({
+    url: `/admin/dictionary/restrict/time_param/update`,
     method: 'post',
     data: data
   })
 }
+

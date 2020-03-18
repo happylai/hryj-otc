@@ -87,7 +87,7 @@
                   </div>
                   {{ item.sentTime|timestampFormat }}</div>
                 <div class="chat-text">
-                  <span v-if="item.messageType==='TextMessage'">{{ item.content.content }}</span>
+                  <span v-if="item.messageType==='TextMessage'" class="textMessage">{{ item.content.content }}</span>
 
                   <img v-else v-lazy="item.content.imageUri" :preview="'chat'" class="chatImage">
 
@@ -838,6 +838,11 @@ export default {
     padding:10px 20px;
     margin: 0 10px;
     border-radius: 5px;
+    max-width: 500px;
+    .textMessage{
+      max-width: 500px;
+      word-wrap:break-word ;
+    }
   }
   .avatar{
     width: 40px;

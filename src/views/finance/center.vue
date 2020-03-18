@@ -3,23 +3,30 @@
 
     <el-card class="box-card marginT20">
       <div slot="header" class="clearfix">
-        <span class="card-title">资产总计（所有交易提成/保证金/激活金）</span>
-        <!-- <el-button style="float: right; padding: 3px 0" type="text">审核</el-button> -->
+        <span class="card-title">资产总计（中央财务余额/所有交易提成/保证金/激活金）</span>
+        <el-button style="float: right; margin-right:4px" size="small" @click="dialogVisibleWithdraw=true">充值</el-button>
+        <el-button style="float: right; margin-right:4px" size="small" @click="dialogVisibleRecharge=true">提现</el-button>
       </div>
       <div class="text item">
         <el-row :gutter="10">
-          <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8">
+          <el-col :xs="12" :sm="6" :md="6" :lg="6" :xl="6">
+            <div class="card-item borderR">
+              <div class="cart-i-t">中央财务余额 </div>
+              <div class="cart-i-v">{{ modals.balance||'-' }}</div>
+            </div>
+          </el-col>
+          <el-col :xs="12" :sm="6" :md="6" :lg="6" :xl="6">
             <div class="card-item borderR">
               <div class="cart-i-t">交易提成 </div>
               <div class="cart-i-v">{{ modals.royalty||'-' }}</div>
             </div>
           </el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8">
+          <el-col :xs="12" :sm="6" :md="6" :lg="6" :xl="6">
             <div class="card-item borderR">
               <div class="cart-i-t">保证金</div>
               <div class="cart-i-v">{{ modals.deposit||'-' }}</div>
             </div></el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8">
+          <el-col :xs="12" :sm="6" :md="6" :lg="6" :xl="6">
             <div class="card-item ">
               <div class="cart-i-t">激活金</div>
               <div class="cart-i-v">{{ modals.activeBalance||'-' }}</div>
@@ -160,7 +167,42 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
+
+    <centerDetail/>
+
+    <el-dialog :visible.sync="dialogVisibleWithdraw" title="提现">
+      <el-form ref="withdrawForm" :model="withdraw" :rules="rechargeRules" class="login-form" label-width="120px" auto-complete="on" label-position="right">
+        <el-form-item label="UUID" class="addUserItem" prop="parent">
+          <el-input ref="parent" v-model="withdraw.uuid" autocomplete="off" placeholder="请输入uuid" name="uuid" type="text" tabindex="1" auto-complete="on" />
+        </el-form-item>
+        <el-form-item label="数量" class="addUserItem" prop="emailContact">
+          <el-input ref="emailContact" v-model="withdraw.amount" autocomplete="off" placeholder="请输入充值数量" name="emailContact" type="text" tabindex="1" auto-complete="on" />
+        </el-form-item>
+        <el-form-item label="备注" class="addUserItem" prop="remark">
+          <el-input ref="remark" v-model="withdraw.remark" autocomplete="off"  type="text" placeholder="请输入备注" name="password" tabindex="2" auto-complete="on" />
+        </el-form-item>
+        <el-form-item label="" class="addUserItem">
+          <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handlWithdraw">提现</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisibleRecharge" title="充值">
+      <el-form ref="rechargeForm" :model="recharge" :rules="rechargeRules" class="login-form" label-width="120px" auto-complete="on" label-position="right">
+        <el-form-item label="UUID" class="addUserItem" prop="uuid">
+          <el-input ref="parent" v-model="recharge.uuid" autocomplete="off" placeholder="请输入uuid" name="uuid" type="text" tabindex="1" auto-complete="on" />
+        </el-form-item>
+        <el-form-item label="数量" class="addUserItem" prop="amount">
+          <el-input ref="emailContact" v-model="recharge.amount" autocomplete="off" placeholder="请输入充值数量" name="amount" type="text" tabindex="1" auto-complete="on" />
+        </el-form-item>
+        <el-form-item label="备注" class="addUserItem" prop="remark">
+          <el-input ref="remark" v-model="recharge.remark" autocomplete="off"  type="text" placeholder="请输入备注" name="password" tabindex="2" auto-complete="on" />
+        </el-form-item>
+        <el-form-item label="" class="addUserItem">
+          <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handlRecharge">充值</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
     <!-- <el-dialog :visible.sync="dialogVisible" title="基础信息审核">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户名ID：</el-col>
@@ -252,14 +294,21 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect } from '@/utils/enumeration'
-import { finance_central, finance_central_flow } from '@/api/finance'
+import { finance_central, finance_central_flow, system_central_withdraw, system_central_recharge,central_detail } from '@/api/finance'
+import centerDetail from './centerDetail'
+
 
 export default {
   name: 'Tab',
-  components: { pagination },
+  components: { pagination,centerDetail },
   directives: { waves },
   data() {
     return {
+      rechargeRules: {
+        uuid: [{ required: true, trigger: 'blur',  message: '请输入uuid', }],
+        amount: [{ required: true, trigger: 'blur', message: '请输入数量' }],
+        remark: [{ required: true, trigger: 'blur', message: '请输入备注' }],
+      },
       UserType,
       Authents: [{ id: '',
         mame: '',
@@ -278,7 +327,16 @@ export default {
         current: 1,
         size: 10
       },
-
+      recharge:{
+        "amount": undefined,
+        "remark": undefined,
+        "uuid": undefined
+      },
+      withdraw:{
+        "amount": undefined,
+        "remark": undefined,
+        "uuid": undefined
+      },
       loading: false,
       list: [],
       paginationMeta: {
@@ -287,6 +345,9 @@ export default {
       },
       id: undefined,
       dialogVisible: false,
+      dialogVisibleWithdraw: false,
+      dialogVisibleRecharge: false,
+      
       modals: {
         balance: 128,
         deposit: 43,
@@ -377,7 +438,39 @@ export default {
     clickAduit() {
       this.dialogVisible = true
       this.editData = this.modals
-    }
+    },
+    handlWithdraw(){
+      this.$refs.withdrawForm.validate((valid) => {
+        if (valid) {
+          system_central_withdraw(this.withdraw).then(res=>{
+            this.dialogVisibleWithdraw=false
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            });
+          })
+        } else {
+          return false;
+        }
+      });
+
+    },
+    handlRecharge(){
+      this.$refs.rechargeForm.validate((valid) => {
+        if(valid){
+          system_central_recharge(this.recharge).then(res=>{
+            this.dialogVisibleRecharge=false,
+
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            });
+          })
+        }
+      })
+
+
+    },
 
   }
 }

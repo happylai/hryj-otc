@@ -50,3 +50,35 @@ export function finance_user_web(meta, data) {
   })
 }
 
+// 中央系统提现
+export function system_central_withdraw(data) {
+  return request({
+    url: `/admin/finance/system_central_withdraw`,
+    method: 'post',
+    data: data
+  })
+}
+
+
+// 中央系统充值
+export function system_central_recharge(data) {
+  return request({
+    url: `/admin/finance/system_central_recharge`,
+    method: 'post',
+    data: data
+  })
+}
+
+
+
+// 获取中央账户流水明细
+export function central_detail(meta, data) {
+  return request({
+    url: `/admin/finance/central_detail`,
+    method: 'get',
+    params: data,
+    headers: {
+      ...meta
+    }
+  })
+}

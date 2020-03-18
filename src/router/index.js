@@ -633,6 +633,17 @@ export const asyncRoutes = [{
       }
     },
     {
+      path: 'userCenter',
+      name: 'system_userCenter',
+      component: () => import('@/views/system/userCenter'),
+      meta: {
+        title: '个人中心',
+        icon: '',
+        authName: ['system_services', 'system_userCenter']
+
+      }
+    },
+    {
       path: 'logs',
       name: 'system_admin_logs',
       component: () => import('@/views/system/logs'),

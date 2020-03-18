@@ -55,6 +55,11 @@
           <span>{{ scope.row.subsidy }}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="手续费" min-width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.fee }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="申请时间" min-width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.orderCreateTime }}</span>

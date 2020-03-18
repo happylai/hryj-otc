@@ -2,13 +2,26 @@
   <div class="tab-container">
     <div class="chat-container">
       <div class="leftArea">
-        <div>
+        <div class="his-list">
           <div class="tabs-box">
             <div class="tab-item " :class="conversationType===1?'active':'' " @click="handleClick(1)">进行中的会话</div>
             <div class="tab-item " :class="conversationType===3?'active':'' " @click="handleClick(3)">群聊会话</div>
           </div>
           <div v-show="conversationType===1">
-            <div v-for="(item,index) in list" :key="index+'user'" class="chat-userList" :class="item.targetId==id?'userListactive':'' " @click="changeCurrentChat(item.targetId)">
+            <div class="searchWarp">
+              <el-input
+                v-model="queryUuid"
+                class="serchInput"
+                style="border-radius:0;"
+                placeholder="搜索uuid"
+                clearable
+                @change="handleQuery"
+                @clear="handleQuery"
+                @keyup.enter.native="handleQuery"
+              />
+            </div>
+
+            <div v-for="(item,index) in queryUuid?queryList:list" :key="index+'user'" class="chat-userList" :class="item.targetId==id?'userListactive':'' " @click="changeCurrentChat(item.targetId,item)">
               <div class="chat-avatar">
                 <el-badge :value="item.unreadMessageCount" class="item" :hidden="item.unreadMessageCount==0">
                   <el-avatar> user </el-avatar>
@@ -16,7 +29,10 @@
               </div>
               <div class="chat-his">
                 <div class="chat-conact">
-                  <div class="chat-user-name">{{ item.targetId }}</div>
+                  <div class="chat-user-name" :title="item.targetId">{{ item.remark?item.remark:item.targetId }}
+                    <!-- <span>{{ item.remark }}</span> -->
+                  </div>
+                  <i class="el-icon-edit remarkUser" title="修改备注" @click="editReark(item.targetId)" />
                 </div>
                 <div style="text-align:right">{{ item.latestMessage.sentTime|timestampFormat }}</div>
 
@@ -53,7 +69,7 @@
       </div>
       <div class="rightArea">
         <div class="chat-header">
-          <div class="chat-name">{{ this.id }}</div>
+          <div class="chat-name">{{ currentObj.remark||currentObj.name||currentObj.uuid||id }}</div>
           <div>
             <el-dropdown v-if="conversationType===3" @command="handleDropdown">
               <span class="el-dropdown-link">
@@ -64,6 +80,7 @@
                 <el-dropdown-item command="2">新增成员</el-dropdown-item>
                 <el-dropdown-item command="3">移除成员</el-dropdown-item>
                 <el-dropdown-item command="4">解散群组</el-dropdown-item>
+                <el-dropdown-item command="5">添加群公告</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -103,7 +120,7 @@
           </div>
         </div>
         <div class="chat-tip">
-          <div>
+          <div class="chat-tip-left">
             <el-upload
               action="null"
               class="upload-demo"
@@ -114,7 +131,31 @@
               <i class="el-icon-picture" />
             </el-upload>
           </div>
+
           <div class="tip-text">按Enter键发送</div>
+        </div>
+        <div v-if="conversationType===3" class="atUserList">
+          <div class="atTitle">
+            @群成员
+          </div>
+          <el-select
+            v-model="atGroupUserList"
+            style="width:100%"
+            multiple
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入关键词搜索需要@的成员"
+            :remote-method="queryUserBuyGroup"
+            :loading="loading"
+          >
+            <el-option
+              v-for="item in userQueryGroupList"
+              :key="item.uuid"
+              :label="item.remark||item.nick||item.uuid"
+              :value="item.uuid"
+            />
+          </el-select>
         </div>
         <div class="chat-input">
           <!-- <textarea v-model="chat" class="chat-input-text" @keyup.enter.native="beforSend" /> -->
@@ -223,6 +264,65 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <el-dialog
+      title="添加群公告"
+      :visible.sync="addGroupNoticeDig"
+      width="600px"
+    >
+      <el-form ref="form" :model="newGroup" label-width="120px">
+
+        <el-form-item label="当前群公告">
+          <div v-if="currentGroupNotice" v-html="currentGroupNotice.content" />
+          <div v-else>暂无</div>
+        </el-form-item>
+        <el-form-item label="新的群公告">
+          <el-input
+            v-model="groupNotice"
+            type="textarea"
+            :rows="2"
+            placeholder="请输入新群公告"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button :loading="actionLoading" :disabled="actionLoading" type="primary" @click="handleDelNotice_save">立即添加</el-button>
+          <el-button @click="addGroupNoticeDig = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+    <el-dialog
+      title="@群成员"
+      :visible.sync="atDiag"
+      width="400px"
+    >
+      <el-form ref="form" :model="newGroup" label-width="80px">
+        <el-form-item label="成员id">
+          <el-select
+            v-model="atGroupUserList"
+            style="width:100%"
+            multiple
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入关键词搜索成员"
+            :remote-method="querUer"
+            :loading="loading"
+          >
+            <el-option
+              v-for="item in userQueryList"
+              :key="item.uuid"
+              :label="item.uuid"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button :loading="actionLoading" :disabled="actionLoading" type="primary" @click="handleJoin">立即加入</el-button>
+          <el-button @click="joinGroup = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -230,12 +330,14 @@
 import tip from '@/components/Tip'
 import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import { uploadImage } from '@/api/common'
-import { message_detail, message_reply, chat_group_current, chat_group_create, chat_group_add_user, chat_group_users, customer_service_list, chat_group_remove_user, chat_group_delete } from '@/api/message'
+import { message_detail, message_reply, chat_group_current, chat_group_create, chat_group_add_user,
+  chat_group_users, customer_service_list, chat_group_remove_user, chat_group_delete, remark_set,
+  chat_group_remarks, chat_group_users_groupid, notice_save, chat_group_notice } from '@/api/message'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, PayType, OrderStatus, CounterParty } from '@/utils/enumeration'
 import { init } from '@/utils/rongcloudutils.js'
 import _ from 'lodash'
-
+import Vue from 'vue'
 export default {
   name: 'Tab',
   components: { tip },
@@ -299,9 +401,18 @@ export default {
       userQueryList: [],
       delGroupNumArr: [],
       groupChatList: [],
+      atGroupUserList: [],
+      userQueryGroupList: [],
       actionLoading: false,
       hasMsg: false,
-      historyLoading: false
+      historyLoading: false,
+      atDiag: false,
+      currentObj: {},
+      addGroupNoticeDig: false,
+      groupNotice: undefined,
+      currentGroupNotice: undefined,
+      queryUuid: undefined,
+      queryList: []
     }
   },
   computed: {
@@ -354,6 +465,10 @@ export default {
       this.id = id
       if (index === '1') {
         this.getMessageList()
+        console.log('index', index)
+        this.currentObj = this.groupList[0]
+      } else {
+        this.currentObj = this.list[0]
       }
       console.log('targetId', id)
       if (id) {
@@ -367,6 +482,9 @@ export default {
         this.id = id
         if (conversationType === 3) {
           this.getMessageList()
+          this.currentObj = this.groupList[0]
+        } else {
+          this.currentObj = this.list[0]
         }
         console.log('targetId', id)
         if (id) {
@@ -374,9 +492,11 @@ export default {
         }
       }
     },
-    changeCurrentChat(id) {
+    changeCurrentChat(id, current) {
       console.log('id', id)
       this.id = id.toString()
+      this.currentObj = current
+      this.atGroupUserList = []
       this.getList()
     },
 
@@ -443,6 +563,7 @@ export default {
           }
           if (_this.conversationType === 1) {
             _this.list = list
+            _this.getRark(list)
           } else if (_this.conversationType === 3) {
             _this.groupChatLiat = list
           }
@@ -451,6 +572,7 @@ export default {
             const id = list[0].targetId.toString()
             console.log('id', id)
             _this.id = id
+            _this.currentObj = list[0]
           }
 
           _this.getList()
@@ -522,6 +644,37 @@ export default {
       })
     },
 
+    getRark() {
+      var a = []
+      var list = this.list
+      const b = list.map(item => { a.push(item.targetId) })
+      console.log('list-----', list, a)
+
+      chat_group_remarks({ uids: a.join(',') }).then(res => {
+        console.log('res', res)
+        const remarkList = res.data
+        //eslint -disable-next-line
+        const list = this.list
+
+        if (remarkList.length) {
+          remarkList.map(item => {
+            list.map((listitem, index) => {
+              // if (listitem.targetId === item.userId&&listitem.remark !== item.remark) { list[index].remark = item.remark }
+              if (listitem.targetId === item.userId && listitem.remark !== item.remark) {
+                list[index].remark = item.remark
+                this.list.splice(index, 1, list[index])
+              }
+            })
+          })
+        }
+        console.log('list', list)
+        // const tiem = new Date().getTime()
+        // Vue.set(this.list, tiem, list)
+        this.list = list
+        Vue.nextTick()
+      })
+    },
+
     async upload(e) {
       const res = await uploadImage(e.raw)
       console.log('upload', res)
@@ -539,14 +692,26 @@ export default {
       if (!chat.length) {
         this.$message.error('请输入信息')
       } else {
-        console.log('true')
-        const extra = JSON.stringify({ userId: this.uuid, userName: this.userName ? this.userName : '游客' })
-        var msg = new RongIMLib.TextMessage({ content: chat, extra })
-        this.handleSend(msg)
+        // console.log('true')
+        // const extra = JSON.stringify({ userId: this.uuid, userName: this.userName ? this.userName : '游客' })
+        // var msg = new RongIMLib.TextMessage({ content: chat, extra })
+        // this.handleSend(msg)
+        this.handleSend(chat)
       }
     },
-    handleSend(msg, conversationType = 1) {
+    handleSend(chat, conversationType = 1) {
       const _this = this
+      const extra = JSON.stringify({ userId: this.uuid, userName: this.userName ? this.userName : '游客' })
+      var isMentioned = false
+      if (_this.conversationType === 3 && _this.atGroupUserList.length) {
+        isMentioned = true
+        var mentioneds = new RongIMLib.MentionedInfo() // @ 消息对象
+        mentioneds.type = RongIMLib.MentionedType.PART
+        mentioneds.userIdList = _this.atGroupUserList// @ 人员列表
+        var msg = new RongIMLib.TextMessage({ content: chat, extra, mentionedInfo: mentioneds })
+      } else {
+        var msg = new RongIMLib.TextMessage({ content: chat, extra })
+      }
       RongIMClient.getInstance().sendMessage(_this.conversationType, this.id.toString(), msg, {
         onSuccess: function(message) {
         // message 为发送的消息对象并且包含服务器返回的消息唯一 Id 和发送消息时间戳
@@ -581,7 +746,7 @@ export default {
           }
           console.log('发送失败: ' + info + errorCode)
         }
-      })
+      }, isMentioned)
     },
     getGroupList() {
       chat_group_current().then(res => {
@@ -590,6 +755,7 @@ export default {
           this.groupList = res.data
           if (!this.id && res.data && this.conversationType === 3) {
             this.id = res.data[0].uuid
+            this.currentObj = res.data[0]
           }
         }
       })
@@ -653,6 +819,9 @@ export default {
         this.delGroupNumDig = true
       } else if (command === '4') {
         this.delGroup()
+      } else if (command === '5') {
+        this.addGroupNoticeDig = true
+        this.getQueryNotice()
       }
     },
     handleJoin() {
@@ -707,6 +876,18 @@ export default {
         }
       })
     },
+    queryUserBuyGroup(data) {
+      const postData = {
+        query: data,
+        id: this.id
+      }
+      console.log('postData', postData)
+      chat_group_users_groupid(postData).then(res => {
+        if (res.code === 0) {
+          this.userQueryGroupList = res.data.records
+        }
+      })
+    },
     delGroup() {
       this.$confirm('是否解散当前群组?', '提示', {
         confirmButtonText: '确定',
@@ -732,6 +913,74 @@ export default {
         }).catch(() => {
           this.actionLoading = false
         })
+      })
+    },
+    editReark(targrtId) {
+      this.$prompt(`修改${targrtId}备注`, '修改备注', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({ value }) => {
+        if (value) {
+          remark_set({ userId: targrtId, remark: value }).then(res => {
+            if (res.code === 0) {
+              this.$message({
+                type: 'success',
+                message: '备注修改成功'
+              })
+              this.getRark()
+            }
+          })
+        }
+      }).catch(() => {
+
+      })
+    },
+    getQueryNotice() {
+      chat_group_notice(this.currentObj.id).then(res => {
+        if (res.code === 0) {
+          this.currentGroupNotice = res.data
+        }
+      })
+    },
+    handleQuery() {
+      const query = this.queryUuid
+      const data = this.list
+      console.log('query', query, data)
+
+      var len = data.length
+      var arr = []
+      for (var i = 0; i < len; i++) {
+        // 如果字符串中不包含目标字符会返回-1
+        if (data[i].targetId.indexOf(query) >= 0) {
+          arr.push(data[i])
+        }
+      }
+      // this.list = arr;
+      this.queryList = arr
+    },
+    handleDelNotice_save(data) {
+      if (!this.groupNotice) {
+        this.$message.error('请输入群公告')
+      }
+      const postData = {
+        content: this.groupNotice,
+        groupId: this.currentObj.id
+      }
+      this.actionLoading = true
+
+      notice_save(postData).then(res => {
+        this.actionLoading = false
+
+        if (res.code === 0) {
+          this.$message({
+            type: 'success',
+            message: '公告添加成功'
+          })
+          this.addGroupNoticeDig = false
+          this.groupNotice = undefined
+        }
+      }).catch(() => {
+        this.actionLoading = false
       })
     },
     loadMoreHistory() {
@@ -788,7 +1037,7 @@ export default {
   }
   .chat-container{
       display: flex;
-    height: 750px;
+    min-height: 750px;
     width: 1160px;
     border-radius:10px;
     flex-direction: row;
@@ -814,7 +1063,11 @@ export default {
     border-right: 1px solid #5C5E63;
   }
   .chat-container .leftArea{
-    flex:2
+    flex:2;
+  }
+  .his-list{
+    height: 750px;
+
   }
   .chat-container .rightArea{
     flex:5;
@@ -886,9 +1139,18 @@ export default {
     display: flex;
     justify-content: space-between
   }
+  .atUserList{
+    padding: 0 20px 10px;
+    display: flex;
+    align-items: center;
+    .atTitle{
+      width: 100px;
+    }
+  }
   .chat-send{
     margin-right: 20px;
     margin-top: 10px;
+    margin-bottom: 10px;
     display: flex;
     justify-content: flex-end;
   }
@@ -1002,4 +1264,23 @@ textarea{
   color: #aaa;
   margin-top:-10px;
 }
+.chat-tip-left{
+  display:flex;
+}
+.remarkUser{
+  cursor:pointer
+}
+.searchWarp{
+  .el-input__inner{
+    border-radius: 0;
+    background-color: rgba(100,100,100,.8)
+  }
+}
+.searchWarp >>> .el-input__inner{
+    border-radius: 0;
+    border:none;
+    color:#fff;
+    background-color: rgba(100,100,100,.8)
+  }
+
 </style>

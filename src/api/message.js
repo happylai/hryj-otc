@@ -85,7 +85,7 @@ export function customer_service_list(meta, data) {
 export function customer_service_delete(uuid) {
   return request({
     url: `/admin/customer_service/delete/${uuid}`,
-    method: 'post',
+    method: 'post'
   })
 }
 
@@ -112,7 +112,6 @@ export function chat_group_current(meta, data) {
     }
   })
 }
-
 
 // 创建群组
 export function chat_group_create(data) {
@@ -160,3 +159,57 @@ export function chat_group_users(meta, data) {
     }
   })
 }
+
+// 根据群id获取群成员
+export function chat_group_users_groupid(data) {
+  return request({
+    url: `/admin/chat_group/group_users`,
+    method: 'get',
+    params: data,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
+// 给用户设置备注
+export function remark_set(data) {
+  return request({
+    url: `/admin/chat_group/remark/set`,
+    method: 'post',
+    data: data
+  })
+}
+
+// 批量获取用户备注
+export function chat_group_remarks(data) {
+  return request({
+    url: `/admin/chat_group/remarks`,
+    method: 'get',
+    params: data,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
+// 保存群公告
+export function notice_save(data) {
+  return request({
+    url: `/admin/chat_group/notice/save`,
+    method: 'post',
+    data: data
+  })
+}
+
+// 获取最新的群公告
+export function chat_group_notice(id) {
+  return request({
+    url: `/admin/chat_group/notice/${id}`,
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+

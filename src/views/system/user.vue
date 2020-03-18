@@ -15,7 +15,7 @@
     <tab-pane :data="list" @freeze="handleFreeze" @edit="handleEdit" />
     <pagination v-show="paginationMeta.total>0" :total="paginationMeta.total" :page.sync="meta.current" :limit.sync="meta.size" @pagination="paginationChange" />
 
-    <el-dialog :visible.sync="dialogVisible" title="后台用户编辑">
+    <el-dialog :visible.sync="dialogVisible" title="后台用户编辑" :close-on-click-modal="false">
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">用户名：</el-col>
         <el-col :span="16">{{ editData.username }}</el-col>
@@ -44,6 +44,39 @@
         </el-col>
       </el-row>
       <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">修改密码：</el-col>
+        <el-col :span="16">
+          <el-input ref="password" style="width:200px;" v-model="editData.password" autocomplete="off" show-password :type="passwordType" placeholder="请输入密码" name="password" tabindex="2" auto-complete="false" />
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">重复修改密码：</el-col>
+        <el-col :span="16">
+          <el-input ref="repeatpassword" style="width:200px;" v-model="editData.confirm" autocomplete="off" show-password :type="passwordType" placeholder="请重复修改密码" name="password" tabindex="2" auto-complete="false" />
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
+        <el-col :span="8" class="textAlingR">修改手机号：</el-col>
+        <el-col :span="16">
+            <el-select style="width:120px;" v-model="country" placeholder="请选择">
+              <el-option-group
+                v-for="(group,index) in Country_code_CN"
+                :key="group.title+index"
+                :label="group.title">
+                <el-option
+                  v-for="(item,index) in group.data"
+                  :key="index"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-option-group>
+            </el-select>
+          <el-input ref="phone" style="width:200px;" v-model="newPhone" autocomplete="off" type="text" placeholder="请输入手机号" name="phone" tabindex="2" auto-complete="false" />
+          <el-link type="danger" :underline="false">当前手机号：{{ editData.phone }}</el-link>
+        
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">上次登陆时间：</el-col>
         <el-col :span="16">{{ editData.createTime|timestampFormat }}</el-col>
       </el-row>
@@ -67,6 +100,23 @@
         <el-form-item label="邮箱" class="addUserItem" prop="email">
           <el-input ref="email" v-model="regForm.email" autocomplete="off" placeholder="请输入邮箱" name="email" type="text" tabindex="1" auto-complete="on" />
         </el-form-item>
+        <el-form-item label="手机" class="addUserItem" prop="phone">
+            <el-select style="width:120px;" v-model="country" placeholder="请选择">
+              <el-option-group
+                v-for="(group,index) in Country_code_CN"
+                :key="group.title+index"
+                :label="group.title">
+                <el-option
+                  v-for="(item,index) in group.data"
+                  :key="index"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-option-group>
+            </el-select>
+            <el-input ref="phone" style="width:200px;" v-model="regForm.phone" autocomplete="off" type="text" placeholder="请输入手机号" name="phone" tabindex="2" auto-complete="false" />        
+        
+        </el-form-item>
         <el-form-item label="密码" class="addUserItem" prop="password">
           <el-input ref="password" v-model="regForm.password" autocomplete="off" show-password :type="passwordType" placeholder="请输入密码" name="password" tabindex="2" auto-complete="on" />
         </el-form-item>
@@ -85,6 +135,7 @@
 import tabPane from './components/TabPane'
 import { mapState, mapGetters } from 'vuex' // 先要引入
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
+import Country_code_CN  from '@/utils/Country_code_CN'
 import pagination from '@/components/Pagination'
 import waves from '@/directive/waves'
 import { freeze, save, admins as listApi } from '@/api/admin'
@@ -111,6 +162,7 @@ export default {
       groupsConstName,
       userRolesConstName,
       adminRolesConstName,
+      Country_code_CN,
       SelectRoles: [{ label: '全部', id: '' }, ...Roles],
       Roles,
       Auths,
@@ -140,14 +192,17 @@ export default {
         username: '',
         email: '',
         password: '',
-        reapatPassword: ''
+        reapatPassword: '',
+        phone:'',
       },
       passwordType: 'password',
       paginationMeta: {
         total: 10,
         pages: 1
       },
-      list: []
+      list: [],
+      country:"中国 +86",
+      newPhone:undefined,
 
     }
   },
@@ -244,11 +299,17 @@ export default {
     },
     saveEdit() {
       const data = this.editData
+      const b=this.country
+      const newPhone =`${b.substring(b.indexOf('+')+1,b.length)}-${this.newPhone}`
+      console.log("newPhone",newPhone)
       const postData = {
         id: data.id,
         email: data.email,
         active: !this.isfreeze,
         ip: data.ip,
+        password:data.password||undefined,
+        confirm:data.confirm||undefined,
+        phone:this.newPhone?newPhone:undefined,
         username: data.username,
         ipOnly: this.ipOnly,
         roleIds: [this.newRole || data.role]
@@ -277,6 +338,9 @@ export default {
         if (valid) {
           this.loading = true
           const data = this.regForm
+          const b=this.country
+          const phone =`${b.substring(b.indexOf('+')+1,b.length)}-${data.phone}`
+          data.phone=phone
           save(data).then(res => {
             this.loading = false
 

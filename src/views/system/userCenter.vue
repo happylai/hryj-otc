@@ -175,6 +175,7 @@ export default {
           this.$message.success('操作成功')
           this.leftTime = 60
           this.countDown(60)
+          this.dialogVisible=false
         } else {
           this.sendCodeLoading = false
           this.$message.error(res.message || '操作失败')

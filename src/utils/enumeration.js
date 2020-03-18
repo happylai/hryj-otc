@@ -838,17 +838,17 @@ export const billType = [
   {
     id: 1,
     name: 'BUY_IN',
-    label: '交易购入'
+    label: '入金'
   },
   {
     id: 2,
     name: 'SELL_OUT',
-    label: '交易卖出 '
+    label: '出金 '
   },
   {
     id: 3,
-    name: '普通商家申请',
-    label: '其他'
+    name: 'DEALERS_APPLY',
+    label: '普通商家申请'
   },
   {
     id: 4,
@@ -902,13 +902,13 @@ export const billType = [
   },
   {
     id: 14,
-    name: 'SHARE_SUBSIDY',
-    label: '邀请奖励'
+    name: 'TRUST_STAPLE_APPLY',
+    label: '信任大宗商家申请'
   },
   {
     id: 15,
-    name: 'BACK_ACTIVE_BALANCE',
-    label: '退还激活金 '
+    name: 'JUNIOR_DEAL_SUBSIDY',
+    label: '下级交易贡献 '
   },
   {
     id: 16,
@@ -924,6 +924,16 @@ export const billType = [
     id: 18,
     name: 'RELEASE_REWARD',
     label: '放行奖励'
+  },
+  {
+    id: 19,
+    name: 'SYSTEM_CENTRAL_WITHDRAW',
+    label: '中央账户提现 '
+  },
+  {
+    id: 20,
+    name: 'SYSTEM_CENTRAL_RECHARGE',
+    label: '中央账户充值'
   },
   {
     id: 21,

@@ -18,7 +18,7 @@
       </el-table-column>
       <el-table-column align="center" min-width="120px" label="交易总价">
         <template slot-scope="scope">
-          <span>{{ scope.row.legalAmount }}</span>
+          <span>{{ scope.row.amount }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column min-width="120px" align="center" label="交易数量">

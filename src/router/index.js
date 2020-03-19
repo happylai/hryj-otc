@@ -494,6 +494,42 @@ export const asyncRoutes = [{
   // }
   ]
 },
+
+{
+  path: '/thirdChannle',
+  name: 'third_channle',
+  component: Layout,
+  meta: {
+    title: '托底通道',
+    icon: 'statistic',
+    authName: ['records_statistics']
+
+  },
+  children: [{
+    path: 'center',
+    name: 'third_channle_manage',
+    component: () => import('@/views/thirdChannle/center'),
+    meta: {
+      title: '通道管理',
+      icon: '',
+      authName: ['records_statistics', 'third_channle_manage']
+
+    }
+  },
+  {
+    path: 'order',
+    name: 'third_channle_order',
+    component: () => import('@/views/thirdChannle/order'),
+    meta: {
+      title: '托底订单列表',
+      icon: '',
+      authName: ['order_award', 'third_channle_order']
+    }
+  }
+
+  ]
+},
+
 {
   name: 'parameter_config',
   path: '/parameter',

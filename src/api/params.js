@@ -300,6 +300,15 @@ export function merchant_rates(meta, data) {
   })
 }
 
+// B端出入金费率保存
+export function merchant_rate_save(data) {
+  return request({
+    url: `/admin/dictionary/merchant_rate_save`,
+    method: 'post',
+    data: data
+  })
+}
+
 // 获取黑名单ip列表
 export function restrict_ip(data) {
   return request({

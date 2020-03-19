@@ -20,11 +20,6 @@
       </el-button> -->
     </div>
     <el-card class="box-card marginT20">
-      <div slot="header" class="clearfix">
-        <span class="card-title">资产总计（中央财务余额/所有交易提成/保证金/激活金）</span>
-        <el-button style="float: right; margin-right:4px" size="small" @click="dialogVisibleWithdraw=true">提现</el-button>
-        <el-button style="float: right; margin-right:4px" size="small" @click="dialogVisibleRecharge=true">充值</el-button>
-      </div>
       <div class="text item">
         <el-row :gutter="10">
           <el-col :xs="6" :sm="6" :md="6" :lg="5" :xl="5">
@@ -70,11 +65,11 @@ import pagination from '@/components/Pagination'
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, emptySelect } from '@/utils/enumeration'
 import { finance_central, finance_central_flow, system_central_withdraw, system_central_recharge, central_detail } from '@/api/finance'
-import {order_statics} from '@/api/thirdChannle'
+import { order_statics } from '@/api/thirdChannle'
 
 export default {
   name: 'Tab',
-  components: { pagination,  },
+  components: { pagination },
   directives: { waves },
   data() {
     return {
@@ -92,7 +87,7 @@ export default {
       fliterQuery: {
         account: undefined,
         uuid: undefined,
-        creatDate: undefined,
+        creatDate: undefined
       },
       meta: {
         current: 1,
@@ -142,8 +137,8 @@ export default {
     handleFilter(resetPage = true) {
       const fliterQuery = this.fliterQuery
       const data = {
-        account:fliterQuery.account,
-        uuid:fliterQuery.uuid,
+        account: fliterQuery.account,
+        uuid: fliterQuery.uuid
       }
       if (fliterQuery.creatDate) {
         data.start = this.$moment(fliterQuery.creatDate[0]).format('YYYY-MM-DD HH:mm:ss')
@@ -153,7 +148,7 @@ export default {
       const meta = this.meta
       resetPage ? meta.current = 1 : null
 
-      this.detail( data)
+      this.detail(data)
     },
     detail(data) {
       this.listLoading = true
@@ -231,7 +226,6 @@ export default {
           return false
         }
       })
-
     },
     handlRecharge() {
       this.$refs.rechargeForm.validate((valid) => {

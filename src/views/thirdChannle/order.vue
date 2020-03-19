@@ -1,6 +1,6 @@
 <template>
   <div class="tab-container">
-    <statis/>
+    <!-- <statis /> -->
     <div class="filter-container" style="margin-bottom: 10px;">
       <el-input v-model="fliterQuery.account" clearable placeholder="托底商家ID" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="fliterQuery.merchant" clearable placeholder="B端ID" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -29,7 +29,42 @@
         导出
       </el-button> -->
     </div>
-    <el-table  v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%;font-size:10px">
+    <el-card class="box-card marginT20">
+      <div class="text item">
+        <el-row :gutter="10">
+          <el-col :xs="6" :sm="6" :md="6" :lg="5" :xl="5">
+            <div class="card-item borderR">
+              <div class="cart-i-t">托底出售交易量汇总 </div>
+              <div class="cart-i-v">{{ modals.dealAmount||'-' }}</div>
+            </div>
+          </el-col>
+          <el-col :xs="6" :sm="6" :md="6" :lg="5" :xl="5">
+            <div class="card-item borderR">
+              <div class="cart-i-t">托底出售完成交易量汇总</div>
+              <div class="cart-i-v">{{ modals.finishAmount||'-' }}</div>
+            </div>
+          </el-col>
+          <el-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
+            <div class="card-item borderR">
+              <div class="cart-i-t">托底订单数</div>
+              <div class="cart-i-v">{{ modals.dealCount||'-' }}</div>
+            </div></el-col>
+          <el-col :xs="6" :sm="6" :md="6" :lg="5" :xl="5">
+            <div class="card-item borderR">
+              <div class="cart-i-t">托底完成订单数</div>
+              <div class="cart-i-v">{{ modals.finishCount||'-' }}</div>
+            </div>
+          </el-col>
+          <el-col :xs="6" :sm="6" :md="6" :lg="5" :xl="5">
+            <div class="card-item ">
+              <div class="cart-i-t">托底订单完成率</div>
+              <div class="cart-i-v">{{ modals.percent||'-' }}</div>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </el-card>
+    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%;font-size:10px">
       <el-table-column
 
         align="center"
@@ -80,7 +115,7 @@
 
       <el-table-column align="center" width="120px" label="交易总资产（pqc）">
         <template slot-scope="scope">
-                <span>{{ scope.row.amount }}</span>
+          <span>{{ scope.row.amount }}</span>
 
         </template>
       </el-table-column>
@@ -106,13 +141,11 @@
         </template>
       </el-table-column>
 
-
       <el-table-column align="center" label="订单完成时间" min-width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.receiveConfirmTime||'无' }}</span>
         </template>
       </el-table-column>
-
 
       <el-table-column align="center" class-name="status-col" label="操作" min-width="210">
         <template slot-scope="scope">
@@ -138,16 +171,17 @@ import { order_list, order_detail, order_cancel, order_confirm, pro_odrder_remat
 import waves from '@/directive/waves' // waves directive
 import { Groups, UserType, Authents, PayType, OrderStatus, CounterParty } from '@/utils/enumeration'
 // import { exportExcel } from '../../api/order'
-import { orders as listApi,order_statics } from '../../api/thirdChannle'
+import { orders as listApi, order_statics } from '../../api/thirdChannle'
+
 import statis from './statis'
 
 export default {
   name: 'Tab',
-  components: { pagination,  paymentInfo,statis },
+  components: { pagination, paymentInfo, statis },
   directives: { waves },
   data() {
     return {
-      statusList:[
+      statusList: [
         {
           name: 'UN_PAYED',
           id: 0,
@@ -220,7 +254,8 @@ export default {
         orderC: {}
       },
       showPaymentInfo: false,
-      digPayInfo: {}
+      digPayInfo: {},
+      modals: {}
     }
   },
   watch: {
@@ -243,8 +278,24 @@ export default {
   },
   mounted() {
     this.getList()
+    this.detail()
   },
   methods: {
+    detail() {
+      this.listLoading = true
+      const data = {
+        uuid: this.fliterQuery.orderUid
+      }
+      if (fliterQuery.creatDate) {
+        data.start = this.$moment(fliterQuery.creatDate[0]).format('YYYY-MM-DD HH:mm:ss')
+        data.end = this.$moment(fliterQuery.creatDate[1]).format('YYYY-MM-DD') + ' 23:59:59'
+      }
+      order_statics(data).then(res => {
+        if (res.code === 0) {
+          this.modals = res.data
+        }
+      })
+    },
     handleShowPaymentInfo(data) {
       this.digPayInfo = data
       this.showPaymentInfo = true
@@ -278,7 +329,7 @@ export default {
     },
     getList(meta, data) {
       this.loading = true
-      listApi(meta || this.meta, data || { isMatch: this.activeType === '2' }).then(res => {
+      listApi(meta || this.meta, data).then(res => {
         console.log('res', res)
         this.loading = false
         if (res.code === 0) {
@@ -294,7 +345,7 @@ export default {
       console.log('fliterQuery', this.fliterQuery)
       const data = {
         ...fliterQuery,
-        creatDate:undefined
+        creatDate: undefined
       }
       if (fliterQuery.creatDate) {
         data.start = this.$moment(fliterQuery.creatDate[0]).format('YYYY-MM-DD HH:mm:ss')
@@ -304,6 +355,7 @@ export default {
       resetPage ? meta.current = 1 : null
 
       this.getList(meta, data)
+      this.detail()
     },
     handleDownload(resetPage = true) {
       const fliterQuery = this.fliterQuery

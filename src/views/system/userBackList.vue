@@ -1,9 +1,9 @@
 <template>
-  <div class="">
+  <div class="tab-container">
 
     <h2>用户黑名单</h2>
 
-    <el-table :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
 
       <el-table-column min-width="120px" align="center" label="id">
         <template slot-scope="scope">
@@ -20,6 +20,12 @@
       <el-table-column min-width="120px" align="center" label="拉黑时间">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="120px" align="center" label="操作">
+        <template slot-scope="scope">
+          <el-button type="danger" size="small" :loading="actionLoading" :disabled="actionLoading" @click="handleRemove(scope.row.id)">移除</el-button>
         </template>
       </el-table-column>
 
@@ -90,8 +96,9 @@ export default {
       },
       dateBucket: 7,
       editData: {},
-      type: 0
-
+      type: 0,
+      actionLoading: false,
+      listLoading: false
     }
   },
 
@@ -113,13 +120,47 @@ export default {
     },
 
     getList(meta, data) {
+      this.listLoading = true
       listApi(meta, data || { type: this.type }).then(res => {
+        this.listLoading = false
+
         if (res.code === 0) {
           this.list = res.data.records
           this.meta.current = res.data.current
           this.paginationMeta.total = res.data.total
           this.paginationMeta.pages = res.data.pages
         }
+      }).catch(() => {
+        this.listLoading = false
+      })
+    },
+    handleRemove(id) {
+      this.$confirm('是否将此ip移除黑名单?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.doRemove({ id: id })
+      }).catch(() => {
+      })
+    },
+    doRemove(data) {
+      this.actionLoading = true
+      restrict_ip_remove(data).then(res => {
+        this.actionLoading = false
+        if (res.code === 0) {
+          this.$message({
+            message: '移除成功',
+            type: 'success'
+          })
+          this.getList()
+        } else {
+          this.$message.error('操作失败')
+        }
+      }).catch(err => {
+        this.actionLoading = false
+
+        this.$message.error(err)
       })
     }
 
@@ -128,5 +169,7 @@ export default {
 </script>
 
 <style scoped>
-
+.tab-container{
+  padding:20px;
+}
 </style>

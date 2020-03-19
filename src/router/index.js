@@ -644,6 +644,17 @@ export const asyncRoutes = [{
       }
     },
     {
+      path: 'blackList',
+      name: 'system_blackList',
+      component: () => import('@/views/system/userBackList'),
+      meta: {
+        title: '用户黑名单',
+        icon: '',
+        authName: ['system_services', 'system_blackList']
+
+      }
+    },
+    {
       path: 'logs',
       name: 'system_admin_logs',
       component: () => import('@/views/system/logs'),

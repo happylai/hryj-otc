@@ -701,13 +701,16 @@ export default {
     },
     handleSend(chat, conversationType = 1) {
       const _this = this
-      const extra = JSON.stringify({ userId: this.uuid, userName: this.userName ? this.userName : '游客' })
+      var extra = JSON.stringify({ userId: this.uuid, userName: this.userName ? this.userName : '游客' })
       var isMentioned = false
       if (_this.conversationType === 3 && _this.atGroupUserList.length) {
         isMentioned = true
         var mentioneds = new RongIMLib.MentionedInfo() // @ 消息对象
         mentioneds.type = RongIMLib.MentionedType.PART
         mentioneds.userIdList = _this.atGroupUserList// @ 人员列表
+        const atListStr = `@${_this.atGroupUserList.join(' @')}`
+        chat = `${atListStr};${chat}`
+
         var msg = new RongIMLib.TextMessage({ content: chat, extra, mentionedInfo: mentioneds })
       } else {
         var msg = new RongIMLib.TextMessage({ content: chat, extra })

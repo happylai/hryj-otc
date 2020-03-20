@@ -922,6 +922,7 @@ export default {
       const name = item.remark ? item.remark : item.targetId
       console.log('item', item, item.remark, item.targetId)
       this.$prompt(`修改${name}的备注`, '修改备注', {
+        inputValue: name,
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(({ value }) => {

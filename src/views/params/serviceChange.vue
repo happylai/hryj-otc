@@ -132,8 +132,8 @@ export default {
       PayChannel,
       PaySchema,
       tabMapOptions: [
-        { label: '入金手续费', key: '0' },
-        { label: '出金手续费', key: '1' }
+        { label: '入金通道管理', key: '0' },
+        { label: '出金通道管理', key: '1' }
       ],
 
       addUserType: {

@@ -32,7 +32,7 @@
                   <div class="chat-user-name" :title="item.targetId">{{ item.remark?item.remark:item.targetId }}
                     <!-- <span>{{ item.remark }}</span> -->
                   </div>
-                  <i class="el-icon-edit remarkUser" title="修改备注" @click="editReark(item.targetId)" />
+                  <i class="el-icon-edit remarkUser" title="修改备注" @click="editReark(item)" />
                 </div>
                 <div style="text-align:right">{{ item.latestMessage.sentTime|timestampFormat }}</div>
 
@@ -710,7 +710,7 @@ export default {
         mentioneds.userIdList = _this.atGroupUserList// @ 人员列表
         const atListStr = `@${_this.atGroupUserList.join(' @')}`
         chat = `${atListStr};${chat}`
-
+        _this.atGroupUserList = []
         var msg = new RongIMLib.TextMessage({ content: chat, extra, mentionedInfo: mentioneds })
       } else {
         var msg = new RongIMLib.TextMessage({ content: chat, extra })
@@ -918,13 +918,15 @@ export default {
         })
       })
     },
-    editReark(targrtId) {
-      this.$prompt(`修改${targrtId}备注`, '修改备注', {
+    editReark(item) {
+      const name = item.remark ? item.remark : item.targetId
+      console.log('item', item, item.remark, item.targetId)
+      this.$prompt(`修改${name}的备注`, '修改备注', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(({ value }) => {
         if (value) {
-          remark_set({ userId: targrtId, remark: value }).then(res => {
+          remark_set({ userId: item.targetId, remark: value }).then(res => {
             if (res.code === 0) {
               this.$message({
                 type: 'success',

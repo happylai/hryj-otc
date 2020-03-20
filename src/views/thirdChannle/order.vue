@@ -2,7 +2,7 @@
   <div class="tab-container">
     <!-- <statis /> -->
     <div class="filter-container" style="margin-bottom: 10px;">
-      <el-input v-model="fliterQuery.account" clearable placeholder="托底商家ID" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="fliterQuery.uuid" clearable placeholder="托底商家ID" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="fliterQuery.merchant" clearable placeholder="B端ID" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="fliterQuery.merchantOrder" clearable placeholder="B端订单号" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="fliterQuery.orderUid" clearable placeholder="订单编号" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -25,11 +25,9 @@
       <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <!-- <el-button v-waves class="filter-item" style="margin-left: 40px" type="primary" icon="el-icon-download" @click="handleDownload">
-        导出
-      </el-button> -->
+
     </div>
-    <el-card class="box-card marginT20">
+    <el-card class="box-card marginT20 marginB20">
       <div class="text item">
         <el-row :gutter="10">
           <el-col :xs="6" :sm="6" :md="6" :lg="5" :xl="5">
@@ -101,12 +99,6 @@
         </template>
       </el-table-column> -->
 
-      <el-table-column align="center" width="120px" label="备注">
-        <template slot-scope="scope">
-          <span>{{ scope.row.memo }}</span>
-        </template>
-      </el-table-column>
-
       <el-table-column align="center" width="120px" label="交易总金额（cny)">
         <template slot-scope="scope">
           <span>{{ scope.row.legalAmount }}</span>
@@ -120,15 +112,19 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="80px" align="left" label="支付方式">
+      <el-table-column min-width="100px" align="left" label="支付方式">
         <template slot-scope="scope">
 
-          <el-link v-if="scope.row.payType!==null" :underline="false" @click="handleShowPaymentInfo(scope.row.payInfo)"><i class="el-icon-info" /> {{ scope.row.payType|payTypeName }} </el-link>
+          <el-link v-if="scope.row.payType!==null" :underline="false"><i class="el-icon-info" /> {{ scope.row.payType|payTypeName }} </el-link>
           <span v-else>无</span>
         <!-- <span>{{ scope.row.remainAmount }}</span> -->
         </template>
       </el-table-column>
-
+      <el-table-column align="center" width="120px" label="备注">
+        <template slot-scope="scope">
+          <span>{{ scope.row.memo }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="状态" width="60">
         <template slot-scope="scope">
           <el-link :underline="false" :type="scope.row.orderStatus|orderStatusTagName">{{ scope.row.orderStatus|orderStatus }}</el-link>
@@ -152,7 +148,6 @@
           <el-button class="actionBtn" :disabled="scope.row.orderStatus===2||scope.row.orderStatus===5||scope.row.orderStatus===6" type="danger" size="small" @click="orderAction(scope.row.id,0,activeType==='1'?'强制取消':scope.row.isOut?'取消委托':'强制取消')">{{ activeType==='1'?'强制取消':scope.row.isOut?'取消委托':'强制取消' }}</el-button>
           <el-button class="actionBtn" :disabled="scope.row.orderStatus===2||scope.row.orderStatus===5||scope.row.orderStatus===6" type="success" size="small" @click="orderAction(scope.row.id,1,'强制完成')">强制完成</el-button>
           <el-button v-if="activeType==='2'&&scope.row.idOut" class="actionBtn" :disabled="scope.row.orderStatus===2||scope.row.orderStatus===5||scope.row.orderStatus===6" type="success" size="small" @click="orderAction(scope.row.id,2,'重新匹配')">重新匹配</el-button>
-          <!-- <el-button class="actionBtn" type="primary" size="small" @click="clickDetail(scope.row)">详情</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -222,18 +217,14 @@ export default {
       isMatch: false,
       createdTimes: 0,
       fliterQuery: {
-        page: 1,
-        size: 10,
-        payType: undefined,
+        uuid: undefined,
+        status: undefined,
         orderUid: undefined,
         merchantOrder: undefined,
-        advertiseUid: undefined,
-        nick: undefined,
-        buyer: undefined,
-        seller: undefined,
-        status: undefined,
-        creatDate: undefined,
-        complateDate: undefined
+        merchant: undefined,
+        orderUid: undefined,
+        min: undefined,
+        max: undefined
       },
       type: undefined,
       meta: {
@@ -283,44 +274,22 @@ export default {
   methods: {
     detail() {
       this.listLoading = true
+      const fliterQuery = this.fliterQuery
       const data = {
-        uuid: this.fliterQuery.orderUid
+        uuid: this.fliterQuery.uuid
       }
       if (fliterQuery.creatDate) {
         data.start = this.$moment(fliterQuery.creatDate[0]).format('YYYY-MM-DD HH:mm:ss')
         data.end = this.$moment(fliterQuery.creatDate[1]).format('YYYY-MM-DD') + ' 23:59:59'
       }
       order_statics(data).then(res => {
+        console.log('订单统计')
         if (res.code === 0) {
           this.modals = res.data
         }
       })
     },
-    handleShowPaymentInfo(data) {
-      this.digPayInfo = data
-      this.showPaymentInfo = true
-    },
-    handleTabClick(tab, event) {
-      console.log('tab', tab)
-      this.meta.current = 1
-      const fliterQuery = {
-        page: 1,
-        size: 10,
-        payType: undefined,
-        query: undefined,
-        status: undefined,
-        creatDate: undefined,
-        complateDate: undefined
-      }
-      this.fliterQuery = fliterQuery
-      this.editData = {
-        orderB: {
-          payInfo: {}
-        },
-        orderC: {}
-      }
-      this.getList()
-    },
+
     paginationChange(e) {
       console.log('paginationChange', e)
       this.meta.size = e.limit
@@ -357,58 +326,7 @@ export default {
       this.getList(meta, data)
       this.detail()
     },
-    handleDownload(resetPage = true) {
-      const fliterQuery = this.fliterQuery
-      console.log('fliterQuery', this.fliterQuery)
-      const data = {
-        isMatch: this.activeType === '2',
-        type: fliterQuery.type,
-        orderUid: fliterQuery.orderUid,
-        merchantOrder: fliterQuery.merchantOrder,
-        advertiseUid: fliterQuery.advertiseUid,
-        nick: fliterQuery.nick,
-        buyer: fliterQuery.buyer,
-        seller: fliterQuery.seller,
-        payType: fliterQuery.payType,
-        status: fliterQuery.status,
-        userId: this.userId
-      }
-      if (fliterQuery.creatDate) {
-        data.createStart = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
-        data.createEnd = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
-      }
-      if (fliterQuery.complateDate) {
-        data.confirmStart = this.$moment(fliterQuery.date[0]).format('YYYY-MM-DD HH:mm:ss')
-        data.confirmEnd = this.$moment(fliterQuery.date[1]).format('YYYY-MM-DD') + ' 23:59:59'
-      }
-      const meta = this.meta
-      resetPage ? meta.current = 1 : null
-      export_excel(meta, data).then(response => {
-        this.downloadExcel(response)
-      }).catch(() => console.log('export excel error'))
-    },
-    downloadExcel(response) {
-      const url = window.URL.createObjectURL(new Blob([response.data]))
-      const link = document.createElement('a')
-      link.href = url
-      const fileName = decodeURI(response.headers['content-disposition'].split('=')[1])
-      link.download = fileName
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
-    },
-    clickDetail(data) {
-      this.getOrderDetail(data.id)
-      this.dialogVisible = true
-    },
-    getOrderDetail(id) {
-      order_detail({ orderId: id }).then(res => {
-        if (res.code === 0) {
-          this.editData = res.data
-        }
-      })
-    },
+
     orderAction(orderId, type, tipText) {
       const apiList = [order_cancel, order_confirm, pro_odrder_rematch]
       this.$confirm(`是否${tipText}`, '提示', {
@@ -436,6 +354,9 @@ export default {
   .tab-container {
     margin: 30px;
   }
+  .marginB20{
+    margin-bottom: 20px;
+  }
   .DetailvoucherImage, .appealImage{
     height: 40px;
     max-width: 100px;
@@ -447,4 +368,37 @@ export default {
   .orderInfoItem{
     margin:8px 4px;
   }
+  .card-title{
+  font-weight: bold;
+  font-size: 16px
+}
+.card-row{
+  margin: 40px 0;
+}
+.marginT20{
+  margin-top: 20px
+}
+.card-item{
+  height: 100px;
+  margin: 0 20px;
+}
+.borderR{
+  border-right: 1px solid #ccc;
+
+}
+.cart-i-t{
+  font-size: 14px
+}
+.cart-i-v{
+  height: 60px;
+  line-height: 60px;
+  font-weight: bold;
+  font-size: 24px;
+  text-align: center;
+  text-indent: -30px;
+}
+.userRow {
+  min-height: 20px;
+  margin: 10px 0;
+}
 </style>

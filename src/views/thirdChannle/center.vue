@@ -12,7 +12,7 @@
             inactive-color="#dcdfe6"
             @change="handleChangeMainStatus()"
           />
-          <el-button style=" margin-left:10px" size="small" @click="dialogVisibleWithdraw=true">刷新</el-button>
+          <!-- <el-button style=" margin-left:10px" size="small" @click="dialogVisibleWithdraw=true">刷新</el-button> -->
 
         </div>
       </div>

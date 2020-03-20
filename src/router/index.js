@@ -501,8 +501,8 @@ export const asyncRoutes = [{
   component: Layout,
   meta: {
     title: '托底通道',
-    icon: 'statistic',
-    authName: ['records_statistics']
+    icon: 'tongdao',
+    authName: ['records_statistics', 'third_channle_order', 'third_channle_manage']
 
   },
   children: [{
@@ -512,7 +512,7 @@ export const asyncRoutes = [{
     meta: {
       title: '通道管理',
       icon: '',
-      authName: ['records_statistics', 'third_channle_manage']
+      authName: ['third_channle_manage']
 
     }
   },
@@ -523,7 +523,7 @@ export const asyncRoutes = [{
     meta: {
       title: '托底订单列表',
       icon: '',
-      authName: ['order_award', 'third_channle_order']
+      authName: ['third_channle_order']
     }
   }
 
@@ -675,7 +675,7 @@ export const asyncRoutes = [{
       meta: {
         title: '个人中心',
         icon: '',
-        authName: ['system_services', 'system_userCenter']
+        authName: ['system_userCenter']
 
       }
     },
@@ -686,7 +686,7 @@ export const asyncRoutes = [{
       meta: {
         title: '用户黑名单',
         icon: '',
-        authName: ['system_services', 'system_blackList']
+        authName: ['system_blackList']
 
       }
     },

@@ -92,8 +92,6 @@
       </div>
     </el-card>
 
-    <blackList />
-
     <div class="section-title-container marginT40">
       <span class="section-title">交易明细</span><span class="container-tip">  已经完成订单：总数<el-link type="primary">{{ modals.orders }} </el-link> </span>
     </div>
@@ -373,11 +371,10 @@ import { role_apply_list, user_web, user_b, users_b, users_web, user_web_save, u
 import { order_details } from '@/api/order'
 import float from '@/directive/float' // float Number directive
 import serviceChange from '@/views/params/serviceChange'
-import blackList from './components/userBackList'
 
 export default {
   name: 'Tab',
-  components: { pagination, serviceChange, blackList },
+  components: { pagination, serviceChange },
   directives: { waves, float },
   data() {
     return {

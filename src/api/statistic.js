@@ -30,6 +30,14 @@ export function merchant_order_statics(meta, data) {
   })
 }
 
+// 整体托底通道统计数据
+export function third_party_statics() {
+  return request({
+    url: `/admin/statistics/third_party_channel_statics`,
+    method: 'get'
+  })
+}
+
 // 整体统计数据
 export function merchant_statics_total(meta, data) {
   return request({

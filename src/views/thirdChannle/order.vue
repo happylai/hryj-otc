@@ -119,12 +119,7 @@
         <!-- <span>{{ scope.row.remainAmount }}</span> -->
         </template>
       </el-table-column>
-      <el-table-column align="center" width="120px" label="备注">
-        <template slot-scope="scope">
-          <span>{{ scope.row.memo }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="状态" width="60">
+      <el-table-column align="center" label="状态" width="100">
         <template slot-scope="scope">
           <el-link :underline="false" :type="scope.row.orderStatus|orderStatusTagName">{{ scope.row.orderStatus|orderStatus }}</el-link>
         </template>

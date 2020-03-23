@@ -5,14 +5,13 @@
       <el-input v-model="fliterQuery.uuid" clearable placeholder="托底商家ID" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="fliterQuery.merchant" clearable placeholder="B端ID" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="fliterQuery.merchantOrder" clearable placeholder="B端订单号" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="fliterQuery.orderUid" clearable placeholder="订单编号" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
-
-      <el-input v-model="fliterQuery.min" clearable placeholder="交易总价最小" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="fliterQuery.max" clearable placeholder="交易总价最大" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
-
       <el-select v-model="fliterQuery.status" placeholder="订单状态" clearable style="width: 140px" class="filter-item">
         <el-option v-for="item in statusList" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
+      <el-input v-model="fliterQuery.orderUid" clearable placeholder="订单编号" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="fliterQuery.min" clearable placeholder="交易总价最小" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="fliterQuery.max" clearable placeholder="交易总价最大" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+
       <el-date-picker
         v-model="fliterQuery.creatDate"
         class="filter-item"

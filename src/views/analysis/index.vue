@@ -194,6 +194,7 @@
           </el-row>
 
         </div>
+        <staticDetail />
       </el-tab-pane>
       <el-tab-pane label="托底统计" name="third_party_statics">
         <div class="staticTable">
@@ -229,7 +230,7 @@
 
           <el-row class="staticRow" :gutter="10">
             <el-col :span="6">
-              <span>拖地匹配总订单数  |  总金额</span>
+              <span>托底匹配总订单数  |  总金额</span>
             </el-col>
             <el-col :span="6">
               <span>{{ thirdPartyData.today.totalCount || '0' }} | {{ thirdPartyData.today.totalAmount || '0' }}</span>
@@ -272,6 +273,20 @@
           </el-row>
           <el-row class="staticRow" :gutter="10">
             <el-col :span="6">
+              <span>总完成订单数  |  总金额</span>
+            </el-col>
+            <el-col :span="6">
+              <span>{{ thirdPartyData.today.sysFinishCount || '0' }} | {{ thirdPartyData.today.sysFinishAmount || '0' }}</span>
+            </el-col>
+            <el-col :span="6">
+              <span>{{ thirdPartyData.yesterday.sysFinishCount || '0' }} | {{ thirdPartyData.yesterday.sysFinishAmount || '0' }}</span>
+            </el-col>
+            <el-col :span="6">
+              <span>{{ thirdPartyData.all.sysFinishCount || '0' }} | {{ thirdPartyData.all.sysFinishAmount || '0' }}</span>
+            </el-col>
+          </el-row>
+          <el-row class="staticRow" :gutter="10">
+            <el-col :span="6">
               <span>站点总成功率</span>
             </el-col>
             <el-col :span="6">
@@ -303,7 +318,6 @@
         </div>
       </el-tab-pane>
     </el-tabs>
-    <staticDetail />
 
   </div>
 </template>

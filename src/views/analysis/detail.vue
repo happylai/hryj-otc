@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>详细数据</h3>
+    <div class="merchant-detail-label">B端详细数据</div>
     <div class="filter-container" style="margin-bottom: 10px;">
       <el-input v-model="filterQuery.userUid" clearable placeholder="B端UID" style="width: 300px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="filterQuery.payChannel" clearable placeholder="支付通道" yle="width: 140px" class="filter-item">
@@ -251,6 +251,13 @@ export default {
 <style scoped>
 .tab-container {
   margin: 30px;
+}
+.merchant-detail-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #409EFF;
+  line-height: 40px;
+  height: 40px;
 }
 .payTypeImage{
   width: 100px;

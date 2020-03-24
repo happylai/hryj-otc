@@ -502,7 +502,7 @@ export const asyncRoutes = [{
   meta: {
     title: '托底通道',
     icon: 'tongdao',
-    authName: ['records_statistics', 'third_channle_order', 'third_channle_manage']
+    authName: ['third_channle_order', 'third_channle_manage']
 
   },
   children: [{

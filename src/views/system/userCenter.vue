@@ -61,7 +61,7 @@
       <el-row :gutter="20" class="userRow">
         <el-col :span="8" class="textAlingR">手机验证码：</el-col>
         <el-col :span="16">
-          <el-input v-model="modals.verifyCode" name="verifyCode" style="width: 240px" type="text" placeholder="请输入手机验证码" bindex="2" />
+          <el-input v-model="modals.verifyCode" name="verifyCode"  style="width: 240px" type="text" placeholder="请输入手机验证码" bindex="2" />
           <el-button size="small" :loading="sendCodeLoading" :disabled="sendCodeDisabled||leftTime>0" type="primary" @click="handle_verify_send() ">{{ leftTime>0?`${leftTime} S 后重试`:`发送验证码` }}</el-button>
         </el-col>
 
@@ -100,6 +100,7 @@ import { mapState, mapGetters, mapActions } from 'vuex' // 先要引入
 import waves from '@/directive/waves' // waves directive
 import { change_password, send_change_msg } from '@/api/admin'
 import { groupsConstName, userRolesConstName, adminRolesConstName } from '@/utils'
+import { removeToken } from '@/utils/auth'
 
 export default {
   name: 'AgentAward',
@@ -158,6 +159,8 @@ export default {
         if (res.code === 0) {
           this.$message.success('修改密码成功')
           this.dialogVisible = false
+          removeToken()
+          this.$router.push('/login')
         } else {
           this.saveLoading = false
           this.$message.error(res.message || '操作失败')

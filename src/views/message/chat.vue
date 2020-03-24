@@ -69,7 +69,7 @@
       </div>
       <div class="rightArea">
         <div class="chat-header">
-          <div class="chat-name">{{ currentObj.remark||currentObj.name||currentObj.uuid||id }}</div>
+          <div class="chat-name">{{ currentObj?( currentObj.remark||currentObj.name||currentObj.uuid||id):'' }}</div>
           <div>
             <el-dropdown v-if="conversationType===3" @command="handleDropdown">
               <span class="el-dropdown-link">
@@ -466,7 +466,7 @@ export default {
       if (index === '1') {
         this.getMessageList()
         console.log('index', index)
-        this.currentObj = this.groupList[0]
+        this.currentObj = this.groupList[0] || {}
       } else {
         this.currentObj = this.list[0]
       }

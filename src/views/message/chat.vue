@@ -680,7 +680,7 @@ export default {
       console.log('upload', res)
       const extra = JSON.stringify({ userId: this.uuid, userName: this.userName ? this.userName : '游客' })
       var msg = new RongIMLib.ImageMessage({ content: '', imageUri: res, extra })
-      this.handleSend(msg)
+      this.handleSend(res, undefined, true)
     },
 
     beforSend: _.throttle(function() {
@@ -699,22 +699,26 @@ export default {
         this.handleSend(chat)
       }
     },
-    handleSend(chat, conversationType = 1) {
+    handleSend(chat, conversationType = 1,image=false) {
       const _this = this
       var extra = JSON.stringify({ userId: this.uuid, userName: this.userName ? this.userName : '游客' })
       var isMentioned = false
-      if (_this.conversationType === 3 && _this.atGroupUserList.length) {
+      if (_this.conversationType === 3 && _this.atGroupUserList.length&&!image) {
         isMentioned = true
         var mentioneds = new RongIMLib.MentionedInfo() // @ 消息对象
         mentioneds.type = RongIMLib.MentionedType.PART
         mentioneds.userIdList = _this.atGroupUserList// @ 人员列表
         const atListStr = `@${_this.atGroupUserList.join(' @')}`
         chat = `${atListStr};${chat}`
-        _this.atGroupUserList = []
         var msg = new RongIMLib.TextMessage({ content: chat, extra, mentionedInfo: mentioneds })
       } else {
-        var msg = new RongIMLib.TextMessage({ content: chat, extra })
+        if(image) {
+          var msg = new RongIMLib.ImageMessage({ content: '', imageUri: chat, extra })
+        }else{
+          var msg = new RongIMLib.TextMessage({ content: chat, extra })
+        }
       }
+      _this.atGroupUserList = []
       RongIMClient.getInstance().sendMessage(_this.conversationType, this.id.toString(), msg, {
         onSuccess: function(message) {
         // message 为发送的消息对象并且包含服务器返回的消息唯一 Id 和发送消息时间戳

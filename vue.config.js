@@ -41,8 +41,8 @@ module.exports = {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
         // target: `http://127.0.0.1:${port}/mock`,
-        target: `http://47.57.25.67:4009/api`,
-        // target: `http://192.168.3.185:4009/api`,
+        // target: `http://47.57.25.67:4009/api`,
+        target: `http://192.168.3.144:4009/api`,
         // target: `http://192.168.3.185:4009/api`,
 
         changeOrigin: true,

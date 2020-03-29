@@ -299,8 +299,8 @@ export default {
     },
     saveEdit() {
       const data = this.editData
-      const b=this.country
-      const newPhone =`${b.substring(b.indexOf('+')+1,b.length)}-${this.newPhone}`
+      const b = this.country
+      const newPhone = `${b.substring(b.indexOf('+')+1,b.length)}-${this.newPhone}`
       console.log("newPhone",newPhone)
       const postData = {
         id: data.id,
@@ -324,6 +324,7 @@ export default {
           })
           this.getAdmins()
           this.dialogVisible = false
+          this.getList()
         } else {
           this.$message.error(res.message || '操作失败')
         }
@@ -351,7 +352,9 @@ export default {
                 type: 'success'
               })
               this.dialogVisible = false
+              this.showAddUser = false
               this.getAdmins()
+              this.getList()
               this.regForm = {
                 username: '',
                 email: '',
